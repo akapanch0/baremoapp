@@ -1,3 +1,817 @@
 [
-  {"baremo": "001", "descripcion": "Instalación base", "precio": 1500}
+  {
+    "baremo": "O111302",
+    "descripcion": "Por verificacion completa T1 bajo tension de acometida y equipo de medicion en instalacion aereas. Por suministro.",
+    "precio": 7625.0
+  },
+  {
+    "baremo": "O111303",
+    "descripcion": "Por verificacion completa T1 bajo tension de acometida y equipo de medicion en instalacion subterraneas. Por suministro.",
+    "precio": 3726.0
+  },
+  {
+    "baremo": "O111304",
+    "descripcion": "Cambio de medidor monofasico (Tarea Asociada)",
+    "precio": 2930.0
+  },
+  {
+    "baremo": "O111305",
+    "descripcion": "Cambio de medidores trifasicos T1 y T2, en instalaciones aereas asociado a la verificacion de equipos de medicion u otra tarea. Por medidor",
+    "precio": 3176.0
+  },
+  {
+    "baremo": "O111306",
+    "descripcion": "Cambio de la/s tapa/s existente por tapa y termomagnetica mono/trifasica en acometidas aereas",
+    "precio": 2224.0
+  },
+  {
+    "baremo": "O111307",
+    "descripcion": "Verificacion ocular sin accion. Tarea asociada.",
+    "precio": 1335.0
+  },
+  {
+    "baremo": "O111308",
+    "descripcion": "Confeccion de acta por fraude. Tarea asociada.",
+    "precio": 3247.0
+  },
+  {
+    "baremo": "O111309",
+    "descripcion": "Retiro de conexiones clandestinas en habitaculo, en acometida o en linea, de clientes de cualquier tarifa. Tarea asociada.",
+    "precio": 1391.0
+  },
+  {
+    "baremo": "O111310",
+    "descripcion": "Conexión monofasica con cable concentrico, sin cruce de calle, hasta bornera de medidor o proteccion. Tarea asociada. Incluye colocacion de herrajes de retension.",
+    "precio": 9856.0
+  },
+  {
+    "baremo": "O111311",
+    "descripcion": "Conexión monofasica con cable concentrico, con cruce de calle, hasta bornera de medidor o proteccion.",
+    "precio": 11570.0
+  },
+  {
+    "baremo": "O111312",
+    "descripcion": "Conexión trifasica con cable concentrico o LAPE, sin cruce de calle, hasta bornera de medidor o proteccion. Tarea asociada. Incluye colocacion de herrajes de retension.",
+    "precio": 19307.0
+  },
+  {
+    "baremo": "O111313",
+    "descripcion": "Conexión trifasica con cable concentrico o LAPE, con cruce de calle, hasta bornera de medidor o proteccion. Tarea asociada. Incluye colocacion de herrajes de retension.",
+    "precio": 23308.0
+  },
+  {
+    "baremo": "O111314",
+    "descripcion": "Retiro de acometida mono/trifasica sin cruce de calle, por suspension de suministros desde linea o caja de interconexion. Tarea asociada.",
+    "precio": 2118.0
+  },
+  {
+    "baremo": "O111315",
+    "descripcion": "Retiro de acometida mono/trifasica con cruce de calle, por suspension de suministros desde linea o caja de interconexion. Tarea asociada.",
+    "precio": 3653.0
+  },
+  {
+    "baremo": "O111316",
+    "descripcion": "Instalacion de medidor trifasico, DIME agrupados.",
+    "precio": 4056.0
+  },
+  {
+    "baremo": "O111317",
+    "descripcion": "Instalacion de medidor monofasico, tapa y termomagnetica. DIME agrupados.",
+    "precio": 4524.0
+  },
+  {
+    "baremo": "O111318",
+    "descripcion": "Retiro de medidor mono o trifasico. DIME agrupados.",
+    "precio": 2984.0
+  },
+  {
+    "baremo": "O111319",
+    "descripcion": "Verificacion de funcionamiento y determinacion del error IN SITU de medidor mono o trifasico T1",
+    "precio": 3610.0
+  },
+  {
+    "baremo": "O111320",
+    "descripcion": "Verificacion ocular con accion electricas en clientes T1. Tarea asociada.",
+    "precio": 2256.0
+  },
+  {
+    "baremo": "O111321",
+    "descripcion": "Soldadura contrapa metalica en medidor o gabinete colectivo. Tarea asociada.",
+    "precio": 2382.0
+  },
+  {
+    "baremo": "O111322",
+    "descripcion": "Instalacion de caja antihurto en caja de medidor monofasico existente.",
+    "precio": 3176.0
+  },
+  {
+    "baremo": "O111812",
+    "descripcion": "Verif Medidor autoadministrado",
+    "precio": 10134.0
+  },
+  {
+    "baremo": "O111813",
+    "descripcion": "Verif.Med.auto adm.c/Cbio medidor",
+    "precio": 9946.0
+  },
+  {
+    "baremo": "O111814",
+    "descripcion": "Verif. Medidor auto administr s/ascenso",
+    "precio": 2245.0
+  },
+  {
+    "baremo": "O111832",
+    "descripcion": "Reclamo/Verificación MIDE SIN ASCENSO",
+    "precio": 4119.0
+  },
+  {
+    "baremo": "O111830",
+    "descripcion": "MIDE piso: Conex UTD+Caja IP+Kit Caño",
+    "precio": 10394.0
+  },
+  {
+    "baremo": "O111803",
+    "descripcion": "Verif. MIDE c/HIDRO Incl Cambio UM/UTD",
+    "precio": 10133.0
+  },
+  {
+    "baremo": "O111810",
+    "descripcion": "Instalación de medidor Bicuerpo comunicado PLC",
+    "precio": 7716.0
+  },
+  {
+    "baremo": "O111811",
+    "descripcion": "Conexión sobre poste UM ADICIONAL",
+    "precio": 4699.0
+  },
+  {
+    "baremo": "O111831",
+    "descripcion": "Gest.contratación medidores auto-admin",
+    "precio": 4119.0
+  },
+  {
+    "baremo": "O111820",
+    "descripcion": "Multimed: Montaj Caja + Conexión de UM´s",
+    "precio": 49132.0
+  },
+  {
+    "baremo": "O111822",
+    "descripcion": "Multimed: Instal Concentrador MIDE",
+    "precio": 27962.38
+  },
+  {
+    "baremo": "O111823",
+    "descripcion": "Multimed: Instal Adic h/5 UM Post montaj",
+    "precio": 8975.0
+  },
+  {
+    "baremo": "O111824",
+    "descripcion": "Multimed: Tendido Agrupado d Concéntrico",
+    "precio": 170.0
+  },
+  {
+    "baremo": "O111801",
+    "descripcion": "Instal / Reloc Caja al vuelo y UM-MIDE",
+    "precio": 8641.0
+  },
+  {
+    "baremo": "O111802",
+    "descripcion": "Conexión al Vuelo de UM ADICIONAL",
+    "precio": 7927.0
+  },
+  {
+    "baremo": "M120801",
+    "descripcion": "Tendido de lape o concentrico 4 x 16 mm2",
+    "precio": 350.0
+  },
+  {
+    "baremo": "M120802",
+    "descripcion": "Tendido LAPE <= 3 x 95/50 mm2",
+    "precio": 514.0
+  },
+  {
+    "baremo": "N120804",
+    "descripcion": "Coloc.vaina autosold.en conector exist.",
+    "precio": 1535.0
+  },
+  {
+    "baremo": "O220201",
+    "descripcion": "Susp.sumin.T1óT2 de bonera med. en Pcia",
+    "precio": 4319.0
+  },
+  {
+    "baremo": "O220202",
+    "descripcion": "Susp.sum.T1óT2 d/toma/otro med. en Pcia",
+    "precio": 4725.0
+  },
+  {
+    "baremo": "O220203",
+    "descripcion": "Susp.sumin. dde termomag. en Pcia",
+    "precio": 2776.0
+  },
+  {
+    "baremo": "O220204",
+    "descripcion": "Susp.sumin.mono/trif.e/altura en Pcia",
+    "precio": 5080.0
+  },
+  {
+    "baremo": "O220205",
+    "descripcion": "Retiro acomet. s/cruce p/susp. en Pcia",
+    "precio": 4096.0
+  },
+  {
+    "baremo": "O220206",
+    "descripcion": "Retiro acomet. c/cruce p/susp.en Pcia",
+    "precio": 8725.0
+  },
+  {
+    "baremo": "O220210",
+    "descripcion": "SUSP MEDIDOR C/HIDRO EN CAJA MULTIMED",
+    "precio": 7717.0
+  },
+  {
+    "baremo": "O220401",
+    "descripcion": "Retiro med.T1óT2 p/corte servicio Pcia",
+    "precio": 4121.0
+  },
+  {
+    "baremo": "O220402",
+    "descripcion": "Retiro acomet. sin cruce p/corte en Pcia",
+    "precio": 6966.0
+  },
+  {
+    "baremo": "O220403",
+    "descripcion": "Retiro acomet. con cruce p/corte en Pcia",
+    "precio": 7642.0
+  },
+  {
+    "baremo": "O220404",
+    "descripcion": "Ret. med. y acometida sin cruce en Pcia",
+    "precio": 9499.0
+  },
+  {
+    "baremo": "O220405",
+    "descripcion": "Ret. med. y acometida con cruce en Pcia",
+    "precio": 10269.0
+  },
+  {
+    "baremo": "O220410",
+    "descripcion": "RETIRO MEDIDOR C/HIDRO EN CAJA MULTIMED",
+    "precio": 7667.0
+  },
+  {
+    "baremo": "O220601",
+    "descripcion": "Rehab.sumin.dde bonera med.monof en Pcia",
+    "precio": 6501.0
+  },
+  {
+    "baremo": "O220602",
+    "descripcion": "Rehab.sumin.dde bonera med.trif en Pcia",
+    "precio": 8072.0
+  },
+  {
+    "baremo": "O220603",
+    "descripcion": "Rehab.sumin.dde protec.termomag. en Pcia",
+    "precio": 4633.0
+  },
+  {
+    "baremo": "O220604",
+    "descripcion": "Reinstalación medidor monofásico en Pcia",
+    "precio": 4877.0
+  },
+  {
+    "baremo": "O220605",
+    "descripcion": "Reinstalación medidor trifásico en Pcia",
+    "precio": 5880.0
+  },
+  {
+    "baremo": "O220607",
+    "descripcion": "Rehab.T1óT2 d/toma/otro med.trif en Pcia",
+    "precio": 6682.0
+  },
+  {
+    "baremo": "O220608",
+    "descripcion": "Rehab sumin. Mono/trif en altura",
+    "precio": 7382.0
+  },
+  {
+    "baremo": "O220609",
+    "descripcion": "Reinst.acometida monof.sin cruce en Pcia",
+    "precio": 12133.0
+  },
+  {
+    "baremo": "O220610",
+    "descripcion": "Reinst.acometida trif.sin cruce en Pcia",
+    "precio": 10553.0
+  },
+  {
+    "baremo": "O220611",
+    "descripcion": "Reinst.acometida monof.con cruce en Pcia",
+    "precio": 12620.0
+  },
+  {
+    "baremo": "O220612",
+    "descripcion": "Reinst.acometida trif.con cruce en Pcia",
+    "precio": 11167.0
+  },
+  {
+    "baremo": "O220613",
+    "descripcion": "Reinst.acom y med.monof. s/cruce en Pcia",
+    "precio": 14405.0
+  },
+  {
+    "baremo": "O220614",
+    "descripcion": "Reinst.acom y med.trifas.s/cruce en Pcia",
+    "precio": 14781.0
+  },
+  {
+    "baremo": "O220615",
+    "descripcion": "Reinst.acom y med.monof. c/cruce en Pcia",
+    "precio": 10299.0
+  },
+  {
+    "baremo": "O220616",
+    "descripcion": "Reinst.acom y med.trifas.c/cruce en Pcia",
+    "precio": 15520.0
+  },
+  {
+    "baremo": "O220620",
+    "descripcion": "REHAB MEDIDOR C/HIDRO EN CAJA MULTIMED",
+    "precio": 8947.0
+  },
+  {
+    "baremo": "O220701",
+    "descripcion": "Retiro conexión clandestina",
+    "precio": 2822.0
+  },
+  {
+    "baremo": "O220702",
+    "descripcion": "Verif.ocular susp,corte o rehab",
+    "precio": 2634.0
+  },
+  {
+    "baremo": "O220703",
+    "descripcion": "Acción fallida",
+    "precio": 2186.0
+  },
+  {
+    "baremo": "O220704",
+    "descripcion": "Cambio de medidor tarea asociada",
+    "precio": 1490.0
+  },
+  {
+    "baremo": "O220705",
+    "descripcion": "Repos. O cambio tapa y termica asoc",
+    "precio": 2321.0
+  },
+  {
+    "baremo": "O220706",
+    "descripcion": "Cbio/rep pipeta caño pilar (asoc DIME",
+    "precio": 3200.0
+  },
+  {
+    "baremo": "M111201",
+    "descripcion": "Fundación hormigón en terreno normal",
+    "precio": 29300.0
+  },
+  {
+    "baremo": "M120601",
+    "descripcion": "Inst.rienda sple con anclaje articulado",
+    "precio": 33973.0
+  },
+  {
+    "baremo": "M120602",
+    "descripcion": "Inst.rienda sple con anclaje helicoidal",
+    "precio": 17198.0
+  },
+  {
+    "baremo": "M120603",
+    "descripcion": "Instalación de tensor en vano abierto",
+    "precio": 20067.0
+  },
+  {
+    "baremo": "M120604",
+    "descripcion": "Retiro rienda o tensor en vano abierto",
+    "precio": 4599.0
+  },
+  {
+    "baremo": "M120701",
+    "descripcion": "Inst.herrajes term.o sostén e/pte exist.",
+    "precio": 3133.0
+  },
+  {
+    "baremo": "O110301",
+    "descripcion": "Cbio tapa/s c/termomag.aérea,no asociado",
+    "precio": 5056.0
+  },
+  {
+    "baremo": "O110302",
+    "descripcion": "Cambio tapa/s c/termomag.aérea,asociado",
+    "precio": 2556.0
+  },
+  {
+    "baremo": "O111323",
+    "descripcion": "Fijac y sell de marco y Coloc mirilla",
+    "precio": 2382.0
+  },
+  {
+    "baremo": "O111324",
+    "descripcion": "Colocación de mirilla",
+    "precio": 1198.0
+  },
+  {
+    "baremo": "M120901",
+    "descripcion": "Ret.LABT.convenc.desmont.pequeños disp.",
+    "precio": 106.0
+  },
+  {
+    "baremo": "M120902",
+    "descripcion": "Ret.LABT.preensambl.desmont.pqños disp.",
+    "precio": 170.0
+  },
+  {
+    "baremo": "M121001",
+    "descripcion": "Inst.caja interconexión mono/trifasica",
+    "precio": 7397.0
+  },
+  {
+    "baremo": "M121101",
+    "descripcion": "Instalación jabalina de p.a.t.en L.A.B.T",
+    "precio": 14687.0
+  },
+  {
+    "baremo": "M121201",
+    "descripcion": "Coloc. manta termocontraible en LAPE",
+    "precio": 3787.0
+  },
+  {
+    "baremo": "M121301",
+    "descripcion": "Traspaso acometida por cbio conduc. LABT",
+    "precio": 778.0
+  },
+  {
+    "baremo": "M420103",
+    "descripcion": "Conex.monof.c/c.conc.dde linea sin cruce",
+    "precio": 7292.0
+  },
+  {
+    "baremo": "M420104",
+    "descripcion": "Conex.monof.c/c.conc.dde linea con cruce",
+    "precio": 9731.0
+  },
+  {
+    "baremo": "M420107",
+    "descripcion": "Conexión trifásica desde línea sin cruce",
+    "precio": 12774.0
+  },
+  {
+    "baremo": "M420108",
+    "descripcion": "Conexión trifásica desde línea con cruce",
+    "precio": 16124.0
+  },
+  {
+    "baremo": "M420302",
+    "descripcion": "Instalación pilar (madera) carenciado con 1 caja. Por pilar.",
+    "precio": 15916.0
+  },
+  {
+    "baremo": "M420303",
+    "descripcion": "Retiro de pilar carenciado.",
+    "precio": 6845.0
+  },
+  {
+    "baremo": "M420304",
+    "descripcion": "Instalación de caja para medidor (monofásico o trifásico), adicional en pilar existente (posición izquierda o derecha) o montada sobre pared. Por 2.243,00",
+    "precio": 2243.0
+  },
+  {
+    "baremo": "M420305",
+    "descripcion": "Col.caño adicional en pilar exist/pared",
+    "precio": 3694.0
+  },
+  {
+    "baremo": "M420401",
+    "descripcion": "Retiro y reinst.artefacto alumb.público",
+    "precio": 11817.0
+  },
+  {
+    "baremo": "M420402",
+    "descripcion": "Provisión/colocación fotocélula para AP",
+    "precio": 5502.0
+  },
+  {
+    "baremo": "N121103",
+    "descripcion": "Aplomado de pilar carenciado existente",
+    "precio": 8732.0
+  },
+  {
+    "baremo": "N410301",
+    "descripcion": "PODA PUNTUAL EQUILIBRADA 1 a 2 árboles",
+    "precio": 6428.0
+  },
+  {
+    "baremo": "N221601",
+    "descripcion": "Reparación de avería conex.cliente",
+    "precio": 2458.0
+  },
+  {
+    "baremo": "N221602",
+    "descripcion": "Reparación de averia red BT",
+    "precio": 20032.0
+  },
+  {
+    "baremo": "N221605",
+    "descripcion": "Reclamo fallido/reposición termomag.",
+    "precio": 5803.0
+  },
+  {
+    "baremo": "N221901",
+    "descripcion": "Cierre/apertura de red en buzón",
+    "precio": 2437.0
+  },
+  {
+    "baremo": "N221902",
+    "descripcion": "Cierre/apertura de red en caja esquinera",
+    "precio": 3494.0
+  },
+  {
+    "baremo": "N222104",
+    "descripcion": "Cbio tapa c/termomag. subterr, asociado",
+    "precio": 707.0
+  },
+  {
+    "baremo": "N310601",
+    "descripcion": "Cbio conexionado completo MT en plataf.",
+    "precio": 88259.0
+  },
+  {
+    "baremo": "N121401",
+    "descripcion": "Reparación de avería en red aérea BT",
+    "precio": 17765.0
+  },
+  {
+    "baremo": "N121402",
+    "descripcion": "Repar.de avería en cruce,acomet.o medic.",
+    "precio": 10021.0
+  },
+  {
+    "baremo": "N121403",
+    "descripcion": "Reposición termomagnética, única tarea.",
+    "precio": 5566.0
+  },
+  {
+    "baremo": "N121404",
+    "descripcion": "Reposic.del servicio c/ramal provisorio",
+    "precio": 4026.0
+  },
+  {
+    "baremo": "N121405",
+    "descripcion": "Rep.fallida instal. Edenor y clte normal",
+    "precio": 5566.0
+  },
+  {
+    "baremo": "N121406",
+    "descripcion": "Rep.fallida problema interno cliente",
+    "precio": 5225.0
+  },
+  {
+    "baremo": "N121412",
+    "descripcion": "Recl MIDE CON ASCENSO tareaaltura y piso",
+    "precio": 8429.0
+  },
+  {
+    "baremo": "N121432",
+    "descripcion": "Recl MIDE SIN ASCENSO -tareas desde piso",
+    "precio": 4870.0
+  },
+  {
+    "baremo": "N121801",
+    "descripcion": "Cbio medidor monofás.T1 aérea, asociado",
+    "precio": 8357.0
+  },
+  {
+    "baremo": "N121804",
+    "descripcion": "Cbio tapa/s c/termomag. aérea, asociado",
+    "precio": 3891.0
+  },
+  {
+    "baremo": "N121603",
+    "descripcion": "Cbio/rep pipeta caño pilar (tarea asoc)",
+    "precio": 1343.0
+  },
+  {
+    "baremo": "N120607",
+    "descripcion": "Cbio conex.monofás.c/c concent.s/cruce",
+    "precio": 7558.0
+  },
+  {
+    "baremo": "N120608",
+    "descripcion": "Cbio conex.monofás.c/c concent.c/cruce",
+    "precio": 9256.0
+  },
+  {
+    "baremo": "N120703",
+    "descripcion": "Reparación de conductores LABT convenc.",
+    "precio": 4749.0
+  },
+  {
+    "baremo": "N120704",
+    "descripcion": "Reparación de conductor neutro de LAPE",
+    "precio": 13890.0
+  },
+  {
+    "baremo": "N120705",
+    "descripcion": "Rep.conduc.cruce de calle LAPE o convenc",
+    "precio": 3876.0
+  },
+  {
+    "baremo": "N120802",
+    "descripcion": "Desconexión,reconex.o retiro de puentes",
+    "precio": 3761.0
+  },
+  {
+    "baremo": "N120803",
+    "descripcion": "Cambio uno ó más morsetos por conexión",
+    "precio": 4517.0
+  },
+  {
+    "baremo": "N111103",
+    "descripcion": "Colocación de disuasivos de aves",
+    "precio": 1375.0
+  },
+  {
+    "baremo": "N110202",
+    "descripcion": "Ejecución empalmes rectos d/conduct.LAMT",
+    "precio": 56995.0
+  },
+  {
+    "baremo": "M110201",
+    "descripcion": "Poste simple H°A° L.Vertical o Compacta",
+    "precio": 59014.0
+  },
+  {
+    "baremo": "M111104",
+    "descripcion": "Retiro poste simpe de madera de LAMT",
+    "precio": 8264.0
+  },
+  {
+    "baremo": "M120201",
+    "descripcion": "Instalación completa poste simple sosten, terminal, amarre (simple o doble, con o sin desvio/derivación), de madera, de hasta 9 metros de altura.",
+    "precio": 18448.0
+  },
+  {
+    "baremo": "M120202",
+    "descripcion": "Instalación completa poste simple sosten, terminal, amarre (simple o doble, con o sin desvio/derivación), de madera, de 11 metros de altura. La p",
+    "precio": 31918.0
+  },
+  {
+    "baremo": "M120301",
+    "descripcion": "Instalación completa poste simple terminal de madera, de hasta 9 metros de altura, con contraposte. Incluye provisión y tratamiento de durmientes",
+    "precio": 76779.0
+  },
+  {
+    "baremo": "M120302",
+    "descripcion": "Inst.poste madera c/contraposte de 11m",
+    "precio": 95833.0
+  },
+  {
+    "baremo": "M120305",
+    "descripcion": "Inst.poste simple H° hasta 9 m c/fund.",
+    "precio": 102040.0
+  },
+  {
+    "baremo": "M120401",
+    "descripcion": "Transf.pte sple e/term.<=9 m c/ctrpte",
+    "precio": 40923.0
+  },
+  {
+    "baremo": "M120501",
+    "descripcion": "Retiro poste o contraposte madera h/11m",
+    "precio": 6765.0
+  },
+  {
+    "baremo": "M120502",
+    "descripcion": "Ret.poste doble o poste c/ctrposte h/11m",
+    "precio": 12985.0
+  },
+  {
+    "baremo": "M120503",
+    "descripcion": "Retiro poste hormigon s/fundación h/9m",
+    "precio": 27307.0
+  },
+  {
+    "baremo": "N120101",
+    "descripcion": "Cambio poste simple sostén madera h/9m",
+    "precio": 24416.0
+  },
+  {
+    "baremo": "N120102",
+    "descripcion": "Cambio poste simple sostén madera 11m",
+    "precio": 28153.0
+  },
+  {
+    "baremo": "N120104",
+    "descripcion": "Cbio pte sple term/amarre madera h/9m",
+    "precio": 34603.0
+  },
+  {
+    "baremo": "N120105",
+    "descripcion": "Cbio poste simple term/amarre madera 11m",
+    "precio": 37174.0
+  },
+  {
+    "baremo": "N120201",
+    "descripcion": "Cbio poste y contraposte d/madera h/9m",
+    "precio": 92708.0
+  },
+  {
+    "baremo": "N120202",
+    "descripcion": "Cbio poste y contraposte de madera 11m",
+    "precio": 67924.0
+  },
+  {
+    "baremo": "N120203",
+    "descripcion": "Cambio postes dobles de madera h/9m",
+    "precio": 92858.0
+  },
+  {
+    "baremo": "N120204",
+    "descripcion": "Cambio postes dobles de madera 11m",
+    "precio": 94396.0
+  },
+  {
+    "baremo": "N120205",
+    "descripcion": "Cambio contraposte en línea de h/9m",
+    "precio": 39358.0
+  },
+  {
+    "baremo": "N120206",
+    "descripcion": "Cambio contraposte en línea de 11m",
+    "precio": 46330.0
+  },
+  {
+    "baremo": "N120207",
+    "descripcion": "Sunchado poste c/prov/coloc.pte tutor",
+    "precio": 10350.0
+  },
+  {
+    "baremo": "N120302",
+    "descripcion": "Retensado de rienda existente",
+    "precio": 3962.0
+  },
+  {
+    "baremo": "N120403",
+    "descripcion": "Cambio de cruceta simple sostén",
+    "precio": 3962.0
+  },
+  {
+    "baremo": "N120501",
+    "descripcion": "Cambio de conductores LAPE",
+    "precio": 905.0
+  },
+  {
+    "baremo": "N120605",
+    "descripcion": "Cbio conex.monof.conv.x concent.s/cruce",
+    "precio": 9728.0
+  },
+  {
+    "baremo": "N120606",
+    "descripcion": "Cbio conex.monof.conv.x concent c/cruce",
+    "precio": 12976.0
+  },
+  {
+    "baremo": "N120702",
+    "descripcion": "Tensado de LABT preensamblada existente",
+    "precio": 243.0
+  },
+  {
+    "baremo": "N121101",
+    "descripcion": "Aplomado poste simple de madera exist.",
+    "precio": 10810.0
+  },
+  {
+    "baremo": "N121102",
+    "descripcion": "Aplomado poste doble de madera exist.",
+    "precio": 18247.0
+  },
+  {
+    "baremo": "N121104",
+    "descripcion": "Aplomado de columna H°A° en LABT",
+    "precio": 6788.0
+  },
+  {
+    "baremo": "N121203",
+    "descripcion": "Retiro conduc.cortados energiz.s/reparar",
+    "precio": 3242.0
+  },
+  {
+    "baremo": "N121701",
+    "descripcion": "Cbio masivo poste sple de madera h/9m",
+    "precio": 24416.0
+  },
+  {
+    "baremo": "N121702",
+    "descripcion": "Cambio poste simple sostén madera 11m",
+    "precio": 29229.0
+  }
 ]
