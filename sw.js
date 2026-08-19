@@ -1,16 +1,19 @@
-const CACHE_NAME = 'baremos-v5.8.33';
+// ============================================================
+// ARCHIVO 2: sw.js (COMPLETO)
+// ============================================================
+const CACHE_NAME = 'baremos-v5.8.34';
 const LOCAL_ASSETS = [
   './', 
   './index.html', 
-  './styles.css?v=5.8.33', 
-  './app.js?v=5.8.33', 
-  './db.js?v=5.8.33',
+  './styles.css?v=5.8.34', 
+  './app.js?v=5.8.34', 
+  './db.js?v=5.8.34',
   './baremo.json', 
-  './manifest.json?v=5.8.33', 
+  './manifest.json?v=5.8.34', 
   './version.json', 
   './VERSION',
-  './icons/icon-192.png?v=5.8.33', 
-  './icons/icon-512.png?v=5.8.33',
+  './icons/icon-192.png?v=5.8.34', 
+  './icons/icon-512.png?v=5.8.34',
   './maps/trujui.png', './maps/cuartelv.png', './maps/moreno.png',
   './maps/gralrodriguez.png', './maps/tigre.png', './maps/sanmartin.png',
   './maps/olivos.png', './maps/pilarescobar.png'
@@ -52,10 +55,9 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // ESTRATEGIA ESTRICTA: NUNCA CACHEAR LOS ARCHIVOS DE VERSIÓN
   if (url.pathname.endsWith('version.json') || url.pathname.endsWith('VERSION')) {
-     event.respondWith(fetch(event.request, { cache: 'no-store' }));
-     return;
+    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+    return;
   }
   
   event.respondWith(caches.match(event.request).then(cached => {
