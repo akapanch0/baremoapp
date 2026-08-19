@@ -1,5 +1,5 @@
 {
-  "version": "5.8.33",
-  "releaseDate": "2026-08-16",
-  "changelog": "Corrección EXCLUSIVA del bucle de versionado y SW. Se garantiza el avance a 5.8.33 sin spam de actualización."
+  "version": "5.8.34",
+  "releaseDate": "2026-08-19",
+  "changelog": "Reparación Crítica: Solucionado bucle infinito de CARGANDO. Añadida inicialización del DOM y corregidos manejadores de eventos. Unificación de versiones a 5.8.34."
 }

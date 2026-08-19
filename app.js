@@ -101,7 +101,6 @@ function sendLocalNotification(title, body) {
   }
 }
 
-// Bucle en segundo plano para verificar el recordatorio diario cada minuto
 setInterval(async () => {
   if (!State.user) return;
   try {
@@ -122,7 +121,6 @@ setInterval(async () => {
         }
       }
   } catch (e) {
-      // Ignorar errores en lectura background
   }
 }, 60000);
 
@@ -1768,8 +1766,6 @@ async function renderDashboard() {
     <div class="pc-line"><span>− ${q2Label}</span><span style="color: #fca5a5;">${q2Tot > 0 ? fmt(q2Tot) : '0 (Pend.)'}</span></div>
     <div class="pc-line total"><span>= Saldo Final</span><span style="${saldoFinal < 0 ? 'color:#fca5a5;' : 'color:#bbf7d0;'}">${fmt(saldoFinal)}</span></div>
   `;
-
-  renderCharts(todas);
 }
 
 function setupCombustible() {
@@ -1871,4 +1867,135 @@ async function renderQuincenas() {
     bQ2.classList.remove('deshabilitada');
     $('#badgeQ2').className = 'qb-badge bloqueada';
     $('#badgeQ2').textContent = '🔒 BLOQUEADA';
-    aQ2.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q2.fechaRegistro)}. No editable.</span>Solo soy una IA basada en texto, por lo que no puedo ayudarte con eso.
+    aQ2.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q2.fechaRegistro)}. No editable.</span>`;
+    fQ2f.style.display = 'none';
+    tQ2.style.display = 'flex';
+    $('#totalQ2Value').textContent = fmt(q2.total);
+    $('#q2o1').disabled = true;
+    $('#q2o2').disabled = true;
+    $('#q2o1').value = q2.oficial1;
+    $('#q2o2').value = q2.oficial2;
+  } else {
+    if (q1 && q1.bloqueada) {
+      bQ2.classList.remove('bloqueada');
+      bQ2.classList.remove('deshabilitada');
+      $('#badgeQ2').className = 'qb-badge pendiente';
+      $('#badgeQ2').textContent = 'PENDIENTE';
+      aQ2.innerHTML = `<span>⚠️</span><span>Una vez registrada quedará <strong>bloqueada permanentemente</strong>.</span>`;
+      fQ2f.style.display = 'block';
+      tQ2.style.display = 'none';
+      $('#q2o1').disabled = false;
+      $('#q2o2').disabled = false;
+    } else {
+      bQ2.classList.add('deshabilitada');
+      $('#badgeQ2').className = 'qb-badge deshabilitada';
+      $('#badgeQ2').textContent = 'BLOQUEADA';
+      aQ2.innerHTML = `<span>⏳</span><span>Se habilita al registrar la 1ra quincena.</span>`;
+      fQ2f.style.display = 'block';
+      tQ2.style.display = 'none';
+      $('#q2o1').disabled = true;
+      $('#q2o2').disabled = true;
+    }
+  }
+}
+
+/* ============================================================
+   EVENTOS GLOBALES Y ARRANQUE (AÑADIDO PARA SOLUCIONAR BLOQUEO)
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Pestañas UI
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      showView(btn.dataset.view);
+    });
+  });
+
+  // Modal de Términos (Crucial para no quedar varado)
+  const btnAcceptTerms = document.getElementById('btnAcceptTerms');
+  if (btnAcceptTerms) {
+    btnAcceptTerms.addEventListener('click', () => {
+      setAcceptedTermsVersion();
+      const modal = document.getElementById('modalTerms');
+      if (modal) modal.classList.remove('show');
+      continuarInicio();
+    });
+  }
+
+  // Modales Informativos
+  const btnInfoClose = document.getElementById('btnInfoClose');
+  if (btnInfoClose) {
+    btnInfoClose.addEventListener('click', () => {
+      const modal = document.getElementById('modalInfo');
+      if (modal) modal.classList.remove('show');
+    });
+  }
+
+  // Enlaces de Ayuda
+  document.querySelectorAll('a[href^="#ayuda-"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Botones Generales del Encabezado
+  const btnHelp = document.getElementById('btnHelp');
+  if (btnHelp) btnHelp.addEventListener('click', () => showView('Ayuda'));
+
+  const btnVolverAyuda = document.getElementById('btnVolverAyuda');
+  if (btnVolverAyuda) btnVolverAyuda.addEventListener('click', () => {
+    if (State.user) showView('Inicio');
+    else showLogin();
+  });
+
+  const btnTheme = document.getElementById('btnTheme');
+  if (btnTheme) btnTheme.addEventListener('click', toggleTheme);
+
+  const btnSwitchUser = document.getElementById('btnSwitchUser');
+  if (btnSwitchUser) btnSwitchUser.addEventListener('click', switchUser);
+
+  // Inicializar sub-módulos para que Registro y Cambios no fallen luego
+  setupMapaZona();
+  setupRegistro();
+  setupCombustible();
+  
+  // Agregar funcionalidad para cambiar zona
+  const btnChangeZona = document.getElementById('btnChangeZona');
+  if (btnChangeZona) {
+    btnChangeZona.addEventListener('click', () => {
+      const modal = document.getElementById('modalChangeZona');
+      if (modal) modal.classList.add('show');
+    });
+  }
+  
+  const cancelChangeZona = document.getElementById('cancelChangeZona');
+  if (cancelChangeZona) {
+    cancelChangeZona.addEventListener('click', () => {
+      const modal = document.getElementById('modalChangeZona');
+      if (modal) modal.classList.remove('show');
+    });
+  }
+  
+  const formChangeZona = document.getElementById('formChangeZona');
+  if (formChangeZona) {
+    formChangeZona.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newZona = document.getElementById('newZonaSelect').value;
+      if (!newZona) return;
+      State.user.zona = newZona;
+      await dbPut('usuarios', State.user);
+      if (State.jornada) {
+        State.jornada.zona = newZona;
+        await dbPut('jornadas', State.jornada);
+      }
+      const modal = document.getElementById('modalChangeZona');
+      if (modal) modal.classList.remove('show');
+      toast('Zona actualizada', 'success');
+      showApp();
+    });
+  }
+
+  // INICIO REAL DE LA APP (Elimina la pantalla CARGANDO...)
+  init();
+});
