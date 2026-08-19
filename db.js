@@ -1,3 +1,6 @@
+// ============================================================
+// ARCHIVO 3: db.js (COMPLETO)
+// ============================================================
 const DB_NAME = 'BaremosDB';
 const DB_VERSION = 1;
 let db;
@@ -29,10 +32,9 @@ function openDB() {
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
 
-    // NUEVO: Prevención de Promise colgada en el arranque si IndexedDB se bloquea
     req.onblocked = () => {
       console.warn('[DB] Base de datos bloqueada');
-      reject(new Error('Base de datos bloqueada por otra pestaña. Por favor recargue.'));
+      reject(new Error('Base de datos bloqueada por otra pestaña.'));
     };
   });
 }
@@ -45,7 +47,14 @@ function dbDelete(store, key) { return new Promise((res, rej) => { const r = db.
 function dbGetByIndex(store, idx, key) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).index(idx).getAll(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 
 async function exportAllDB() {
-  const d = { config: await dbGetAll('config'), usuarios: await dbGetAll('usuarios'), baremo: await dbGetAll('baremo'), jornadas: await dbGetAll('jornadas'), combustible: await dbGetAll('combustible'), quincenas: await dbGetAll('quincenas') };
+  const d = { 
+    config: await dbGetAll('config'), 
+    usuarios: await dbGetAll('usuarios'), 
+    baremo: await dbGetAll('baremo'), 
+    jornadas: await dbGetAll('jornadas'), 
+    combustible: await dbGetAll('combustible'), 
+    quincenas: await dbGetAll('quincenas') 
+  };
   return d;
 }
 
