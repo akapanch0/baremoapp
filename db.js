@@ -1,9 +1,11 @@
 const DB_NAME = 'BaremosDB';
 const DB_VERSION = 1;
 let db;
+
 function openDB() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
+    
     req.onupgradeneeded = e => {
       const d = e.target.result;
       if (!d.objectStoreNames.contains('config')) d.createObjectStore('config', { keyPath: 'key' });
@@ -23,20 +25,30 @@ function openDB() {
         st.createIndex('legajo', 'legajo', { unique: false });
       }
     };
+    
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
+
+    // NUEVO: Prevención de Promise colgada en el arranque si IndexedDB se bloquea
+    req.onblocked = () => {
+      console.warn('[DB] Base de datos bloqueada');
+      reject(new Error('Base de datos bloqueada por otra pestaña. Por favor recargue.'));
+    };
   });
 }
+
 function dbGet(store, key) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).get(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 function dbGetAll(store) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).getAll(); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 function dbPut(store, data) { return new Promise((res, rej) => { const r = db.transaction(store, 'readwrite').objectStore(store).put(data); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 function dbAdd(store, data) { return new Promise((res, rej) => { const r = db.transaction(store, 'readwrite').objectStore(store).add(data); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 function dbDelete(store, key) { return new Promise((res, rej) => { const r = db.transaction(store, 'readwrite').objectStore(store).delete(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 function dbGetByIndex(store, idx, key) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).index(idx).getAll(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+
 async function exportAllDB() {
   const d = { config: await dbGetAll('config'), usuarios: await dbGetAll('usuarios'), baremo: await dbGetAll('baremo'), jornadas: await dbGetAll('jornadas'), combustible: await dbGetAll('combustible'), quincenas: await dbGetAll('quincenas') };
   return d;
 }
+
 async function importAllDB(data) {
   if (data.config) for (const i of data.config) await dbPut('config', i);
   if (data.usuarios) for (const i of data.usuarios) await dbPut('usuarios', i);

@@ -372,10 +372,6 @@ function confirmDialog(msg) {
     const m = $('#modalConfirm');
     if (!m) { res(true); return; }
     
-    // Almacenamos temporalmente los modales activos para que no estorben la visión
-    const activeModals = $$('.modal-backdrop.show').filter(mod => mod.id !== 'modalConfirm');
-    activeModals.forEach(mod => mod.classList.remove('show'));
-
     const msgEl = $('#modalConfirmMsg');
     if (msgEl) msgEl.textContent = msg;
     m.classList.add('show');
@@ -392,8 +388,6 @@ function confirmDialog(msg) {
     if (btnCancel) {
       btnCancel.onclick = () => {
         m.classList.remove('show');
-        // Si el usuario cancela, restauramos exactamente la ventana donde estaba
-        activeModals.forEach(mod => mod.classList.add('show'));
         res(false);
       };
     }
@@ -1032,7 +1026,7 @@ function setupRegistro() {
   // IMPLEMENTACIÓN BLINDADA: Finalizar -> Validar -> Clonar -> Guardar BD -> Renderizar
   const btnFinalizar = document.getElementById('btnFinalizarTarea');
   if (btnFinalizar) {
-    btnFinalizar.addEventListener('click', async (e) => {
+    btnFinalizar.onclick = async (e) => {
       e.preventDefault();
       
       try {
@@ -1073,7 +1067,7 @@ function setupRegistro() {
         console.error('[Error de Almacenamiento Tarea]', error);
         toast('Error al guardar en base de datos. Por favor, reintenta.', 'error');
       }
-    });
+    };
   }
 }
 
@@ -1204,9 +1198,9 @@ function renderTotales() {
   const totalItemsActuales = (State.currentTarea && State.currentTarea.items) ? State.currentTarea.items.reduce((a, i) => a + (i.cantidad || 0), 0) : 0;
   
   const sumFinalizadas = (State.jornada.tareas || []).reduce((a, t) => a + (t.total || 0), 0);
-  const sumActual = (State.currentTarea && State.currentTarea.total) ? State.currentTarea.total : 0;
   
-  const t = sumFinalizadas + sumActual;
+  // REGLA ABSOLUTA: El total debe representar EXCLUSIVAMENTE la SUMA DE LAS TAREAS FINALIZADAS
+  const t = sumFinalizadas;
   
   const tr = $('#totalRegs'); if (tr) tr.textContent = fmtNum(totalTareas);
   const ti = $('#totalItems'); if (ti) ti.textContent = fmtNum(totalItemsFinalizados + totalItemsActuales);
@@ -2416,7 +2410,10 @@ function hideAyuda() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+/* ============================================================
+   INICIALIZADOR ABSOLUTO (SOLUCIÓN A LA PANTALLA DE CARGA INFINITA)
+   ============================================================ */
+function bootstrapApp() {
   try {
       $$('.tab-btn').forEach(b => { b.onclick = () => showView(b.dataset.view); });
       const bt = $('#btnTheme'); if (bt) bt.onclick = toggleTheme;
@@ -2481,8 +2478,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       setupQuincenas();
       setupAdmin();
   } catch (e) {
-      console.error("[DOMContentLoaded Error]", e);
+      console.error("[Bootstrap Error]", e);
   } finally {
-      await init();
+      init(); // Se ejecuta incondicionalmente
   }
-});
+}
+
+// Verificación anti Race-Condition
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrapApp);
+} else {
+    // Si la caché del SW o el navegador ya cargó el DOM, forzamos el arranque.
+    bootstrapApp();
+}
