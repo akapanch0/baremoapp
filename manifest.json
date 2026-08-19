@@ -1,3 +1,6 @@
+// ============================================================
+// ARCHIVO 7: manifest.json (COMPLETO)
+// ============================================================
 {
   "id": "/baremos/",
   "name": "BAREMOS",
@@ -12,9 +15,9 @@
   "lang": "es-AR",
   "categories": ["business", "productivity"],
   "icons": [
-    { "src": "icons/icon-192.png?v=5.8.33", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-192.png?v=5.8.33", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon-512.png?v=5.8.33", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png?v=5.8.33", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icons/icon-192.png?v=5.8.34", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-192.png?v=5.8.34", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-512.png?v=5.8.34", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png?v=5.8.34", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
