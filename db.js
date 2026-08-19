@@ -29,9 +29,10 @@ function openDB() {
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e.target.error);
 
+    // NUEVO: Prevención de Promise colgada en el arranque si IndexedDB se bloquea
     req.onblocked = () => {
       console.warn('[DB] Base de datos bloqueada');
-      reject(new Error('Base de datos bloqueada por otra pestaña.'));
+      reject(new Error('Base de datos bloqueada por otra pestaña. Por favor recargue.'));
     };
   });
 }
@@ -44,45 +45,7 @@ function dbDelete(store, key) { return new Promise((res, rej) => { const r = db.
 function dbGetByIndex(store, idx, key) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).index(idx).getAll(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 
 async function exportAllDB() {
-  const d = { 
-    config: await dbGetAll('config'), 
-    usuarios: await dbGetAll('usuarios'), 
-    baremo: await dbGetAll('baremo'), 
-    jornadas: await dbGetAll('jornadas'), 
-    combustible: await dbGetAll('combustible'), 
-    quincenas: await dbGetAll('quincenas') 
-  };
-  return d;
-}
-
-async function importAllDB(data) {
-  if (data.config) for (const i of data.config) await dbPut('config', i);
-  if (data.usuarios) for (const i of data.usuarios) await dbPut('usuarios', i);
-  if (data.baremo) for (const i of data.baremo) await dbPut('baremo', i);
-  if (data.jornadas) for (const i of data.jornadas) await dbPut('jornadas', i);
-  if (data.combustible) for (const i of data.combustible) await dbPut('combustible', i);
-  if (data.quincenas) for (const i of data.quincenas) await dbPut('quincenas', i);
-}      reject(new Error('Base de datos bloqueada por otra pestaña.'));
-    };
-  });
-}
-
-function dbGet(store, key) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).get(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
-function dbGetAll(store) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).getAll(); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
-function dbPut(store, data) { return new Promise((res, rej) => { const r = db.transaction(store, 'readwrite').objectStore(store).put(data); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
-function dbAdd(store, data) { return new Promise((res, rej) => { const r = db.transaction(store, 'readwrite').objectStore(store).add(data); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
-function dbDelete(store, key) { return new Promise((res, rej) => { const r = db.transaction(store, 'readwrite').objectStore(store).delete(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
-function dbGetByIndex(store, idx, key) { return new Promise((res, rej) => { const r = db.transaction(store).objectStore(store).index(idx).getAll(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
-
-async function exportAllDB() {
-  const d = { 
-    config: await dbGetAll('config'), 
-    usuarios: await dbGetAll('usuarios'), 
-    baremo: await dbGetAll('baremo'), 
-    jornadas: await dbGetAll('jornadas'), 
-    combustible: await dbGetAll('combustible'), 
-    quincenas: await dbGetAll('quincenas') 
-  };
+  const d = { config: await dbGetAll('config'), usuarios: await dbGetAll('usuarios'), baremo: await dbGetAll('baremo'), jornadas: await dbGetAll('jornadas'), combustible: await dbGetAll('combustible'), quincenas: await dbGetAll('quincenas') };
   return d;
 }
 

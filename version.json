@@ -1,5 +1,5 @@
 {
-  "version": "5.8.34",
-  "releaseDate": "2026-08-19",
-  "changelog": "Actualización integral: Módulo de Ayuda compatible con AdSense (Términos, Privacidad, Cookies, FAQ), fixes en Dashboard y protección PWA."
+  "version": "5.8.33",
+  "releaseDate": "2026-08-16",
+  "changelog": "Corrección EXCLUSIVA del bucle de versionado y SW. Se garantiza el avance a 5.8.33 sin spam de actualización."
 }
