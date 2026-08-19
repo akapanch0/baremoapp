@@ -1,3 +1,6 @@
+// ============================================================
+// ARCHIVO 1: app.js (COMPLETO)
+// ============================================================
 /* ============================================================
    BAREMOS v5.8.34 - app.js COMPLETO
    ============================================================ */
@@ -22,7 +25,8 @@ const State = {
   mensaje150kMostrado: false,
   mensaje125kMostrado: false,
   mensaje100kMostrado: false,
-  metaAlcanzada: false
+  metaAlcanzada: false,
+  chartInstances: {}
 };
 
 const $ = (s, p = document) => p.querySelector(s);
@@ -38,13 +42,13 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   const btn = $('#btnInstallHeader');
-  if(btn) btn.style.display = 'inline-flex';
+  if (btn) btn.style.display = 'inline-flex';
 });
 
 window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
   const btn = $('#btnInstallHeader');
-  if(btn) btn.style.display = 'none';
+  if (btn) btn.style.display = 'none';
   console.log('PWA fue instalada.');
 });
 
@@ -66,19 +70,17 @@ function openInstallModal() {
   const btnConfirm = $('#btnConfirmInstall');
   
   if (isIOS()) {
-    iosInstructions.style.display = 'block';
-    btnConfirm.style.display = 'none';
+    if (iosInstructions) iosInstructions.style.display = 'block';
+    if (btnConfirm) btnConfirm.style.display = 'none';
   } else {
-    iosInstructions.style.display = 'none';
+    if (iosInstructions) iosInstructions.style.display = 'none';
     if (!deferredPrompt) {
-        btnConfirm.textContent = 'App ya instalada';
-        btnConfirm.disabled = true;
+      if (btnConfirm) { btnConfirm.textContent = 'App ya instalada'; btnConfirm.disabled = true; }
     } else {
-        btnConfirm.textContent = '📲 Instalar App';
-        btnConfirm.disabled = false;
+      if (btnConfirm) { btnConfirm.textContent = '📲 Instalar App'; btnConfirm.disabled = false; }
     }
   }
-  modal.classList.add('show');
+  if (modal) modal.classList.add('show');
 }
 
 function sendLocalNotification(title, body) {
@@ -101,29 +103,26 @@ function sendLocalNotification(title, body) {
   }
 }
 
-// Bucle en segundo plano para verificar el recordatorio diario cada minuto
 setInterval(async () => {
   if (!State.user) return;
   try {
-      const config = await dbGet('config', 'reminderConfig');
-      if (config && config.active) {
-        const now = new Date();
-        const currentHour = String(now.getHours()).padStart(2, '0');
-        const currentMinute = String(now.getMinutes()).padStart(2, '0');
-        const currentTime = `${currentHour}:${currentMinute}`;
-        
-        if (currentTime === config.time) {
-          const lastNotified = await dbGet('config', 'lastNotifiedDate');
-          const todayDate = hoy();
-          if (!lastNotified || lastNotified.value !== todayDate) {
-             sendLocalNotification("¡Hora de cerrar BAREMOS!", "Recordá registrar tus tareas y cerrar la jornada de hoy.");
-             await dbPut('config', { key: 'lastNotifiedDate', value: todayDate });
-          }
+    const config = await dbGet('config', 'reminderConfig');
+    if (config && config.active) {
+      const now = new Date();
+      const currentHour = String(now.getHours()).padStart(2, '0');
+      const currentMinute = String(now.getMinutes()).padStart(2, '0');
+      const currentTime = `${currentHour}:${currentMinute}`;
+      
+      if (currentTime === config.time) {
+        const lastNotified = await dbGet('config', 'lastNotifiedDate');
+        const todayDate = hoy();
+        if (!lastNotified || lastNotified.value !== todayDate) {
+          sendLocalNotification("¡Hora de cerrar BAREMOS!", "Recordá registrar tus tareas y cerrar la jornada de hoy.");
+          await dbPut('config', { key: 'lastNotifiedDate', value: todayDate });
         }
       }
-  } catch (e) {
-      // Ignorar errores en lectura background
-  }
+    }
+  } catch (e) {}
 }, 60000);
 
 /* ============================================================
@@ -146,28 +145,28 @@ function getConfigMes(monto) {
 }
 
 /* ============================================================
-   CONTENIDO MENÚ LEGAL
+   CONTENIDO MENÚ LEGAL E INFORMACIÓN
    ============================================================ */
 const INFO_CONTENT = {
   privacidad: {
     title: "Política de Privacidad",
-    html: `<h3>1. Introducción</h3><p>La presente Política de Privacidad describe cómo se gestiona la información dentro del sitio web BAREMO y su aplicación asociada. Este proyecto es un desarrollo 100% freelance, sin asociaciones comerciales ni vínculos con terceros.</p><h3>2. No recopilación de datos personales</h3><p>BAREMO no recopila, almacena ni procesa datos personales de los usuarios.</p><p>El sitio y la aplicación no solicitan información identificatoria, no registran actividad del usuario y no acceden a datos del dispositivo.</p><h3>3. Información local</h3><p>Toda la información que el usuario ingresa en la aplicación se mantiene localmente en su dispositivo, sin ser enviada ni almacenada en servidores externos.</p><h3>4. Cookies y tecnologías de seguimiento</h3><p>Este sitio no utiliza cookies, herramientas de análisis, publicidad, ni tecnologías de rastreo.</p><h3>5. Compartición de información</h3><p>Dado que no se recopilan datos, no existe ningún tipo de cesión, venta o transferencia de información a terceros.</p><h3>6. Seguridad</h3><p>Aunque no se manejan datos personales, se aplican medidas básicas de seguridad para garantizar el funcionamiento correcto del sitio y la aplicación.</p><h3>7. Actualizaciones</h3><p>BAREMO puede modificar esta política en cualquier momento. Las actualizaciones se publicarán en este sitio web.</p>`
+    html: `<h3>1. Introducción</h3><p>La presente Política de Privacidad describe cómo se gestiona la información dentro de la aplicación BAREMO. Este proyecto es un desarrollo independiente y local.</p><h3>2. No recopilación de datos personales</h3><p>BAREMO no recopila, almacena ni transfiere datos personales a servidores remotos.</p><h3>3. Almacenamiento local</h3><p>Toda la información se mantiene resguardada exclusivamente dentro de tu dispositivo mediante IndexedDB.</p><h3>4. Sin seguimiento</h3><p>No se utilizan cookies comerciales, herramientas invasivas ni rastreadores de actividad.</p>`
   },
   terminos: {
     title: "Términos y Condiciones",
-    html: `<h3>1. Aceptación</h3><p>Al utilizar el sitio o la aplicación BAREMO, el usuario acepta estos Términos y Condiciones. Si no está de acuerdo, debe abstenerse de utilizar el servicio.</p><h3>2. Descripción del servicio</h3><p>BAREMO es una herramienta destinada al control y registro de ganancias diarias para contratistas del rubro eléctrico.</p><p>El servicio se ofrece “tal cual”, sin garantías de disponibilidad continua o ausencia de errores.</p><h3>3. Uso permitido</h3><p>El usuario se compromete a utilizar el sitio y la aplicación de manera legal y responsable. Queda prohibido:</p><ul><li>Manipular o intentar acceder a funciones no autorizadas.</li><li>Utilizar el servicio para actividades ilícitas.</li><li>Realizar ingeniería inversa, descompilación o extracción del código fuente.</li></ul><h3>4. Responsabilidad</h3><p>BAREMO no se responsabiliza por:</p><ul><li>Errores derivados del uso incorrecto del servicio.</li><li>Pérdida de información almacenada localmente en el dispositivo del usuario.</li><li>Fallas técnicas, interrupciones o indisponibilidad del servicio.</li></ul><h3>5. Modificaciones</h3><p>Los presentes términos pueden actualizarse sin previo aviso. Las modificaciones se publicarán en este sitio.</p>`
+    html: `<h3>1. Aceptación</h3><p>Al utilizar BAREMO, el usuario acepta estos Términos y Condiciones. Su propósito es exclusivamente operativo para contratistas.</p><h3>2. Uso responsable</h3><p>El usuario es responsable de verificar la correspondencia entre los códigos de baremos y sus tarifas vigentes.</p><h3>3. Responsabilidad</h3><p>La aplicación funciona "tal cual", eximiendo al desarrollador por cualquier discrepancia contractual con empresas distribuidoras.</p>`
   },
   legal: {
     title: "Aviso Legal",
-    html: `<p>BAREMO es un proyecto independiente y freelance, sin asociaciones con empresas, entidades o marcas del sector eléctrico.</p><p>La información presentada en el sitio y la aplicación tiene fines operativos y organizativos para contratistas.</p><p>No se garantiza la exactitud de los cálculos o registros generados por el usuario, ya que cada contratista maneja sus propios Baremos y estos pueden variar.</p><p>El desarrollador no asume responsabilidad por decisions comerciales tomadas a partir del uso de la aplicación.</p>`
+    html: `<p>BAREMO es una herramienta técnica independiente y no posee vinculación jurídica directa con ninguna distribuidora eléctrica oficial.</p>`
   },
   contacto: {
     title: "Contacto",
-    html: `<p>Para consultas, sugerencias o reportes relacionados con la aplicación BAREMO, podés comunicarte a:</p><p>📧 Email: <a href="mailto:contacto@baremo.app">contacto@baremo.app</a><br>🌐 Desarrollador: Proyecto freelance AKAPANCH0<br>📍 Ubicación: Buenos Aires, Argentina</p>`
+    html: `<p>Para consultas técnicas, sugerencias o reporte de fallos:</p><p>📧 Email: <a href="mailto:contacto@baremo.app">contacto@baremo.app</a><br>🌐 Desarrollador: AKAPANCH0<br>📍 Buenos Aires, Argentina</p>`
   },
   nosotros: {
     title: "Sobre Nosotros",
-    html: `<p>BAREMO es un proyecto desarrollado de manera 100% freelance, sin asociaciones comerciales ni vínculos con terceros.</p><p>Nuestro objetivo es ofrecer una herramienta simple, clara y eficiente para contratistas del rubro eléctrico, permitiendo registrar y controlar sus ganancias diarias, tareas realizadas y organización operativa.</p><p>Creemos en soluciones prácticas, livianas y sin complicaciones. Por eso, nuestra aplicación funciona de manera local, sin recopilar datos personales y sin depender de servidores externos.</p><p>BAREMO es independiente, transparente y diseñado para profesionales que necesitan una herramienta confiable para su trabajo diario.</p>`
+    html: `<p>Diseñado para facilitar la administración del trabajo en calle de cuadrillas técnicas y contratistas del sector de energía eléctrica.</p>`
   }
 };
 
@@ -210,23 +209,26 @@ function mostrarMapaZona(zona) {
     return;
   }
   const mapa = ZONA_MAPAS[zona];
-  titulo.textContent = `Zona: ${mapa.nombre}`;
-  nombre.textContent = mapa.nombre;
-  img.style.display = 'none';
-  placeholder.innerHTML = `<div><span class="zmp-ico">⏳</span><span>Cargando mapa...</span></div>`;
-  placeholder.style.display = 'grid';
+  if (titulo) titulo.textContent = `Zona: ${mapa.nombre}`;
+  if (nombre) nombre.textContent = mapa.nombre;
+  if (img) img.style.display = 'none';
+  if (placeholder) {
+    placeholder.innerHTML = `<div><span class="zmp-ico">⏳</span><span>Cargando mapa...</span></div>`;
+    placeholder.style.display = 'grid';
+  }
   container.classList.remove('show');
   void container.offsetWidth;
   const nuevaImg = new Image();
   nuevaImg.onload = () => {
-    img.src = `maps/${mapa.archivo}`;
-    img.style.display = 'block';
-    placeholder.style.display = 'none';
+    if (img) { img.src = `maps/${mapa.archivo}`; img.style.display = 'block'; }
+    if (placeholder) placeholder.style.display = 'none';
     container.classList.add('show');
   };
   nuevaImg.onerror = () => {
-    placeholder.innerHTML = `<div><span class="zmp-ico">⚠️</span><span>Mapa no disponible</span></div>`;
-    placeholder.style.display = 'grid';
+    if (placeholder) {
+      placeholder.innerHTML = `<div><span class="zmp-ico">⚠️</span><span>Mapa no disponible</span></div>`;
+      placeholder.style.display = 'grid';
+    }
     container.classList.add('show');
   };
   nuevaImg.src = `maps/${mapa.archivo}`;
@@ -240,7 +242,13 @@ function setupMapaZona() {
 /* ============================================================
    FRASES MOTIVACIONALES
    ============================================================ */
-const FRASES = ["Hoy es un nuevo día productivo","Tu esfuerzo es tu mayor recompensa","Cada tarea completada es un paso hacia el éxito","La disciplina vence al talento","Hacé que cada minuto cuente","El éxito es la suma de pequeños esfuerzos","Tu dedicación inspira a los demás","Cada baremo es una victoria","La constancia es la clave del progreso","Hoy vas a superar tus propios récords","El trabajo bien hecho no pasa desapercibido","Cada día es una nueva oportunidad","La excelencia es un hábito, no un acto","Tu compromiso marca la diferencia","Los grandes logros empiezan con un primer paso","La perseverancia convierte sueños en realidad","Hoy construyes el mañana que querés","Cada desafío es una oportunidad de crecer","Tu actitud define tu altitud","El esfuerzo de hoy es el éxito de mañana","Somos lo que hacemos día tras día","La pasión por el trabajo se nota en los resultados","Cada jornada es una página de tu historia","Tu determinación es tu superpoder","Los resultados llegan a quienes no se rinden","Hoy es el día perfecto para dar lo mejor","La calidad no es un acto, es un hábito","Cada meta alcanzada abre nuevas puertas","Tu trabajo duro tiene su recompensa","El éxito se construye día a día","Vos tenés el poder de hacer la diferencia","Cada tarea es una oportunidad de brillar","La motivación te pone en marcha, el hábito te mantiene","Hoy es tu día para destacar","El progreso, no la perfección, es lo que importa","Tu energía positiva transforma el entorno","Cada esfuerzo suma al gran objetivo","La acción es la clave fundamental de todo éxito","Vos podés lograr lo que te propongas","El trabajo en equipo multiplica los resultados","Cada día es una nueva chance de ser mejor","La dedicación abre todas las puertas","Tu constancia es admirada por todos","El éxito no es casualidad, es trabajo duro","Cada baremo completado es un logro personal","Hoy es un gran día para tener un gran día","La actitud positiva atrae resultados positivos","Tu esfuerzo construye tu futuro","Cada paso cuenta en el camino al éxito","La pasión convierte el trabajo en arte","Vos sos el arquitecto de tu propio destino","Cada jornada es una nueva aventura","El trabajo bien hecho es su propia recompensa","Tu compromiso inspira a todo el equipo","Hoy dejás huella con tu trabajo","La excelencia está en los detalles","Cada meta es un escalón hacia arriba","Tu esfuerzo diario construye grandes cosas","El éxito llega a quienes se preparan","Vos tenés todo lo necesario para triunfar","Cada día es una nueva página en blanco","La disciplina es el puente entre metas y logros","Tu trabajo es tu firma personal","Cada logro comienza con la decisión de intentarlo","El esfuerzo constante supera al talento natural","Hoy es el día de superar tus límites","Tu dedicación es la base de tu éxito","Cada tarea completada es una victoria","La paciencia y el esfuerzo todo lo pueden","Vos marcás la diferencia con tu trabajo","Cada día es una oportunidad de aprender","El éxito es la consecuencia del esfuerzo","Tu trabajo habla por vos","Cada jornada es un paso hacia la meta","La fortaleza viene de superar desafíos","Cada logro es un motivo para celebrar","El trabajo duro supera al talento cuando el talento no trabaja duro","Tu esfuerzo de hoy construye tu éxito de mañana","La pasión por lo que hacés es tu mejor herramienta","Vos sos capaz de lograr cosas increíbles","Cada tarea es una oportunidad de demostrar tu valor","El éxito se mide por el progreso, no por la perfección","Tu dedicación diaria hace la diferencia","Cada meta alcanzada es un nuevo comienzo","La actitud lo es todo","Vos escribís tu propia historia de éxito","El trabajo en equipo hace que los sueños funcionen","Tu esfuerzo es la semilla de tu éxito","Cada día es un regalo, por eso se llama presente","La perseverancia es la madre de la suerte","Vos tenés el poder de cambiar tu realidad","Cada tarea completada te acerca a tu meta","El coraje para continuar es lo que cuenta","Tu trabajo es tu mejor carta de presentación","Vos sos el protagonista de tu propia historia","Cada logro es un escalón hacia tu sueño","El esfuerzo de hoy es la tranquilidad de mañana","Tu compromiso es tu mayor fortaleza","Cada jornada es una nueva aventura por vivir","La dedicación convierte lo ordinario en extraordinario","El trabajo duro siempre paga","Tu esfuerzo diario construye tu legado","Cada día es una nueva oportunidad de triunfar","La pasión por el trabajo se refleja en los resultados","Vos sos la clave de tu propio éxito","Cada logro es un motivo de orgullo","El esfuerzo constante abre todas las puertas","Tu dedicación es tu mejor inversión","La actitud positiva es el primer paso al éxito","Cada tarea completada es un paso adelante","Tu esfuerzo es la base de tu futuro","La disciplina es la madre del éxito","Vos sos capaz de superar cualquier obstáculo","Cada logro es una celebración del esfuerzo","El trabajo duro convierte los sueños en realidad","La perseverancia es la clave de todo logro","Cada tarea es una oportunidad de demostrar tu capacidad","El éxito llega a quienes trabajan por él","La excelencia se logra con dedicación","Cada logro es un motivo para seguir adelante","El trabajo duro es el camino al éxito","Vos sos el autor de tu propio destino","El trabajo duro siempre da sus frutos","Tu dedicación es tu sello personal","La actitud positiva atrae cosas positivas","Cada tarea completada es una victoria personal","Hoy es un día para recordar","Tu esfuerzo marca la diferencia","Cada día cuenta en tu camino","La constancia es tu mejor aliada","Vos tenés todo lo que necesitás","El éxito está en tus manos","Cada jornada es una nueva oportunidad","Tu dedicación es admirable","La pasión te lleva lejos","Vos sos capaz de grandes cosas","El trabajo en equipo es tu fortaleza","Cada logro es un paso más","Tu esfuerzo inspira a otros","La excelencia es tu marca personal","Vos construís tu propio camino","Cada día es una nueva chance","Tu dedicación da frutos","El éxito es tu destino","Vos marcás la diferencia","Cada tarea es importante","Tu esfuerzo vale la pena","La perseverancia es tu fuerza","Vos sos un ejemplo a seguir","Cada logro te acerca a tu meta","Tu dedicación es tu mejor arma","El trabajo duro te define","Vos tenés el potencial","Cada día es una bendición","Tu esfuerzo construye tu futuro","La pasión es tu motor","Vos sos único y especial","Cada jornada es un regalo","Tu dedicación es tu legado","El éxito es tuyo","Vos podés con todo","Cada logro es una victoria","Tu esfuerzo es tu firma","La excelencia es tu hábito","Vos sos el mejor","Cada día es una oportunidad","Tu dedicación es tu fuerza","El éxito te espera","Vos sos imparable","Cada tarea es un paso","Tu esfuerzo es tu mejor inversión","La perseverancia es tu clave","Vos sos un ganador","Cada logro es tuyo","Tu dedicación es tu sello","El éxito es tu recompensa","Vos sos extraordinario","Cada día es para brillar","Tu esfuerzo es tu orgullo","La excelencia es tu camino","Vos sos inspirador","Cada jornada es una victoria","Tu dedicación es tu poder","El éxito está cerca","Vos sos capaz de todo","Cada logro es un triunfo","Tu esfuerzo es tu mejor aliado","La perseverancia es tu virtud","Vos sos un líder","Cada día es para crecer","Tu dedicación es tu fuerza interior","El éxito es tu destino final","Vos sos imbatible","Cada tarea es una oportunidad","Tu esfuerzo es tu mejor carta","La excelencia es tu marca","Vos sos un campeón","Cada logro es un escalón","Tu dedicación es tu mejor inversión","El éxito es tu recompensa merecida","Vos sos inolvidable","Cada día es una nueva página","Tu esfuerzo es tu mayor tesoro","La perseverancia es tu mejor amiga","Vos sos una estrella","Cada jornada es un nuevo comienzo","Tu dedicación es tu mejor legado","El éxito es tu destino asegurado","Vos sos una inspiración","Cada logro es una bendición","Tu esfuerzo es tu mejor inversión","La excelencia es tu sello personal","Vos sos un triunfador","Cada día es para destacar","Tu dedicación es tu mayor fortaleza","El éxito es tu recompensa","Vos sos un ejemplo","Cada tarea es una victoria","Tu esfuerzo es tu mejor aliado","La perseverancia es tu mejor virtud","Vos sos un genio","Cada logro es un paso al éxito","Tu dedicación es tu mejor inversión","El éxito es tu destino","Vos sos extraordinario","Cada día es una oportunidad de oro","Tu esfuerzo es tu mejor legado","La excelencia es tu mejor marca","Vos sos una leyenda","Cada jornada es una nueva aventura","Tu dedicación es tu mejor inversión","El éxito es tu destino asegurado","Vos sos un maestro","Cada logro es una bendición","Tu esfuerzo es tu mejor inversión","La perseverancia es tu mejor virtud","Vos sos un héroe","Cada día es para triunfar","Tu dedicación es tu mejor legado","El éxito es tu recompensa","Vos sos un líder nato"];
+const FRASES = [
+  "Hoy es un nuevo día productivo", "Tu esfuerzo es tu mayor recompensa", "Cada tarea completada es un paso hacia el éxito",
+  "La disciplina vence al talento", "Hacé que cada minuto cuente", "El éxito es la suma de pequeños esfuerzos",
+  "Tu dedicación inspira a los demás", "Cada baremo es una victoria", "La constancia es la clave del progreso",
+  "Hoy vas a superar tus propios récords", "El trabajo bien hecho no pasa desapercibido", "La excelencia es un hábito",
+  "Tu compromiso marca la diferencia", "Los grandes logros empiezan con un primer paso", "Cada jornada es una oportunidad de triunfar"
+];
 
 function obtenerFraseDelDia() {
   const now = new Date();
@@ -275,23 +283,10 @@ function mostrarMensajeDiario(mensajes, bgColor) {
   }, 3500);
 }
 
-function mostrarMensaje100k() {
-  State.mensaje100kMostrado = true;
-  mostrarMensajeDiario(MENSAJES_100K, 'linear-gradient(135deg, #f59e0b, #d97706)');
-}
-function mostrarMensaje125k() {
-  State.mensaje125kMostrado = true;
-  mostrarMensajeDiario(MENSAJES_125K, 'linear-gradient(135deg, #22c55e, #16a34a)');
-}
-function mostrarMensaje150k() {
-  State.mensaje150kMostrado = true;
-  mostrarMensajeDiario(MENSAJES_150K, 'linear-gradient(135deg, #10b981, #047857)');
-}
-function mostrarMensaje200k() {
-  State.mensaje200kMostrado = true;
-  mostrarMensajeDiario(MENSAJES_200K, 'linear-gradient(135deg, #ffd700, #ff6b6b, #4ecdc4)');
-  lanzarConfeti();
-}
+function mostrarMensaje100k() { State.mensaje100kMostrado = true; mostrarMensajeDiario(MENSAJES_100K, 'linear-gradient(135deg, #f59e0b, #d97706)'); }
+function mostrarMensaje125k() { State.mensaje125kMostrado = true; mostrarMensajeDiario(MENSAJES_125K, 'linear-gradient(135deg, #22c55e, #16a34a)'); }
+function mostrarMensaje150k() { State.mensaje150kMostrado = true; mostrarMensajeDiario(MENSAJES_150K, 'linear-gradient(135deg, #10b981, #047857)'); }
+function mostrarMensaje200k() { State.mensaje200kMostrado = true; mostrarMensajeDiario(MENSAJES_200K, 'linear-gradient(135deg, #ffd700, #ff6b6b, #4ecdc4)'); lanzarConfeti(); }
 
 function lanzarConfeti() {
   let cont = document.querySelector('.confeti-container');
@@ -314,7 +309,7 @@ function lanzarConfeti() {
     conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
     cont.appendChild(conf);
   }
-  setTimeout(() => { cont.innerHTML = ''; }, 5000);
+  setTimeout(() => { if(cont) cont.innerHTML = ''; }, 5000);
 }
 
 function lanzarBengalas() {
@@ -354,10 +349,12 @@ function hoy() {
 }
 function ahora() { return new Date().toISOString(); }
 function fechaLegible(f) {
+  if (!f) return '';
   const [y,m,d] = f.split('-').map(Number);
   return new Date(y,m-1,d).toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
 function fechaCorta(f) {
+  if (!f) return '';
   const [y,m,d] = f.split('-').map(Number);
   return new Date(y,m-1,d).toLocaleDateString('es-AR');
 }
@@ -371,10 +368,12 @@ function mesAnterior() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
 }
 function nombreMes(ms) {
+  if (!ms) return '';
   const [y,m] = ms.split('-').map(Number);
   return new Date(y,m-1).toLocaleDateString('es-AR',{month:'long',year:'numeric'});
 }
 function diasDelMes(ms) {
+  if (!ms) return 30;
   const [y,m] = ms.split('-').map(Number);
   return new Date(y,m,0).getDate();
 }
@@ -504,6 +503,7 @@ function parsePrecio(v) {
   } else s = s.replace(/,/g, '');
   return parseFloat(s) || 0;
 }
+
 function getField(r, ...keys) {
   for (const k of keys) {
     if (r[k] !== undefined && r[k] !== null && r[k] !== '') return r[k];
@@ -525,6 +525,7 @@ async function sha256(message) {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
+
 async function getAdminPasswordHash() {
   const existing = await dbGet('config', 'adminPasswordHash');
   if (!existing) {
@@ -547,11 +548,13 @@ async function registerSW() {
     if (swRegistration.waiting) checkForUpdate(true);
     swRegistration.addEventListener('updatefound', () => {
       const newWorker = swRegistration.installing;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          checkForUpdate(true);
-        }
-      });
+      if (newWorker) {
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            checkForUpdate(true);
+          }
+        });
+      }
     });
   } catch(e) { console.warn('[SW]', e); }
 }
@@ -594,26 +597,31 @@ function showUpdateNotification() {
   `;
   document.body.appendChild(notification);
   
-  document.getElementById('updateNowBtn').onclick = async () => {
-    notification.remove();
-    const btn = document.getElementById('updateNowBtn');
-    if(btn) { btn.innerText = "Actualizando..."; btn.disabled = true; }
-    try {
-      if (swRegistration && swRegistration.waiting) {
-        swRegistration.waiting.postMessage('SKIP_WAITING');
-      }
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (let reg of regs) await reg.unregister();
-      const keys = await caches.keys();
-      for (let key of keys) await caches.delete(key);
-    } catch(e) {}
-    window.location.href = window.location.pathname + '?updated=true&t=' + Date.now();
-  };
+  const btnNow = document.getElementById('updateNowBtn');
+  if (btnNow) {
+    btnNow.onclick = async () => {
+      notification.remove();
+      btnNow.innerText = "Actualizando..."; btnNow.disabled = true;
+      try {
+        if (swRegistration && swRegistration.waiting) {
+          swRegistration.waiting.postMessage('SKIP_WAITING');
+        }
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (let reg of regs) await reg.unregister();
+        const keys = await caches.keys();
+        for (let key of keys) await caches.delete(key);
+      } catch(e) {}
+      window.location.href = window.location.pathname + '?updated=true&t=' + Date.now();
+    };
+  }
   
-  document.getElementById('updateLaterBtn').onclick = () => {
-    notification.remove();
-    State.updateAvailable = false;
-  };
+  const btnLater = document.getElementById('updateLaterBtn');
+  if (btnLater) {
+    btnLater.onclick = () => {
+      notification.remove();
+      State.updateAvailable = false;
+    };
+  }
 }
 
 function loadVersion() {
@@ -639,7 +647,7 @@ async function checkForUpdate(silent = false) {
 }
 
 /* ============================================================
-   TÉRMINOS Y PRIVACIDAD (CONTROL SEGURO)
+   TÉRMINOS Y PRIVACIDAD
    ============================================================ */
 function getAcceptedTermsVersion() {
   try { return parseInt(localStorage.getItem('baremos_terms_version')) || 0; }
@@ -658,7 +666,6 @@ function mostrarPopupTerminos() {
   const modal = $('#modalTerms');
   const content = $('#termsModalContent');
   if (!modal) {
-    console.error('CRÍTICO: No se encontró el modal de términos en el DOM.');
     continuarInicio();
     return;
   }
@@ -669,14 +676,14 @@ function mostrarPopupTerminos() {
 }
 
 /* ============================================================
-   MIGRACIÓN SEGURA PARA ESTRUCTURA HEREDADA
+   MIGRACIÓN Y NORMALIZACIÓN DE DATOS
    ============================================================ */
 function getSafeItems(j) {
   let safeItems = [];
   if (j.items && j.items.length > 0) {
-      safeItems = j.items;
+    safeItems = j.items;
   } else if (j.tareas && j.tareas.length > 0) {
-      j.tareas.forEach(t => { if (t.items) safeItems = safeItems.concat(t.items); });
+    j.tareas.forEach(t => { if (t.items) safeItems = safeItems.concat(t.items); });
   }
   return safeItems;
 }
@@ -697,8 +704,27 @@ function getNormalizedTareas(j) {
 }
 
 /* ============================================================
-   INICIALIZACIÓN (FLUJO ESTRICTO Y PROTEGIDO)
+   INICIALIZACIÓN (SPLASH PROTEGIDO CONTRA CUELGUES)
    ============================================================ */
+let initFinished = false;
+
+function safeHideSplash() {
+  if (initFinished) return;
+  initFinished = true;
+  const splash = $('.splash');
+  if (splash) splash.classList.add('hide');
+  
+  const acceptedVersion = getAcceptedTermsVersion();
+  if (acceptedVersion < CURRENT_TERMS_VERSION) {
+    mostrarPopupTerminos();
+  } else {
+    continuarInicio();
+  }
+}
+
+// Resguardo total: si algo se traba, a los 2.5s se quita el Splash forzosamente
+setTimeout(safeHideSplash, 2500);
+
 async function init() {
   try {
     await openDB();
@@ -710,30 +736,14 @@ async function init() {
     await loadUser();
   } catch(e) {
     console.error('[Init Error]', e);
-    toast('Error al cargar datos iniciales: ' + e.message, 'error');
+    toast('Iniciando en modo rescate: ' + e.message, 'warn');
   } finally {
-    // ELIMINACIÓN SEGURA DEL SPLASH ESTÉ COMO ESTÉ EL DOM
-    setTimeout(() => {
-      try {
-        const splash = $('.splash');
-        if (splash) splash.classList.add('hide');
-        
-        const acceptedVersion = getAcceptedTermsVersion();
-        if (acceptedVersion < CURRENT_TERMS_VERSION) {
-          mostrarPopupTerminos();
-        } else {
-          continuarInicio();
-        }
-      } catch(err) {
-        console.error('[Splash Fallback Error]', err);
-        continuarInicio(); 
-      }
-    }, 800);
+    setTimeout(safeHideSplash, 400);
   }
   
   try {
     await registerSW();
-    setTimeout(() => checkForUpdate(true), 3000);
+    setTimeout(() => checkForUpdate(true), 3500);
   } catch(e) {}
 }
 
@@ -747,10 +757,13 @@ async function continuarInicio() {
 }
 
 async function loadTheme() {
-  const c = await dbGet('config', 'theme');
-  State.theme = c?.value || 'light';
-  document.documentElement.setAttribute('data-theme', State.theme);
+  try {
+    const c = await dbGet('config', 'theme');
+    State.theme = c?.value || 'light';
+    document.documentElement.setAttribute('data-theme', State.theme);
+  } catch(e) {}
 }
+
 function toggleTheme() {
   State.theme = State.theme === 'light' ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', State.theme);
@@ -758,7 +771,6 @@ function toggleTheme() {
   toast(`Modo ${State.theme === 'light' ? 'claro' : 'oscuro'}`, 'success');
 }
 
-/* NORMALIZACIÓN SEGURA DE BAREMOS EN ARRANQUE */
 async function loadBaremo() {
   let d = [];
   try { d = await dbGetAll('baremo'); } catch(e) { console.warn(e); }
@@ -819,7 +831,7 @@ async function updateBaremoFromFile(file) {
     for (const i of norm) await dbPut('baremo', i);
     State.baremo = await dbGetAll('baremo');
     toast(`Baremo: ${norm.length} ítems`, 'success');
-  } catch(e) { toast('Error', 'error'); }
+  } catch(e) { toast('Error al cargar archivo de baremo', 'error'); }
 }
 
 async function loadUser() {
@@ -935,8 +947,6 @@ async function loadOrCreateJornada() {
   
   if (ab.length > 0) {
     State.jornada = ab[ab.length - 1];
-    
-    // Normalización al cargar base de datos
     if (!State.jornada.tareas) {
       if (State.jornada.items && State.jornada.items.length > 0) {
         State.jornada.tareas = [{
@@ -979,9 +989,9 @@ async function saveJornada() {
   
   let countItems = 0;
   if (State.jornada.tareas) {
-     State.jornada.tareas.forEach(t => {
-        if (t.items) countItems += t.items.reduce((sa, i) => sa + (i.cantidad || 0), 0);
-     });
+    State.jornada.tareas.forEach(t => {
+      if (t.items) countItems += t.items.reduce((sa, i) => sa + (i.cantidad || 0), 0);
+    });
   }
   State.jornada.cantidadItems = countItems;
   await dbPut('jornadas', State.jornada);
@@ -1005,7 +1015,7 @@ async function cerrarJornada() {
 }
 
 /* ============================================================
-   SETUP REGISTRO (CON SISTEMA DE TAREAS Y FINALIZACIÓN PROTEGIDA)
+   REGISTRO Y GESTIÓN DE TAREAS
    ============================================================ */
 function setupRegistro() {
   const input = $('#baremoInput');
@@ -1053,13 +1063,13 @@ function setupRegistro() {
     
     const up = v.toUpperCase();
     const m = State.baremo.filter(b => {
-        const cod = String(b.baremo || '').toUpperCase();
-        const desc = String(b.descripcion || '').toUpperCase();
-        return cod.includes(up) || desc.includes(up);
+      const cod = String(b.baremo || '').toUpperCase();
+      const desc = String(b.descripcion || '').toUpperCase();
+      return cod.includes(up) || desc.includes(up);
     }).sort((a, b) => {
-        const codA = String(a.baremo || '').toUpperCase();
-        const codB = String(b.baremo || '').toUpperCase();
-        return (codA.startsWith(up) ? 0 : 1) - (codB.startsWith(up) ? 0 : 1);
+      const codA = String(a.baremo || '').toUpperCase();
+      const codB = String(b.baremo || '').toUpperCase();
+      return (codA.startsWith(up) ? 0 : 1) - (codB.startsWith(up) ? 0 : 1);
     });
     
     const ex = State.baremo.find(b => String(b.baremo || '').toUpperCase() === up);
@@ -1119,22 +1129,17 @@ function setupRegistro() {
   
   qtyInput.addEventListener('keydown', e => { if (e.key === 'Enter') agregar(); });
 
-  // IMPLEMENTACIÓN BLINDADA: Finalizar -> Validar -> Clonar -> Guardar BD -> Renderizar
   const btnFinalizar = document.getElementById('btnFinalizarTarea');
   if (btnFinalizar) {
     btnFinalizar.onclick = async (e) => {
       e.preventDefault();
-      
       try {
         if (!State.currentTarea || !State.currentTarea.items || State.currentTarea.items.length === 0) {
           toast('La tarea no tiene baremos agregados', 'warn');
           return;
         }
         
-        // Clonar la jornada existente para recuperar ante un error físico de base de datos
         const backupTareas = State.jornada.tareas ? [...State.jornada.tareas] : [];
-        
-        // Empaquetado completo (Deep Copy) para desvincular de la memoria temporal
         const nuevaTareaConfirmada = {
           id: Date.now() + Math.random(),
           fecha: hoy(),
@@ -1148,23 +1153,20 @@ function setupRegistro() {
         if (!State.jornada.tareas) State.jornada.tareas = [];
         State.jornada.tareas.push(nuevaTareaConfirmada);
         
-        // Frena la ejecución hasta garantizar persistencia en IndexedDB
         await saveJornada(); 
-        
-        // Limpieza y Renderizado Instantáneo (Sin recargar)
         State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 };
         renderAll(); 
-        
         toast('Tarea finalizada exitosamente', 'success');
-        
       } catch (error) {
-        // En caso de fallo crítico de base de datos, revertimos para que el usuario no pierda su trabajo en pantalla
         if (State.jornada && backupTareas) State.jornada.tareas = backupTareas;
         console.error('[Error de Almacenamiento Tarea]', error);
         toast('Error al guardar en base de datos. Por favor, reintenta.', 'error');
       }
     };
   }
+
+  const btnCerrar = $('#btnCerrarJornada');
+  if (btnCerrar) btnCerrar.onclick = () => cerrarJornada();
 }
 
 function renderItems() {
@@ -1172,7 +1174,6 @@ function renderItems() {
   const card = $('#currentTaskCard');
   if (!tb || !card) return;
   
-  // RENDERIZAR BAREMOS DE LA TAREA ACTIVA
   if (!State.currentTarea || State.currentTarea.items.length === 0) {
     card.style.display = 'none';
     tb.innerHTML = '';
@@ -1204,7 +1205,6 @@ function renderItems() {
     });
   }
 
-  // RENDERIZAR TAREAS FINALIZADAS HOY (ACORDEÓN MULTINIVEL)
   const tl = $('#tareasFinalizadasList');
   if (!tl) return;
   if (!State.jornada || !State.jornada.tareas || State.jornada.tareas.length === 0) {
@@ -1289,12 +1289,10 @@ function renderTotales() {
   const totalTareas = (State.jornada.tareas || []).length;
   let totalItemsFinalizados = 0;
   (State.jornada.tareas || []).forEach(t => {
-     if (t.items) totalItemsFinalizados += t.items.reduce((s, i) => s + (i.cantidad || 0), 0);
+    if (t.items) totalItemsFinalizados += t.items.reduce((s, i) => s + (i.cantidad || 0), 0);
   });
   const totalItemsActuales = (State.currentTarea && State.currentTarea.items) ? State.currentTarea.items.reduce((a, i) => a + (i.cantidad || 0), 0) : 0;
-  
   const sumFinalizadas = (State.jornada.tareas || []).reduce((a, t) => a + (t.total || 0), 0);
-  
   const t = sumFinalizadas;
   
   const tr = $('#totalRegs'); if (tr) tr.textContent = fmtNum(totalTareas);
@@ -1365,12 +1363,22 @@ function showApp() {
 
 function renderAll() { renderItems(); renderTotales(); }
 
+/* ============================================================
+   HISTORIAL Y EXPORTACIONES
+   ============================================================ */
 async function renderHistorial() {
   const all = await dbGetAll('jornadas');
   let f = all.filter(j => j.legajo === State.user.legajo);
   if (State.histFilter === 'hoy') f = f.filter(j => j.fecha === hoy());
   else if (State.histFilter === 'mes') f = f.filter(j => j.fecha.startsWith(mesActual()));
   else if (State.histFilter === 'mesAnterior') f = f.filter(j => j.fecha.startsWith(mesAnterior()));
+  
+  const searchInput = $('#histSearch');
+  if (searchInput && searchInput.value.trim()) {
+    const q = searchInput.value.trim().toLowerCase();
+    f = f.filter(j => (j.fecha && j.fecha.includes(q)) || (j.usuario && j.usuario.toLowerCase().includes(q)));
+  }
+
   f.sort((a, b) => b.fecha.localeCompare(a.fecha));
   
   const lst = $('#historialList');
@@ -1438,7 +1446,7 @@ async function openJornada(id) {
       const labelTarea = isLegacy ? 'REGISTROS ANTERIORES' : `TAREA ${String(idx+1).padStart(3,'0')}`;
       html += `<tr style="background:var(--surface-2)"><td colspan="6" style="font-weight:800; color:var(--primary); font-size:11px;">${labelTarea}</td></tr>`;
       (t.items || []).forEach((it, i) => {
-         html += `<tr><td class="hide-mob">${i + 1}</td><td><strong>${it.codigo}</strong></td><td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td><td class="hide-mob">${fmt(it.precio)}</td><td>${it.cantidad}</td><td>${fmt(it.subtotal)}</td></tr>`;
+        html += `<tr><td class="hide-mob">${i + 1}</td><td><strong>${it.codigo}</strong></td><td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td><td class="hide-mob">${fmt(it.precio)}</td><td>${it.cantidad}</td><td>${fmt(it.subtotal)}</td></tr>`;
       });
       html += `<tr><td colspan="6" style="text-align:right; font-weight:800; font-size:12px; border-bottom: 2px solid var(--border);">Total de la Tarea: ${fmt(t.total)}</td></tr>`;
     });
@@ -1580,9 +1588,9 @@ async function exportarMultiplesPDF(ids, nom) {
   }
 
   if (currentY > 260) {
-     doc.addPage();
-     drawElegantHeader(doc, "BAREMOS", `Reporte de Producción: ${mesLabel} (Final)`, State.user.nombre, `Legajo: ${State.user.legajo} | Zona: ${State.user.zona || '-'}`);
-     currentY = 45;
+    doc.addPage();
+    drawElegantHeader(doc, "BAREMOS", `Reporte de Producción: ${mesLabel} (Final)`, State.user.nombre, `Legajo: ${State.user.legajo} | Zona: ${State.user.zona || '-'}`);
+    currentY = 45;
   }
 
   doc.setFillColor(11, 61, 145);
@@ -1613,16 +1621,16 @@ async function exportarMesExcel() {
     const detalle = [];
     const tareas = getNormalizedTareas(x);
     tareas.forEach((t, idx) => {
-       const isLegacy = t.referencia === 'Registros Anteriores';
-       const fRef = isLegacy ? 'REGISTROS ANTERIORES' : `TAREA ${String(idx + 1).padStart(3, '0')}`;
-       detalle.push({ '#': fRef, Código: '', Subtotal: t.total });
-       (t.items || []).forEach((it, i) => {
-         detalle.push({
-           '#': i + 1, Código: it.codigo, Descripción: it.descripcion,
-           Precio: it.precio, Cantidad: it.cantidad, Subtotal: it.subtotal
-         });
-       });
-       detalle.push({});
+      const isLegacy = t.referencia === 'Registros Anteriores';
+      const fRef = isLegacy ? 'REGISTROS ANTERIORES' : `TAREA ${String(idx + 1).padStart(3, '0')}`;
+      detalle.push({ '#': fRef, Código: '', Subtotal: t.total });
+      (t.items || []).forEach((it, i) => {
+        detalle.push({
+          '#': i + 1, Código: it.codigo, Descripción: it.descripcion,
+          Precio: it.precio, Cantidad: it.cantidad, Subtotal: it.subtotal
+        });
+      });
+      detalle.push({});
     });
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(detalle), `Dia_${x.fecha}`.substring(0, 31));
   });
@@ -1630,6 +1638,9 @@ async function exportarMesExcel() {
   toast('Excel generado', 'success');
 }
 
+/* ============================================================
+   DASHBOARD & GRÁFICOS
+   ============================================================ */
 async function renderDashboard() {
   const leg = State.user.legajo;
   const mes = mesActual();
@@ -1724,15 +1735,11 @@ async function renderDashboard() {
     tacCard.className = 'total-acumulado-card ' + cfgMes.cls;
     if(overlay) overlay.classList.remove('show');
 
-    if (tot <= 1500000) {
-      // red
-    } else if (tot <= 2000000) {
-      // yellow
-    } else if (tot <= 2500000) {
+    if (tot > 2000000 && tot <= 2500000) {
       if(overlay){ overlay.textContent = '👏 ¡Sigue así!'; overlay.classList.add('show'); }
-    } else if (tot < 3000000) {
+    } else if (tot > 2500000 && tot < 3000000) {
       if(overlay){ overlay.textContent = '🚀 Excelente rendimiento'; overlay.classList.add('show'); }
-    } else {
+    } else if (tot >= 3000000) {
       if(overlay){ overlay.textContent = '🏆 ¡Sos Imparable!'; overlay.classList.add('show'); }
       if (!State.metaAlcanzada) {
         lanzarConfeti();
@@ -1772,6 +1779,97 @@ async function renderDashboard() {
   renderCharts(todas);
 }
 
+function renderCharts(todas) {
+  if (!window.Chart) return;
+  
+  const ctxD = $('#chartDiario')?.getContext('2d');
+  const ctxM = $('#chartMensual')?.getContext('2d');
+  const ctxP = $('#chartPie')?.getContext('2d');
+
+  if (State.chartInstances.diario) State.chartInstances.diario.destroy();
+  if (State.chartInstances.mensual) State.chartInstances.mensual.destroy();
+  if (State.chartInstances.pie) State.chartInstances.pie.destroy();
+
+  // Gráfico Diario (Últimos 7 días)
+  if (ctxD) {
+    const ult7 = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      ult7.push(d.toISOString().slice(0, 10));
+    }
+    const dataD = ult7.map(f => {
+      const match = todas.filter(j => j.fecha === f);
+      return match.reduce((a, j) => a + (j.total || 0), 0);
+    });
+    
+    const t7El = $('#total7Dias');
+    if (t7El) t7El.textContent = `Total: ${fmt(dataD.reduce((a, b) => a + b, 0))}`;
+
+    State.chartInstances.diario = new Chart(ctxD, {
+      type: 'bar',
+      data: {
+        labels: ult7.map(f => fechaCorta(f)),
+        datasets: [{
+          label: 'Producción',
+          data: dataD,
+          backgroundColor: '#0b3d91',
+          borderRadius: 6
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+  }
+
+  // Gráfico Mensual
+  if (ctxM) {
+    const meses = {};
+    todas.forEach(j => {
+      const m = j.fecha.slice(0, 7);
+      meses[m] = (meses[m] || 0) + (j.total || 0);
+    });
+    const mKeys = Object.keys(meses).sort().slice(-6);
+    State.chartInstances.mensual = new Chart(ctxM, {
+      type: 'line',
+      data: {
+        labels: mKeys.map(m => nombreMes(m)),
+        datasets: [{
+          label: 'Producción Mes',
+          data: mKeys.map(m => meses[m]),
+          borderColor: '#22a06b',
+          backgroundColor: 'rgba(34, 160, 107, 0.15)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  // Gráfico Top 5 Baremos
+  if (ctxP) {
+    const counts = {};
+    todas.forEach(j => {
+      getSafeItems(j).forEach(i => { counts[i.codigo] = (counts[i.codigo] || 0) + (i.cantidad || 1); });
+    });
+    const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    State.chartInstances.pie = new Chart(ctxP, {
+      type: 'doughnut',
+      data: {
+        labels: top.map(t => t[0]),
+        datasets: [{
+          data: top.map(t => t[1]),
+          backgroundColor: ['#0b3d91', '#2563c9', '#22a06b', '#e0a800', '#d93025']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+}
+
+/* ============================================================
+   COMBUSTIBLE
+   ============================================================ */
 function setupCombustible() {
   const f = $('#formComb');
   if (!f) return;
@@ -1811,6 +1909,9 @@ async function renderCombustible() {
   if (t) t.textContent = fmt(all.filter(c => c.mes === mesActual()).reduce((a, c) => a + c.monto, 0));
 }
 
+/* ============================================================
+   QUINCENAS
+   ============================================================ */
 async function renderQuincenas() {
   const leg = State.user.legajo;
   const mes = mesActual();
@@ -1840,9 +1941,9 @@ async function renderQuincenas() {
   const aQ2 = $('#alertaQ2');
   const fQ1f = $('#formQ1');
   const fQ2f = $('#formQ2');
-  const btnQ2 = $('#btnQ2');
   const tQ1 = $('#totalQ1');
   const tQ2 = $('#totalQ2');
+  
   if (q1 && q1.bloqueada) {
     bQ1.classList.add('bloqueada');
     bQ1.classList.remove('deshabilitada');
@@ -1866,9 +1967,394 @@ async function renderQuincenas() {
     $('#q1o1').disabled = false;
     $('#q1o2').disabled = false;
   }
+
   if (q2 && q2.bloqueada) {
     bQ2.classList.add('bloqueada');
     bQ2.classList.remove('deshabilitada');
     $('#badgeQ2').className = 'qb-badge bloqueada';
     $('#badgeQ2').textContent = '🔒 BLOQUEADA';
-    aQ2.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q2.fechaRegistro)}. No editable.</span>Solo soy una IA basada en texto, por lo que no puedo ayudarte con eso.
+    aQ2.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q2.fechaRegistro)}. No editable.</span>`;
+    fQ2f.style.display = 'none';
+    tQ2.style.display = 'flex';
+    $('#totalQ2Value').textContent = fmt(q2.total);
+    $('#q2o1').disabled = true;
+    $('#q2o2').disabled = true;
+    $('#q2o1').value = q2.oficial1;
+    $('#q2o2').value = q2.oficial2;
+  } else {
+    bQ2.classList.remove('bloqueada');
+    if (q1 && q1.bloqueada) {
+      bQ2.classList.remove('deshabilitada');
+      $('#badgeQ2').className = 'qb-badge pendiente';
+      $('#badgeQ2').textContent = 'PENDIENTE';
+      aQ2.innerHTML = `<span>⚠️</span><span>Una vez registrada quedará <strong>bloqueada permanentemente</strong>.</span>`;
+      fQ2f.style.display = 'block';
+      tQ2.style.display = 'none';
+      $('#q2o1').disabled = false;
+      $('#q2o2').disabled = false;
+    } else {
+      bQ2.classList.add('deshabilitada');
+      $('#badgeQ2').className = 'qb-badge deshabilitada';
+      $('#badgeQ2').textContent = 'BLOQUEADA';
+      aQ2.innerHTML = `<span>⏳</span><span>Se habilita al registrar la 1ra quincena.</span>`;
+      fQ2f.style.display = 'block';
+      tQ2.style.display = 'none';
+      $('#q2o1').disabled = true;
+      $('#q2o2').disabled = true;
+    }
+  }
+
+  const lst = $('#quiList');
+  if (lst) {
+    const todasQ = (await dbGetAll('quincenas')).filter(q => q.legajo === leg).sort((a, b) => b.mes.localeCompare(a.mes));
+    if (!todasQ.length) {
+      lst.innerHTML = '<div class="empty"><div class="ico">💰</div><p>Sin quincenas registradas</p></div>';
+    } else {
+      lst.innerHTML = todasQ.map(q => `
+        <div class="registro-item">
+          <div class="ri-left">
+            <div class="pat">${q.tipo === 1 ? '1ra' : '2da'} Quincena · ${nombreMes(q.mes)}</div>
+            <div class="fecha">Oficial 1: ${fmt(q.oficial1)} | Oficial 2: ${fmt(q.oficial2)}</div>
+          </div>
+          <div class="ri-right">
+            <div class="monto">${fmt(q.total)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function setupQuincenas() {
+  const f1 = $('#formQ1');
+  const f2 = $('#formQ2');
+  
+  if (f1) {
+    f1.onsubmit = async (e) => {
+      e.preventDefault();
+      const o1 = parseFloat($('#q1o1').value) || 0;
+      const o2 = parseFloat($('#q1o2').value) || 0;
+      if (!await confirmDialog('¿Confirmar registro de la 1ra Quincena? No podrá editarse.')) return;
+      
+      const mes = mesActual();
+      await dbAdd('quincenas', {
+        tipo: 1,
+        mes,
+        legajo: State.user.legajo,
+        oficial1: o1,
+        oficial2: o2,
+        total: o1 + o2,
+        bloqueada: true,
+        fechaRegistro: hoy()
+      });
+      toast('1ra Quincena registrada', 'success');
+      renderQuincenas();
+      renderDashboard();
+    };
+  }
+
+  if (f2) {
+    f2.onsubmit = async (e) => {
+      e.preventDefault();
+      const o1 = parseFloat($('#q2o1').value) || 0;
+      const o2 = parseFloat($('#q2o2').value) || 0;
+      if (!await confirmDialog('¿Confirmar registro de la 2da Quincena? No podrá editarse.')) return;
+      
+      const mes = mesQuincenaActual();
+      await dbAdd('quincenas', {
+        tipo: 2,
+        mes,
+        legajo: State.user.legajo,
+        oficial1: o1,
+        oficial2: o2,
+        total: o1 + o2,
+        bloqueada: true,
+        fechaRegistro: hoy()
+      });
+      toast('2da Quincena registrada', 'success');
+      renderQuincenas();
+      renderDashboard();
+    };
+  }
+}
+
+/* ============================================================
+   AJUSTES
+   ============================================================ */
+function renderAjustes() {
+  const c = $('#ajustesList');
+  if (!c) return;
+  c.innerHTML = `
+    <div class="ajuste-item" id="ajItemUsers"><div class="aj-ico">👥</div><div class="aj-text"><div class="aj-title">Gestionar Usuarios</div><div class="aj-desc">Cambiar o eliminar usuarios</div></div><div class="aj-arrow">›</div></div>
+    <div class="ajuste-item" id="ajItemBaremo"><div class="aj-ico">📋</div><div class="aj-text"><div class="aj-title">Actualizar Baremo</div><div class="aj-desc">Subir archivo Excel o JSON</div></div><div class="aj-arrow">›</div></div>
+    <div class="ajuste-item" id="ajItemExport"><div class="aj-ico">📤</div><div class="aj-text"><div class="aj-title">Copia de Seguridad</div><div class="aj-desc">Exportar base de datos local</div></div><div class="aj-arrow">›</div></div>
+    <div class="ajuste-item" id="ajItemImport"><div class="aj-ico">📥</div><div class="aj-text"><div class="aj-title">Restaurar Datos</div><div class="aj-desc">Importar archivo de seguridad</div></div><div class="aj-arrow">›</div></div>
+    <div class="ajuste-item" id="ajItemUpdate"><div class="aj-ico">🔄</div><div class="aj-text"><div class="aj-title">Buscar Actualizaciones</div><div class="aj-desc">Versión ${APP_VERSION}</div></div><div class="aj-arrow">›</div></div>
+    <div class="ajuste-item admin" id="ajItemAdmin"><div class="aj-ico">🔐</div><div class="aj-text"><div class="aj-title">Panel de Administración</div><div class="aj-desc">Reportes consolidados y métricas</div></div><div class="aj-arrow">›</div></div>
+    <div class="credits">
+      <div class="credits-emoji">⚡</div>
+      <div class="credits-label">Desarrollado para Contratistas</div>
+      <div class="credits-author">AKAPANCH0</div>
+      <div class="credits-divider"></div>
+      <div class="app-version">v${APP_VERSION}</div>
+    </div>
+  `;
+
+  $('#ajItemUsers').onclick = () => switchUser();
+  $('#ajItemBaremo').onclick = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.json,.xlsx,.xls';
+    inp.onchange = e => { if (e.target.files[0]) updateBaremoFromFile(e.target.files[0]); };
+    inp.click();
+  };
+  $('#ajItemExport').onclick = async () => {
+    const d = await exportAllDB();
+    const blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `baremos_backup_${hoy()}.json`;
+    a.click();
+    toast('Copia de seguridad descargada', 'success');
+  };
+  $('#ajItemImport').onclick = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.json';
+    inp.onchange = async e => {
+      if (e.target.files[0]) {
+        try {
+          const content = JSON.parse(await e.target.files[0].text());
+          await importAllDB(content);
+          toast('Datos restaurados con éxito', 'success');
+          location.reload();
+        } catch(err) { toast('Archivo inválido', 'error'); }
+      }
+    };
+    inp.click();
+  };
+  $('#ajItemUpdate').onclick = () => checkForUpdate(false);
+  $('#ajItemAdmin').onclick = () => showView('Admin');
+}
+
+/* ============================================================
+   ADMINISTRACIÓN Y REPORTES
+   ============================================================ */
+function setupAdmin() {
+  const btnLogin = $('#btnAdminLogin');
+  if (btnLogin) {
+    btnLogin.onclick = async () => {
+      const pass = $('#adminPassword')?.value || '';
+      const hash = await sha256(pass);
+      const target = await getAdminPasswordHash();
+      if (hash === target) {
+        State.adminLoggedIn = true;
+        $('#adminLogin').style.display = 'none';
+        $('#adminPanel').style.display = 'block';
+        toast('Acceso Admin concedido', 'success');
+        renderAdmin();
+      } else {
+        toast('Contraseña incorrecta', 'error');
+      }
+    };
+  }
+
+  const btnLogout = $('#btnAdminLogout');
+  if (btnLogout) {
+    btnLogout.onclick = () => {
+      State.adminLoggedIn = false;
+      $('#adminLogin').style.display = 'block';
+      $('#adminPanel').style.display = 'none';
+      if ($('#adminPassword')) $('#adminPassword').value = '';
+      showView('Ajustes');
+    };
+  }
+
+  const typeBtns = $$('#adminReportType button');
+  typeBtns.forEach(btn => {
+    btn.onclick = () => {
+      typeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      State.adminReportType = btn.dataset.type;
+      updateAdminReport();
+    };
+  });
+
+  const uSelect = $('#adminUsuario');
+  const dDate = $('#adminFecha');
+  if (uSelect) uSelect.onchange = () => updateAdminReport();
+  if (dDate) {
+    dDate.value = hoy();
+    dDate.onchange = () => updateAdminReport();
+  }
+
+  const btnPreview = $('#btnAdminPreview');
+  if (btnPreview) btnPreview.onclick = () => updateAdminReport(true);
+
+  const btnPDF = $('#btnAdminPDF');
+  if (btnPDF) btnPDF.onclick = () => exportAdminPDF();
+
+  const btnExcel = $('#btnAdminExcel');
+  if (btnExcel) btnExcel.onclick = () => exportAdminExcel();
+}
+
+async function renderAdmin() {
+  if (!State.adminLoggedIn) {
+    $('#adminLogin').style.display = 'block';
+    $('#adminPanel').style.display = 'none';
+    return;
+  }
+  
+  const users = await dbGetAll('usuarios');
+  const s = $('#adminUsuario');
+  if (s) {
+    s.innerHTML = '<option value="todos">👥 Todos los usuarios</option>' + users.map(u => `<option value="${u.legajo}">${u.nombre} (${u.legajo})</option>`).join('');
+  }
+  updateAdminReport();
+}
+
+async function getAdminFilteredJornadas() {
+  const u = $('#adminUsuario')?.value || 'todos';
+  const f = $('#adminFecha')?.value || hoy();
+  const all = await dbGetAll('jornadas');
+  
+  return all.filter(j => {
+    if (u !== 'todos' && j.legajo !== u) return false;
+    if (State.adminReportType === 'diario') return j.fecha === f;
+    if (State.adminReportType === 'mensual') return j.fecha.startsWith(f.slice(0, 7));
+    if (State.adminReportType === 'semanal') {
+      const sem = obtenerSemanaDeFecha(f);
+      return j.fecha >= sem.lunes && j.fecha <= sem.domingo;
+    }
+    return true;
+  });
+}
+
+async function updateAdminReport(showToast = false) {
+  const jornadas = await getAdminFilteredJornadas();
+  const sumDiv = $('#adminSummary');
+  const sumCont = $('#adminSummaryContent');
+  if (!sumDiv || !sumCont) return;
+
+  const total = jornadas.reduce((a, j) => a + (j.total || 0), 0);
+  let itemsCount = 0;
+  jornadas.forEach(j => { itemsCount += getSafeItems(j).length; });
+
+  sumCont.innerHTML = `
+    <div class="as-line"><span>Jornadas:</span><strong>${jornadas.length}</strong></div>
+    <div class="as-line"><span>Total ítems:</span><strong>${itemsCount}</strong></div>
+    <div class="as-line total"><span>Total Recaudado:</span><strong style="color:var(--primary)">${fmt(total)}</strong></div>
+  `;
+  sumDiv.style.display = 'block';
+  if (showToast) toast('Resumen actualizado', 'info');
+}
+
+async function exportAdminPDF() {
+  const j = await getAdminFilteredJornadas();
+  if (!j.length) { toast('Sin datos para exportar', 'warn'); return; }
+  await exportarMultiplesPDF(j.map(x => x.id), `Admin_${State.adminReportType}`);
+}
+
+async function exportAdminExcel() {
+  if (!window.XLSX) return;
+  const j = await getAdminFilteredJornadas();
+  if (!j.length) { toast('Sin datos', 'warn'); return; }
+  const wb = XLSX.utils.book_new();
+  const res = j.map(x => ({ Fecha: fechaCorta(x.fecha), Usuario: x.usuario, Legajo: x.legajo, Total: x.total || 0 }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(res), 'Reporte_Admin');
+  XLSX.writeFile(wb, `Reporte_Admin_${hoy()}.xlsx`);
+  toast('Excel Admin generado', 'success');
+}
+
+/* ============================================================
+   EVENT LISTENERS GLOBALES
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  setupRegistro();
+  setupCombustible();
+  setupQuincenas();
+  setupMapaZona();
+  setupAdmin();
+
+  // Navegación de Solapas
+  $$('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => showView(btn.dataset.view));
+  });
+
+  // Botón Cambiar Tema
+  const btnTheme = $('#btnTheme');
+  if (btnTheme) btnTheme.onclick = toggleTheme;
+
+  // Botón Switch Usuario Header
+  const btnSwitchUser = $('#btnSwitchUser');
+  if (btnSwitchUser) btnSwitchUser.onclick = () => { if (State.user) switchUser(); else showLogin(); };
+
+  // Botón Cambiar Zona Header
+  const btnChangeZona = $('#btnChangeZona');
+  if (btnChangeZona) {
+    btnChangeZona.onclick = () => {
+      const m = $('#modalChangeZona');
+      const s = $('#newZonaSelect');
+      if (m && s && State.user) {
+        s.value = State.user.zona || '';
+        m.classList.add('show');
+      }
+    };
+  }
+
+  // Modal Cambiar Zona Handlers
+  const formChangeZona = $('#formChangeZona');
+  if (formChangeZona) {
+    formChangeZona.onsubmit = async (e) => {
+      e.preventDefault();
+      const z = $('#newZonaSelect').value;
+      if (z && State.user) {
+        State.user.zona = z;
+        await dbPut('usuarios', State.user);
+        if (State.jornada) { State.jornada.zona = z; await saveJornada(); }
+        $('#modalChangeZona').classList.remove('show');
+        showApp();
+        toast(`Zona cambiada a: ${z}`, 'success');
+      }
+    };
+  }
+  const cancelChangeZona = $('#cancelChangeZona');
+  if (cancelChangeZona) cancelChangeZona.onclick = () => $('#modalChangeZona').classList.remove('show');
+
+  // Menú de Ayuda
+  const btnHelp = $('#btnHelp');
+  if (btnHelp) btnHelp.onclick = () => showView('Ayuda');
+  const btnVolverAyuda = $('#btnVolverAyuda');
+  if (btnVolverAyuda) btnVolverAyuda.onclick = () => showView('Inicio');
+
+  // Historial Filtros y Acciones
+  $$('.hist-filtro-btn').forEach(btn => {
+    btn.onclick = () => setHistFilter(btn.dataset.filter);
+  });
+  const histSearch = $('#histSearch');
+  if (histSearch) histSearch.oninput = () => renderHistorial();
+  
+  const habClear = $('#habClear');
+  if (habClear) habClear.onclick = () => { State.histSelected.clear(); renderHistorial(); };
+  const habExportSel = $('#habExportSelected');
+  if (habExportSel) habExportSel.onclick = exportarSeleccionadasPDF;
+  const habExportMes = $('#habExportMonth');
+  if (habExportMes) habExportMes.onclick = exportarMesCompletoPDF;
+  const habExportXls = $('#habExportExcel');
+  if (habExportXls) habExportXls.onclick = exportarMesExcel;
+
+  // Modales Cierre
+  const mjClose = $('#mjClose');
+  if (mjClose) mjClose.onclick = () => $('#modalJornada').classList.remove('show');
+  const btnInfoClose = $('#btnInfoClose');
+  if (btnInfoClose) btnInfoClose.onclick = () => $('#modalInfo').classList.remove('show');
+
+  // Términos Aceptación
+  const btnAcceptTerms = $('#btnAcceptTerms');
+  if (btnAcceptTerms) {
+    btnAcceptTerms.onclick = () => {
+      setAcceptedTermsVersion();
+      $('#modalTerms').classList.remove('show');
+      continuarInicio();
+    };
+  }
+});
