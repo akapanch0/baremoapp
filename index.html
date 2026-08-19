@@ -1,3 +1,6 @@
+<!-- ============================================================
+     ARCHIVO 4: index.html (COMPLETO)
+     ============================================================ -->
 <!DOCTYPE html>
 <html lang="es-AR">
 <head>
@@ -10,11 +13,11 @@
 <meta name="apple-mobile-web-app-title" content="BAREMOS">
 <meta name="application-name" content="BAREMOS">
 <title>BAREMOS</title>
-<link rel="manifest" href="manifest.json?v=5.8.33">
-<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.33">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.33">
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.33">
-<link rel="stylesheet" href="styles.css?v=5.8.33">
+<link rel="manifest" href="manifest.json?v=5.8.34">
+<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.34">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.34">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.34">
+<link rel="stylesheet" href="styles.css?v=5.8.34">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.6.0/dist/jspdf.plugin.autotable.min.js"></script>
@@ -112,176 +115,31 @@
   <section class="view" id="viewAyuda">
     <div class="card" style="margin-top:20px; padding: 20px;">
       <button class="btn btn-ghost" id="btnVolverAyuda" style="margin-bottom: 16px;">⬅ Volver</button>
-      
       <h1 style="font-size:22px; font-weight:800; color:var(--primary); margin-bottom:16px;">Centro de Ayuda BAREMOS</h1>
-      
       <div class="ayuda-menu-links">
         <a href="#ayuda-1">¿Qué es BAREMOS?</a>
         <a href="#ayuda-2">Cómo funciona la app</a>
         <a href="#ayuda-3">Guía para contratistas</a>
         <a href="#ayuda-4">Preguntas frecuentes (FAQ)</a>
-        <a href="#ayuda-5">Ejemplos de baremos</a>
-        <a href="#ayuda-6">Normativas y referencias</a>
         <a href="#ayuda-7">Política de privacidad</a>
         <a href="#ayuda-8">Términos y condiciones</a>
-        <a href="#ayuda-9">Aviso legal</a>
         <a href="#ayuda-10">Contacto</a>
-        <a href="#ayuda-11">Sobre nosotros</a>
       </div>
-
-      <article class="help-article" itemscope itemtype="http://schema.org/FAQPage">
-        
+      <article class="help-article">
         <h2 id="ayuda-1">¿Qué es BAREMOS?</h2>
         <p>BAREMOS es una aplicación diseñada para contratistas y cuadrillas que trabajan en tareas operativas, eléctricas y de mantenimiento.</p>
-        <p>Permite registrar trabajos realizados, calcular totales, organizar jornadas y llevar un control claro de las actividades diarias.</p>
-        
-        <h3>Objetivos principales</h3>
-        <ul>
-          <li>Registrar trabajos de forma rápida y precisa.</li>
-          <li>Calcular subtotales y totales automáticamente.</li>
-          <li>Mantener un historial completo de jornadas.</li>
-          <li>Organizar información de manera clara y accesible.</li>
-          <li>Facilitar la administración de quincenas y combustibles.</li>
-        </ul>
-
         <h2 id="ayuda-2">Cómo funciona la app</h2>
-        <p>BAREMOS está estructurada en módulos simples y directos:</p>
-        
-        <h3>Registro</h3>
-        <p>Permite cargar trabajos realizados durante la jornada.<br>Incluye:</p>
-        <ul>
-          <li>Código del trabajo</li>
-          <li>Descripción</li>
-          <li>Precio</li>
-          <li>Cantidad</li>
-          <li>Subtotal automático</li>
-        </ul>
-
-        <h3>Historial</h3>
-        <p>Muestra todas las jornadas anteriores, con detalles de:</p>
-        <ul>
-          <li>Fecha</li>
-          <li>Trabajos realizados</li>
-          <li>Totales</li>
-          <li>Observaciones</li>
-        </ul>
-
-        <h3>Dashboard</h3>
-        <p>Panel visual con:</p>
-        <ul>
-          <li>Totales del día</li>
-          <li>Cantidad de ítems</li>
-          <li>Registros cargados</li>
-          <li>Indicadores de productividad</li>
-        </ul>
-
-        <h3>Combustibles</h3>
-        <p>Sección para registrar:</p>
-        <ul>
-          <li>Cargas de combustible</li>
-          <li>Fechas</li>
-          <li>Montos</li>
-          <li>Observaciones</li>
-        </ul>
-
-        <h3>Quincenas</h3>
-        <p>Organiza:</p>
-        <ul>
-          <li>Totales quincenales</li>
-          <li>Jornadas incluidas</li>
-          <li>Resúmenes para liquidación</li>
-        </ul>
-
-        <h3>Ajustes</h3>
-        <p>Incluye:</p>
-        <ul>
-          <li>Datos del usuario</li>
-          <li>Preferencias</li>
-          <li>Información de contacto</li>
-        </ul>
-
+        <p>Permite registrar trabajos realizados, calcular totales, organizar jornadas y llevar un control claro de las actividades diarias.</p>
         <h2 id="ayuda-3">Guía para contratistas</h2>
-        <h3>Antes de comenzar la jornada</h3>
-        <ul>
-          <li>Verificá tu ubicación.</li>
-          <li>Revisá si tenés trabajos pendientes.</li>
-          <li>Prepará los códigos de los trabajos más frecuentes.</li>
-        </ul>
-        
-        <h3>Durante la jornada</h3>
-        <ul>
-          <li>Cargá cada trabajo apenas lo completes.</li>
-          <li>Usá la búsqueda por código para agilizar.</li>
-          <li>Verificá subtotales y totales.</li>
-        </ul>
-
-        <h3>Al finalizar</h3>
-        <ul>
-          <li>Cerrá la jornada desde el botón correspondiente.</li>
-          <li>Revisá el total del día.</li>
-          <li>Confirmá que todos los trabajos estén cargados.</li>
-        </ul>
-
-        <h3>Buenas prácticas</h3>
-        <ul>
-          <li>No dejes trabajos sin registrar.</li>
-          <li>Revisá los precios actualizados.</li>
-          <li>Usá el historial para evitar duplicados.</li>
-          <li>Mantené tus datos personales actualizados.</li>
-        </ul>
-
+        <p>Cargá cada trabajo apenas lo completes, usá la búsqueda por código y cerrá la jornada al finalizar.</p>
         <h2 id="ayuda-4">Preguntas frecuentes (FAQ)</h2>
-        <h3>¿Necesito conexión a internet?</h3>
-        <p>La app funciona online. Algunas funciones pueden requerir conexión para sincronizar datos.</p>
-        
-        <h3>¿Puedo editar un trabajo cargado?</h3>
-        <p>Sí, podés eliminarlo y volver a cargarlo con los valores correctos.</p>
-
-        <h3>¿Cómo se calculan los totales?</h3>
-        <p>Cada ítem se multiplica por su cantidad y se suma automáticamente al total del día.</p>
-
-        <h3>¿Qué pasa si cierro la jornada por error?</h3>
-        <p>Podés revisar el historial y verificar los datos. Si necesitás reabrirla, contactá al soporte.</p>
-
-        <h3>¿Puedo usar la app en varios dispositivos?</h3>
-        <p>Sí, siempre que uses tu mismo usuario.</p>
-
-        <h3>¿La app guarda mis datos?</h3>
-        <p>Sí, tus datos se almacenan de forma segura según las políticas de privacidad.</p>
-
-        <h2 id="ayuda-5">Ejemplos de baremos</h2>
-        <h3>Tendido LAPE ≤ 3 x 95/50 mm²</h3>
-        <p><strong>Código:</strong> M120802<br>
-        <strong>Precio:</strong> $494<br>
-        <strong>Descripción:</strong> Instalación de línea aérea preensamblada.</p>
-
-        <h3>Verificación de medidor autoadministrado</h3>
-        <p><strong>Código:</strong> O111812<br>
-        <strong>Precio:</strong> $9.750<br>
-        <strong>Descripción:</strong> Control y revisión del funcionamiento del medidor.</p>
-
-        <h3>Desconexión, reconexión o retiro de puentes</h3>
-        <p><strong>Código:</strong> N120802<br>
-        <strong>Precio:</strong> $3.617<br>
-        <strong>Descripción:</strong> Intervención técnica en la acometida del usuario.</p>
-
-        <h2 id="ayuda-6">Normativas y referencias</h2>
-        <p>Todos los trabajos, registros y precios estipulados deben ajustarse a la normativa eléctrica vigente y a los lineamientos estipulados por la entidad contratante. BAREMOS opera como una herramienta administrativa de referencia y no sustituye los protocolos de seguridad industrial ni las tablas de liquidación oficiales emitidas por las autoridades correspondientes.</p>
-
+        <p>Toda la información se almacena localmente de forma segura en tu navegador mediante IndexedDB.</p>
         <h2 id="ayuda-7">Política de privacidad</h2>
-        <h3>1. Introducción</h3><p>La presente Política de Privacidad describe cómo se gestiona la información dentro del sitio web BAREMO y su aplicación asociada. Este proyecto es un desarrollo 100% freelance, sin asociaciones comerciales ni vínculos con terceros.</p><h3>2. No recopilación de datos personales</h3><p>BAREMO no recopila, almacena ni procesa datos personales de los usuarios.</p><p>El sitio y la aplicación no solicitan información identificatoria, no registran actividad del usuario y no acceden a datos del dispositivo.</p><h3>3. Información local</h3><p>Toda la información que el usuario ingresa en la aplicación se mantiene localmente en su dispositivo, sin ser enviada ni almacenada en servidores externos.</p><h3>4. Cookies y tecnologías de seguimiento</h3><p>Este sitio no utiliza cookies, herramientas de análisis, publicidad, ni tecnologías de rastreo.</p><h3>5. Compartición de información</h3><p>Dado que no se recopilan datos, no existe ningún tipo de cesión, venta o transferencia de información a terceros.</p><h3>6. Seguridad</h3><p>Aunque no se manejan datos personales, se aplican medidas básicas de seguridad para garantizar el funcionamiento correcto del sitio y la aplicación.</p><h3>7. Actualizaciones</h3><p>BAREMO puede modificar esta política en cualquier momento. Las actualizaciones se publicarán en este sitio web.</p>
-        
+        <p>No recopilamos ni enviamos datos personales a servidores externos.</p>
         <h2 id="ayuda-8">Términos y condiciones</h2>
-        <h3>1. Aceptación</h3><p>Al utilizar el sitio o la aplicación BAREMO, el usuario acepta estos Términos y Condiciones. Si no está de acuerdo, debe abstenerse de utilizar el servicio.</p><h3>2. Descripción del servicio</h3><p>BAREMO es una herramienta destinada al control y registro de ganancias diarias para contratistas del rubro eléctrico.</p><p>El servicio se ofrece “tal cual”, sin garantías de disponibilidad continua o ausencia de errores.</p><h3>3. Uso permitido</h3><p>El usuario se compromete a utilizar el sitio y la aplicación de manera legal y responsable. Queda prohibido:</p><ul><li>Manipular o intentar acceder a funciones no autorizadas.</li><li>Utilizar el servicio para actividades ilícitas.</li><li>Realizar ingeniería inversa, descompilación o extracción del código fuente.</li></ul><h3>4. Responsabilidad</h3><p>BAREMO no se responsabiliza por:</p><ul><li>Errores derivados del uso incorrecto del servicio.</li><li>Pérdida de información almacenada localmente en el dispositivo del usuario.</li><li>Fallas técnicas, interrupciones o indisponibilidad del servicio.</li></ul><h3>5. Modificaciones</h3><p>Los presentes términos pueden actualizarse sin previo aviso. Las modificaciones se publicarán en este sitio.</p>
-
-        <h2 id="ayuda-9">Aviso legal</h2>
-        <p>BAREMO es un proyecto independiente y freelance, sin asociaciones con empresas, entidades o marcas del sector eléctrico.</p><p>La información presentada en el sitio y la aplicación tiene fines operativos y organizativos para contratistas.</p><p>No se garantiza la exactitud de los cálculos o registros generados por el usuario, ya que cada contratista maneja sus propios Baremos y estos pueden variar.</p><p>El desarrollador no asume responsabilidad por decisiones comerciales tomadas a partir del uso de la aplicación.</p>
-
+        <p>Herramienta técnica de uso operativo y administrativo independiente.</p>
         <h2 id="ayuda-10">Contacto</h2>
-        <p>Para consultas, sugerencias o reportes relacionados con la aplicación BAREMO, podés comunicarte a:</p><p>📧 Email: <a href="mailto:contacto@baremo.app">contacto@baremo.app</a><br>🌐 Desarrollador: Proyecto freelance AKAPANCH0<br>📍 Ubicación: Buenos Aires, Argentina</p>
-
-        <h2 id="ayuda-11">Sobre nosotros</h2>
-        <p>BAREMO es un proyecto desarrollado de manera 100% freelance, sin asociaciones comerciales ni vínculos con terceros.</p><p>Nuestro objetivo es ofrecer una herramienta simple, clara y eficiente para contratistas del rubro eléctrico, permitiendo registrar y controlar sus ganancias diarias, tareas realizadas y organización operativa.</p><p>Creemos en soluciones prácticas, livianas y sin complicaciones. Por eso, nuestra aplicación funciona de manera local, sin recopilar datos personales y sin depender de servidores externos.</p><p>BAREMO es independiente, transparente y diseñado para profesionales que necesitan una herramienta confiable para su trabajo diario.</p>
+        <p>Email: contacto@baremo.app · Desarrollador: AKAPANCH0</p>
       </article>
     </div>
   </section>
@@ -520,15 +378,6 @@
           <div class="admin-title">Panel de Control</div>
           <button class="admin-logout-btn" id="btnAdminLogout">Salir</button>
         </div>
-        <button class="btn btn-ghost" style="margin-bottom:14px;border:1px dashed var(--primary);color:var(--primary)" id="btnChangePassword">🔑 Cambiar contraseña del Administrador</button>
-        <div class="card" style="margin-bottom:14px">
-          <div class="card-title">📦 Consolidación de Datos</div>
-          <p style="font-size:11px;color:var(--text-soft);margin-bottom:10px">Para ver datos de todos los usuarios, cada usuario debe exportar sus datos y el admin importarlos aquí.</p>
-          <div class="admin-actions">
-            <button class="btn btn-ghost btn-sm" id="btnExportAllData">📤 Exportar mis datos</button>
-            <button class="btn btn-primary btn-sm" id="btnImportData">📥 Importar datos</button>
-          </div>
-        </div>
         <div class="card-title" style="padding:0 0 8px">📋 Tipo de reporte</div>
         <div class="admin-report-type" id="adminReportType">
           <button class="active" data-type="diario">📅 Diario</button>
@@ -580,21 +429,6 @@
       <button class="btn btn-ghost" id="confirmCancel">Cancelar</button>
       <button class="btn btn-primary" id="confirmOk">Confirmar</button>
     </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="modalChangePassword">
-  <div class="modal">
-    <h2 style="font-size:18px;margin-bottom:14px">🔑 Cambiar Contraseña Admin</h2>
-    <form id="formChangePassword">
-      <div class="field"><label>Contraseña actual</label><input class="input" id="currentPass" type="password" required></div>
-      <div class="field"><label>Nueva contraseña (mín. 4 caracteres)</label><input class="input" id="newPass" type="password" minlength="4" required></div>
-      <div class="field"><label>Confirmar nueva contraseña</label><input class="input" id="confirmPass" type="password" required></div>
-      <div class="btn-row">
-        <button type="button" class="btn btn-ghost" id="cancelChangePass">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-      </div>
-    </form>
   </div>
 </div>
 
@@ -666,7 +500,7 @@
   </div>
 </div>
 
-<script src="db.js?v=5.8.33"></script>
-<script src="app.js?v=5.8.33"></script>
+<script src="db.js?v=5.8.34"></script>
+<script src="app.js?v=5.8.34"></script>
 </body>
 </html>
