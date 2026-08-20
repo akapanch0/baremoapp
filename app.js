@@ -45,7 +45,6 @@ window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
   const btn = $('#btnInstallHeader');
   if(btn) btn.style.display = 'none';
-  console.log('PWA fue instalada.');
 });
 
 function isIOS() {
@@ -78,7 +77,7 @@ function openInstallModal() {
         btnConfirm.disabled = false;
     }
   }
-  modal.classList.add('show');
+  if(modal) modal.classList.add('show');
 }
 
 function sendLocalNotification(title, body) {
@@ -120,8 +119,7 @@ setInterval(async () => {
           }
         }
       }
-  } catch (e) {
-  }
+  } catch (e) {}
 }, 60000);
 
 /* ============================================================
@@ -756,11 +754,8 @@ function toggleTheme() {
   toast(`Modo ${State.theme === 'light' ? 'claro' : 'oscuro'}`, 'success');
 }
 
-/* NORMALIZACIÓN SEGURA DE BAREMOS EN ARRANQUE */
+/* NORMALIZACIÓN Y LECTURA ESTRICTA DE BAREMOS EN ARRANQUE */
 async function loadBaremo() {
-  let d = [];
-  try { d = await dbGetAll('baremo'); } catch(e) { console.warn(e); }
-  
   const normalizeArray = (arr) => {
     return arr.map(r => ({
       baremo: String(getField(r, 'BAREMO', 'baremo', 'Codigo', 'codigo', 'Código', 'CÓDIGO')).trim(),
@@ -769,29 +764,25 @@ async function loadBaremo() {
     })).filter(r => r.baremo !== '' && r.baremo !== 'undefined');
   };
 
-  let needsRepair = false;
-  if (d && d.length > 0) {
-    needsRepair = d.some(b => b.descripcion === undefined || b.precio === undefined);
-  }
-
-  if (!d || d.length === 0 || needsRepair) {
-    try {
-      const r = await fetch('baremo.json', { cache: 'no-store' });
-      if (r.ok) {
-        const j = await r.json();
-        let arr = Array.isArray(j) ? j : (j.baremos || j.data || [j]);
-        const norm = normalizeArray(arr);
-        
-        if (norm.length > 0) {
-          if (needsRepair && d) {
-            for (const o of d) if (o.baremo) await dbDelete('baremo', o.baremo);
-          }
-          for (const i of norm) await dbPut('baremo', i);
-          d = await dbGetAll('baremo');
-        }
+  try {
+    // Lectura forzada desde el archivo nuevo (anulando cache viejo) para asegurar que los precios se recuperen
+    const r = await fetch('baremo.json?t=' + Date.now(), { cache: 'no-store' });
+    if (r.ok) {
+      const j = await r.json();
+      let arr = Array.isArray(j) ? j : (j.baremos || j.data || [j]);
+      const norm = normalizeArray(arr);
+      
+      if (norm.length > 0) {
+        const dStore = await dbGetAll('baremo');
+        for (const o of dStore) await dbDelete('baremo', o.baremo);
+        for (const i of norm) await dbPut('baremo', i);
       }
-    } catch(e) {}
+    }
+  } catch(e) {
+    console.warn('Utilizando baremos almacenados localmente por falta de red.', e);
   }
+  
+  const d = await dbGetAll('baremo');
   State.baremo = normalizeArray(d || []);
 }
 
@@ -933,8 +924,6 @@ async function loadOrCreateJornada() {
   
   if (ab.length > 0) {
     State.jornada = ab[ab.length - 1];
-    
-    // Normalización al cargar base de datos
     if (!State.jornada.tareas) {
       if (State.jornada.items && State.jornada.items.length > 0) {
         State.jornada.tareas = [{
@@ -1117,22 +1106,16 @@ function setupRegistro() {
   
   qtyInput.addEventListener('keydown', e => { if (e.key === 'Enter') agregar(); });
 
-  // IMPLEMENTACIÓN BLINDADA: Finalizar -> Validar -> Clonar -> Guardar BD -> Renderizar
   const btnFinalizar = document.getElementById('btnFinalizarTarea');
   if (btnFinalizar) {
     btnFinalizar.onclick = async (e) => {
       e.preventDefault();
-      
       try {
         if (!State.currentTarea || !State.currentTarea.items || State.currentTarea.items.length === 0) {
           toast('La tarea no tiene baremos agregados', 'warn');
           return;
         }
-        
-        // Clonar la jornada existente para recuperar ante un error físico de base de datos
         const backupTareas = State.jornada.tareas ? [...State.jornada.tareas] : [];
-        
-        // Empaquetado completo (Deep Copy) para desvincular de la memoria temporal
         const nuevaTareaConfirmada = {
           id: Date.now() + Math.random(),
           fecha: hoy(),
@@ -1146,20 +1129,14 @@ function setupRegistro() {
         if (!State.jornada.tareas) State.jornada.tareas = [];
         State.jornada.tareas.push(nuevaTareaConfirmada);
         
-        // Frena la ejecución hasta garantizar persistencia en IndexedDB
         await saveJornada(); 
         
-        // Limpieza y Renderizado Instantáneo (Sin recargar)
         State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 };
         renderAll(); 
-        
         toast('Tarea finalizada exitosamente', 'success');
-        
       } catch (error) {
-        // En caso de fallo crítico de base de datos, revertimos para que el usuario no pierda su trabajo en pantalla
         if (State.jornada && backupTareas) State.jornada.tareas = backupTareas;
-        console.error('[Error de Almacenamiento Tarea]', error);
-        toast('Error al guardar en base de datos. Por favor, reintenta.', 'error');
+        toast('Error al guardar en base de datos.', 'error');
       }
     };
   }
@@ -1170,7 +1147,6 @@ function renderItems() {
   const card = $('#currentTaskCard');
   if (!tb || !card) return;
   
-  // RENDERIZAR BAREMOS DE LA TAREA ACTIVA
   if (!State.currentTarea || State.currentTarea.items.length === 0) {
     card.style.display = 'none';
     tb.innerHTML = '';
@@ -1202,7 +1178,6 @@ function renderItems() {
     });
   }
 
-  // RENDERIZAR TAREAS FINALIZADAS HOY (ACORDEÓN MULTINIVEL)
   const tl = $('#tareasFinalizadasList');
   if (!tl) return;
   if (!State.jornada || !State.jornada.tareas || State.jornada.tareas.length === 0) {
@@ -1723,9 +1698,7 @@ async function renderDashboard() {
     if(overlay) overlay.classList.remove('show');
 
     if (tot <= 1500000) {
-      // red
     } else if (tot <= 2000000) {
-      // yellow
     } else if (tot <= 2500000) {
       if(overlay){ overlay.textContent = '👏 ¡Sigue así!'; overlay.classList.add('show'); }
     } else if (tot < 3000000) {
@@ -1766,6 +1739,25 @@ async function renderDashboard() {
     <div class="pc-line"><span>− ${q2Label}</span><span style="color: #fca5a5;">${q2Tot > 0 ? fmt(q2Tot) : '0 (Pend.)'}</span></div>
     <div class="pc-line total"><span>= Saldo Final</span><span style="${saldoFinal < 0 ? 'color:#fca5a5;' : 'color:#bbf7d0;'}">${fmt(saldoFinal)}</span></div>
   `;
+
+  renderCharts(todas);
+}
+
+function renderCharts(todas) {
+  if (typeof Chart === 'undefined') return;
+  const ctxDiario = document.getElementById('chartDiario');
+  const jMes = todas.filter(j => j.fecha.startsWith(mesActual())).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  
+  if (ctxDiario) {
+    const labelsDiario = jMes.slice(-7).map(j => fechaCorta(j.fecha).slice(0,5));
+    const dataDiario = jMes.slice(-7).map(j => j.total || 0);
+    if(window.chartD) window.chartD.destroy();
+    window.chartD = new Chart(ctxDiario, {
+      type: 'bar',
+      data: { labels: labelsDiario, datasets: [{ label: 'Producción ($)', data: dataDiario, backgroundColor: '#0b3d91', borderRadius: 4 }] },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
 }
 
 function setupCombustible() {
@@ -1807,6 +1799,44 @@ async function renderCombustible() {
   if (t) t.textContent = fmt(all.filter(c => c.mes === mesActual()).reduce((a, c) => a + c.monto, 0));
 }
 
+function setupQuincenas() {
+  const formQ1 = $('#formQ1');
+  if (formQ1) {
+    formQ1.onsubmit = async (e) => {
+      e.preventDefault();
+      if (!await confirmDialog('¿Registrar 1ra Quincena? No podrá editarse.')) return;
+      const o1 = parseFloat($('#q1o1').value) || 0;
+      const o2 = parseFloat($('#q1o2').value) || 0;
+      const total = o1 + o2;
+      await dbAdd('quincenas', {
+        tipo: 1, mes: mesActual(), legajo: State.user.legajo,
+        oficial1: o1, oficial2: o2, total: total,
+        bloqueada: true, fechaRegistro: hoy()
+      });
+      toast('1ra Quincena registrada', 'success');
+      renderQuincenas();
+    };
+  }
+  const formQ2 = $('#formQ2');
+  if (formQ2) {
+    formQ2.onsubmit = async (e) => {
+      e.preventDefault();
+      if (!await confirmDialog('¿Registrar 2da Quincena? No podrá editarse.')) return;
+      const o1 = parseFloat($('#q2o1').value) || 0;
+      const o2 = parseFloat($('#q2o2').value) || 0;
+      const total = o1 + o2;
+      const mesQ = mesQuincenaActual();
+      await dbAdd('quincenas', {
+        tipo: 2, mes: mesQ, legajo: State.user.legajo,
+        oficial1: o1, oficial2: o2, total: total,
+        bloqueada: true, fechaRegistro: hoy()
+      });
+      toast('2da Quincena registrada', 'success');
+      renderQuincenas();
+    };
+  }
+}
+
 async function renderQuincenas() {
   const leg = State.user.legajo;
   const mes = mesActual();
@@ -1836,81 +1866,211 @@ async function renderQuincenas() {
   const aQ2 = $('#alertaQ2');
   const fQ1f = $('#formQ1');
   const fQ2f = $('#formQ2');
-  const btnQ2 = $('#btnQ2');
   const tQ1 = $('#totalQ1');
   const tQ2 = $('#totalQ2');
+
   if (q1 && q1.bloqueada) {
-    bQ1.classList.add('bloqueada');
-    bQ1.classList.remove('deshabilitada');
-    $('#badgeQ1').className = 'qb-badge bloqueada';
-    $('#badgeQ1').textContent = '🔒 BLOQUEADA';
-    aQ1.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q1.fechaRegistro)}. No editable.</span>`;
-    fQ1f.style.display = 'none';
-    tQ1.style.display = 'flex';
-    $('#totalQ1Value').textContent = fmt(q1.total);
-    $('#q1o1').disabled = true;
-    $('#q1o2').disabled = true;
-    $('#q1o1').value = q1.oficial1;
-    $('#q1o2').value = q1.oficial2;
+    if(bQ1) {
+      bQ1.classList.add('bloqueada');
+      bQ1.classList.remove('deshabilitada');
+    }
+    const badgeQ1 = $('#badgeQ1');
+    if(badgeQ1) {
+      badgeQ1.className = 'qb-badge bloqueada';
+      badgeQ1.textContent = '🔒 BLOQUEADA';
+    }
+    if(aQ1) aQ1.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q1.fechaRegistro)}. No editable.</span>`;
+    if(fQ1f) fQ1f.style.display = 'none';
+    if(tQ1) tQ1.style.display = 'flex';
+    const totalQ1Value = $('#totalQ1Value');
+    if(totalQ1Value) totalQ1Value.textContent = fmt(q1.total);
+    const q1o1 = $('#q1o1');
+    const q1o2 = $('#q1o2');
+    if(q1o1) { q1o1.disabled = true; q1o1.value = q1.oficial1; }
+    if(q1o2) { q1o2.disabled = true; q1o2.value = q1.oficial2; }
   } else {
-    bQ1.classList.remove('bloqueada');
-    $('#badgeQ1').className = 'qb-badge pendiente';
-    $('#badgeQ1').textContent = 'PENDIENTE';
-    aQ1.innerHTML = `<span>⚠️</span><span>Una vez registrada quedará <strong>bloqueada permanentemente</strong>.</span>`;
-    fQ1f.style.display = 'block';
-    tQ1.style.display = 'none';
-    $('#q1o1').disabled = false;
-    $('#q1o2').disabled = false;
+    if(bQ1) bQ1.classList.remove('bloqueada');
+    const badgeQ1 = $('#badgeQ1');
+    if(badgeQ1) {
+      badgeQ1.className = 'qb-badge pendiente';
+      badgeQ1.textContent = 'PENDIENTE';
+    }
+    if(aQ1) aQ1.innerHTML = `<span>⚠️</span><span>Una vez registrada quedará <strong>bloqueada permanentemente</strong>.</span>`;
+    if(fQ1f) fQ1f.style.display = 'block';
+    if(tQ1) tQ1.style.display = 'none';
+    const q1o1 = $('#q1o1');
+    const q1o2 = $('#q1o2');
+    if(q1o1) q1o1.disabled = false;
+    if(q1o2) q1o2.disabled = false;
   }
+
   if (q2 && q2.bloqueada) {
-    bQ2.classList.add('bloqueada');
-    bQ2.classList.remove('deshabilitada');
-    $('#badgeQ2').className = 'qb-badge bloqueada';
-    $('#badgeQ2').textContent = '🔒 BLOQUEADA';
-    aQ2.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q2.fechaRegistro)}. No editable.</span>`;
-    fQ2f.style.display = 'none';
-    tQ2.style.display = 'flex';
-    $('#totalQ2Value').textContent = fmt(q2.total);
-    $('#q2o1').disabled = true;
-    $('#q2o2').disabled = true;
-    $('#q2o1').value = q2.oficial1;
-    $('#q2o2').value = q2.oficial2;
+    if(bQ2) {
+      bQ2.classList.add('bloqueada');
+      bQ2.classList.remove('deshabilitada');
+    }
+    const badgeQ2 = $('#badgeQ2');
+    if(badgeQ2) {
+      badgeQ2.className = 'qb-badge bloqueada';
+      badgeQ2.textContent = '🔒 BLOQUEADA';
+    }
+    if(aQ2) aQ2.innerHTML = `<span>✅</span><span>Registrada ${fechaCorta(q2.fechaRegistro)}. No editable.</span>`;
+    if(fQ2f) fQ2f.style.display = 'none';
+    if(tQ2) tQ2.style.display = 'flex';
+    const totalQ2Value = $('#totalQ2Value');
+    if(totalQ2Value) totalQ2Value.textContent = fmt(q2.total);
+    const q2o1 = $('#q2o1');
+    const q2o2 = $('#q2o2');
+    if(q2o1) { q2o1.disabled = true; q2o1.value = q2.oficial1; }
+    if(q2o2) { q2o2.disabled = true; q2o2.value = q2.oficial2; }
   } else {
     if (q1 && q1.bloqueada) {
-      bQ2.classList.remove('bloqueada');
-      bQ2.classList.remove('deshabilitada');
-      $('#badgeQ2').className = 'qb-badge pendiente';
-      $('#badgeQ2').textContent = 'PENDIENTE';
-      aQ2.innerHTML = `<span>⚠️</span><span>Una vez registrada quedará <strong>bloqueada permanentemente</strong>.</span>`;
-      fQ2f.style.display = 'block';
-      tQ2.style.display = 'none';
-      $('#q2o1').disabled = false;
-      $('#q2o2').disabled = false;
+      if(bQ2) {
+        bQ2.classList.remove('bloqueada');
+        bQ2.classList.remove('deshabilitada');
+      }
+      const badgeQ2 = $('#badgeQ2');
+      if(badgeQ2) {
+        badgeQ2.className = 'qb-badge pendiente';
+        badgeQ2.textContent = 'PENDIENTE';
+      }
+      if(aQ2) aQ2.innerHTML = `<span>⚠️</span><span>Una vez registrada quedará <strong>bloqueada permanentemente</strong>.</span>`;
+      if(fQ2f) fQ2f.style.display = 'block';
+      if(tQ2) tQ2.style.display = 'none';
+      const q2o1 = $('#q2o1');
+      const q2o2 = $('#q2o2');
+      if(q2o1) q2o1.disabled = false;
+      if(q2o2) q2o2.disabled = false;
     } else {
-      bQ2.classList.add('deshabilitada');
-      $('#badgeQ2').className = 'qb-badge deshabilitada';
-      $('#badgeQ2').textContent = 'BLOQUEADA';
-      aQ2.innerHTML = `<span>⏳</span><span>Se habilita al registrar la 1ra quincena.</span>`;
-      fQ2f.style.display = 'block';
-      tQ2.style.display = 'none';
-      $('#q2o1').disabled = true;
-      $('#q2o2').disabled = true;
+      if(bQ2) bQ2.classList.add('deshabilitada');
+      const badgeQ2 = $('#badgeQ2');
+      if(badgeQ2) {
+        badgeQ2.className = 'qb-badge deshabilitada';
+        badgeQ2.textContent = 'BLOQUEADA';
+      }
+      if(aQ2) aQ2.innerHTML = `<span>⏳</span><span>Se habilita al registrar la 1ra quincena.</span>`;
+      if(fQ2f) fQ2f.style.display = 'block';
+      if(tQ2) tQ2.style.display = 'none';
+      const q2o1 = $('#q2o1');
+      const q2o2 = $('#q2o2');
+      if(q2o1) q2o1.disabled = true;
+      if(q2o2) q2o2.disabled = true;
     }
   }
 }
 
+function renderAjustes() {
+  const lst = $('#ajustesList');
+  if (!lst) return;
+  lst.innerHTML = `
+    <div class="ajuste-item" onclick="toggleTheme()">
+      <div class="aj-ico">🌓</div>
+      <div class="aj-text">
+        <div class="aj-title">Modo Oscuro / Claro</div>
+        <div class="aj-desc">Cambiar el tema visual de la aplicación</div>
+      </div>
+      <div class="aj-arrow">›</div>
+    </div>
+    <div class="ajuste-item" onclick="switchUser()">
+      <div class="aj-ico">👤</div>
+      <div class="aj-text">
+        <div class="aj-title">Cambiar Usuario</div>
+        <div class="aj-desc">Gestionar perfiles de contratistas</div>
+      </div>
+      <div class="aj-arrow">›</div>
+    </div>
+    <div class="ajuste-item" onclick="document.getElementById('modalChangeZona').classList.add('show')">
+      <div class="aj-ico">📍</div>
+      <div class="aj-text">
+        <div class="aj-title">Cambiar Zona</div>
+        <div class="aj-desc">Modificar la zona de trabajo actual</div>
+      </div>
+      <div class="aj-arrow">›</div>
+    </div>
+    <div class="ajuste-item" onclick="showView('Admin')">
+      <div class="aj-ico">🔐</div>
+      <div class="aj-text">
+        <div class="aj-title">Panel de Administración</div>
+        <div class="aj-desc">Consolidación y configuración avanzada</div>
+      </div>
+      <div class="aj-arrow">›</div>
+    </div>
+    <div class="ajuste-item" onclick="showInfoModal('nosotros')">
+      <div class="aj-ico">ℹ️</div>
+      <div class="aj-text">
+        <div class="aj-title">Sobre Nosotros</div>
+        <div class="aj-desc">Conocer más sobre BAREMOS</div>
+      </div>
+      <div class="aj-arrow">›</div>
+    </div>
+    <div class="ajuste-item warn" onclick="cerrarSesion()">
+      <div class="aj-ico">🚪</div>
+      <div class="aj-text">
+        <div class="aj-title">Cerrar Sesión</div>
+        <div class="aj-desc">Salir del usuario actual de manera segura</div>
+      </div>
+      <div class="aj-arrow">›</div>
+    </div>
+    <div class="credits">
+       <span class="credits-emoji">⚡</span>
+       <span class="credits-label">Desarrollado para Contratistas</span>
+       <span class="credits-author">BAREMOS APP</span>
+       <span class="credits-divider"></span>
+       <span class="app-version">Versión ${APP_VERSION}</span>
+    </div>
+  `;
+}
+
+function renderAdmin() {
+  const al = $('#adminLogin');
+  const ap = $('#adminPanel');
+  if (State.adminLoggedIn) {
+    if(al) al.style.display = 'none';
+    if(ap) ap.style.display = 'block';
+  } else {
+    if(al) al.style.display = 'block';
+    if(ap) ap.style.display = 'none';
+  }
+}
+
+function setupAdmin() {
+  const btnLogin = $('#btnAdminLogin');
+  if (btnLogin) {
+    btnLogin.onclick = async () => {
+      const pass = $('#adminPassword').value;
+      if (!pass) return;
+      const hash = await sha256(pass);
+      const savedHash = await getAdminPasswordHash();
+      if (hash === savedHash) {
+        State.adminLoggedIn = true;
+        $('#adminPassword').value = '';
+        renderAdmin();
+        toast('Acceso administrador concedido', 'success');
+      } else {
+        toast('Contraseña incorrecta', 'error');
+      }
+    };
+  }
+  const btnLogout = $('#btnAdminLogout');
+  if (btnLogout) {
+    btnLogout.onclick = () => {
+      State.adminLoggedIn = false;
+      renderAdmin();
+      toast('Sesión cerrada', 'info');
+    };
+  }
+}
+
 /* ============================================================
-   EVENTOS GLOBALES Y ARRANQUE (AÑADIDO PARA SOLUCIONAR BLOQUEO)
+   EVENTOS GLOBALES Y ARRANQUE SEGURO
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
-  // Pestañas UI
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       showView(btn.dataset.view);
     });
   });
 
-  // Modal de Términos (Crucial para no quedar varado)
   const btnAcceptTerms = document.getElementById('btnAcceptTerms');
   if (btnAcceptTerms) {
     btnAcceptTerms.addEventListener('click', () => {
@@ -1921,7 +2081,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Modales Informativos
   const btnInfoClose = document.getElementById('btnInfoClose');
   if (btnInfoClose) {
     btnInfoClose.addEventListener('click', () => {
@@ -1930,7 +2089,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Enlaces de Ayuda
   document.querySelectorAll('a[href^="#ayuda-"]').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
@@ -1939,7 +2097,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Botones Generales del Encabezado
   const btnHelp = document.getElementById('btnHelp');
   if (btnHelp) btnHelp.addEventListener('click', () => showView('Ayuda'));
 
@@ -1955,12 +2112,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSwitchUser = document.getElementById('btnSwitchUser');
   if (btnSwitchUser) btnSwitchUser.addEventListener('click', switchUser);
 
-  // Inicializar sub-módulos para que Registro y Cambios no fallen luego
   setupMapaZona();
   setupRegistro();
   setupCombustible();
+  setupQuincenas();
+  setupAdmin();
   
-  // Agregar funcionalidad para cambiar zona
   const btnChangeZona = document.getElementById('btnChangeZona');
   if (btnChangeZona) {
     btnChangeZona.addEventListener('click', () => {
@@ -1996,6 +2153,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // INICIO REAL DE LA APP (Elimina la pantalla CARGANDO...)
+  // Desencadena el arranque y limpieza de caché del código BAREMO
   init();
 });
