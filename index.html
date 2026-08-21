@@ -9,12 +9,16 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAREMOS">
 <meta name="application-name" content="BAREMOS">
-<title>BAREMOS</title>
-<link rel="manifest" href="manifest.json?v=5.8.34">
-<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.34">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.34">
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.34">
-<link rel="stylesheet" href="styles.css?v=5.8.34">
+<title>BAREMOS - Control de Producción</title>
+<link rel="manifest" href="manifest.json?v=5.8.39">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.39">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.39">
+<link rel="apple-touch-icon" href="icons/icon-180.png?v=5.8.39">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png?v=5.8.39">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png?v=5.8.39">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png?v=5.8.39">
+<link rel="stylesheet" href="styles.css?v=5.8.39">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.6.0/dist/jspdf.plugin.autotable.min.js"></script>
@@ -52,6 +56,7 @@
       BAREMOS
     </h1>
     <div class="header-actions">
+      <button class="btn-pwa-install" id="btnInstallPwa" style="display:none;" title="Instalar Aplicación">📲 Instalar</button>
       <button class="btn-ayuda" id="btnHelp" title="Menú de Ayuda">AYUDA</button>
       <button class="icon-btn" id="btnTheme" title="Tema">🌓</button>
     </div>
@@ -65,6 +70,7 @@
       <div class="mini-calendar" id="miniCalendar"></div>
     </div>
   </div>
+  <div id="offlineBar" class="offline-bar" style="display:none;">⚡ Modo Offline activo · Tus datos se guardan de forma local</div>
 </header>
 
 <main>
@@ -572,6 +578,25 @@
   <button class="tab-btn" data-view="Ajustes"><span class="ico">⚙️</span>Ajustes</button>
 </nav>
 
+<div class="modal-backdrop" id="modalUbicacionManual">
+  <div class="modal">
+    <h2 style="font-size:18px;margin-bottom:8px">📍 Ubicación de la Tarea</h2>
+    <p style="font-size:12px;color:var(--text-soft);margin-bottom:14px">
+      No se pudo obtener el GPS automático o se denegó el permiso. Ingresá la dirección o referencia del lugar de trabajo para guardarla en la tarea:
+    </p>
+    <form id="formUbicacionManual">
+      <div class="field">
+        <label>Dirección / Calle y Número / Referencia</label>
+        <input class="input" id="inputManualDireccion" type="text" placeholder="Ej: Av. San Martín 1420, Vicente López" required>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" id="cancelUbicacionManual">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Confirmar y Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="modalConfirm">
   <div class="modal">
     <h2 style="font-size:18px;margin-bottom:14px">⚠️ Confirmar</h2>
@@ -623,6 +648,22 @@
           <option value="Pilar-Escobar">Pilar-Escobar</option>
         </select>
       </div>
+      <div class="zona-mapa-container" id="modalZonaMapaContainer" style="margin-bottom:14px">
+        <div class="zona-mapa-header">
+          <span>📍</span>
+          <span id="modalZonaMapaTitulo">Zona seleccionada</span>
+        </div>
+        <div class="zona-mapa-img-wrap">
+          <img class="zona-mapa-img" id="modalZonaMapaImg" alt="Mapa" style="display:none">
+          <div class="zona-mapa-placeholder" id="modalZonaMapaPlaceholder">
+            <div><span class="zmp-ico">🗺️</span><span>Seleccioná una zona</span></div>
+          </div>
+        </div>
+        <div class="zona-mapa-footer">
+          <span><span class="zmf-dot"></span>Mapa precargado</span>
+          <span id="modalZonaMapaNombre">—</span>
+        </div>
+      </div>
       <div class="btn-row">
         <button type="button" class="btn btn-ghost" id="cancelChangeZona">Cancelar</button>
         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -666,7 +707,79 @@
   </div>
 </div>
 
-<script src="db.js?v=5.8.34"></script>
-<script src="app.js?v=5.8.34"></script>
+<div class="modal-backdrop" id="modalNotificaciones">
+  <div class="modal">
+    <h2 style="font-size:18px;margin-bottom:12px">🔔 Recordatorio Diario de Cierre</h2>
+    <p style="font-size:13px;color:var(--text-soft);margin-bottom:16px;line-height:1.4">
+      Configurá una alerta push automática para recordarte registrar tus tareas y cerrar la jornada antes de que termine el día.
+    </p>
+    <form id="formNotificaciones">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-sm);margin-bottom:14px;">
+        <span style="font-weight:600;font-size:14px">Activar recordatorio</span>
+        <input type="checkbox" id="notifEnabled" style="width:20px;height:20px;accent-color:var(--primary);cursor:pointer;">
+      </div>
+      <div class="field" id="notifTimeField">
+        <label>Hora del recordatorio</label>
+        <input class="input" id="notifTime" type="time" value="18:00" required>
+        <div style="font-size:11px;color:var(--text-soft);margin-top:4px">Horarios habituales: 18:00, 19:00 o 20:00</div>
+      </div>
+      <div style="margin-top:14px;margin-bottom:16px">
+        <button type="button" class="btn btn-ghost" id="btnTestNotif" style="width:100%;font-size:13px;padding:10px 12px;border:1px dashed var(--primary);color:var(--primary)">
+          🔔 Enviar notificación de prueba
+        </button>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" id="cancelNotif">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Ajustes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalInstallPwa">
+  <div class="modal pwa-install-modal">
+    <div style="text-align:center; margin-bottom:14px;">
+      <img src="icons/icon-192.png?v=5.8.39" alt="BAREMOS" style="width:72px; height:72px; border-radius:18px; box-shadow:0 8px 24px rgba(11,61,145,.35); margin-bottom:10px;">
+      <h2 style="font-size:20px; font-weight:800; color:var(--text); margin-bottom:4px;">Instalar BAREMOS</h2>
+      <p style="font-size:12px; color:var(--text-soft);">Aplicación PWA de Alto Rendimiento</p>
+    </div>
+    <div class="pwa-features-list">
+      <div class="pwa-feat-item">
+        <span class="pwa-feat-ico">⚡</span>
+        <div>
+          <div class="pwa-feat-title">100% Offline</div>
+          <div class="pwa-feat-desc">Registrá tareas sin depender de conexión a internet o señal.</div>
+        </div>
+      </div>
+      <div class="pwa-feat-item">
+        <span class="pwa-feat-ico">🚀</span>
+        <div>
+          <div class="pwa-feat-title">Acceso Instantáneo</div>
+          <div class="pwa-feat-desc">Apertura en pantalla completa desde tu pantalla de inicio.</div>
+        </div>
+      </div>
+      <div class="pwa-feat-item">
+        <span class="pwa-feat-ico">🔒</span>
+        <div>
+          <div class="pwa-feat-title">Máxima Seguridad</div>
+          <div class="pwa-feat-desc">Base de datos local cifrada y respaldos en Excel y PDF.</div>
+        </div>
+      </div>
+    </div>
+    <div id="pwaIosInstructions" style="display:none; background:var(--surface-2); padding:12px 14px; border-radius:var(--radius-sm); font-size:12px; line-height:1.5; color:var(--text); margin-bottom:14px; border:1px solid var(--border);">
+      <strong>📱 Instrucciones para iPhone / iPad (Safari):</strong><br>
+      1. Tocá el botón <strong>Compartir</strong> <span style="font-size:14px;">📤</span> en la barra inferior.<br>
+      2. Desplazate hacia abajo y seleccioná <strong>"Añadir a pantalla de inicio"</strong> ➕.<br>
+      3. Confirmá en <strong>"Añadir"</strong> para tener el acceso directo.
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" id="btnPwaModalClose">Cerrar</button>
+      <button type="button" class="btn btn-primary" id="btnPwaModalAction">📲 Instalar App</button>
+    </div>
+  </div>
+</div>
+
+<script src="db.js?v=5.8.39"></script>
+<script src="app.js?v=5.8.39"></script>
 </body>
 </html>

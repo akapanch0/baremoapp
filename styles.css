@@ -118,8 +118,11 @@ th, td { padding: 10px 6px; text-align: left; border-bottom: 1px solid var(--bor
 th { font-size: 11px; text-transform: uppercase; font-weight: 700; }
 .td-desc { max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-tbody tr.adding { animation: rowIn .4s ease; }
-@keyframes rowIn { from { opacity: 0; } to { opacity: 1; } }
+tbody tr.adding { animation: rowIn .45s ease-out; }
+@keyframes rowIn {
+  0% { opacity: 0; transform: translateY(8px); background-color: rgba(11, 61, 145, 0.12); }
+  100% { opacity: 1; transform: translateY(0); background-color: transparent; }
+}
 .qty-input { width: 60px; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-weight: 600; text-align: center; }
 .del-btn { background: var(--danger); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; }
 .totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
@@ -130,6 +133,7 @@ tbody tr.adding { animation: rowIn .4s ease; }
 .total-general .lbl { font-size: 12px; opacity: .9; text-transform: uppercase; }
 .total-general .val { font-size: 28px; margin-top: 4px; position: relative; z-index: 2; }
 
+/* NUEVAS CLASES PARA ESTRUCTURA DE TAREAS Y ACORDEÓN */
 .tarea-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: all 0.3s ease; }
 .tarea-header { background: var(--surface-2); padding: 12px 14px; color: var(--text); border-bottom: 1px solid transparent; }
 .tarea-card.expanded .tarea-header { border-bottom-color: var(--border); }
@@ -137,8 +141,46 @@ tbody tr.adding { animation: rowIn .4s ease; }
 .tarea-card.expanded .tarea-body { display: block; }
 .expand-ico { transition: transform 0.3s; display: inline-block; font-size: 12px; color: var(--text-soft); }
 .tarea-card.expanded .expand-ico { transform: rotate(180deg); }
-.tarea-footer { padding: 12px 14px; background: var(--surface); display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); }
-.tarea-total { font-weight: 800; font-size: 15px; }
+.tarea-footer { padding: 12px 14px; background: var(--surface); display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); flex-wrap: wrap; gap: 10px; }
+.tarea-actions-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.btn-tarea-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.btn-tarea-action:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+.btn-tarea-del {
+  color: #dc2626;
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.08);
+}
+.btn-tarea-del:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: #dc2626;
+}
+.btn-tarea-edit {
+  color: var(--primary);
+  border-color: rgba(11, 61, 145, 0.35);
+  background: rgba(11, 61, 145, 0.08);
+}
+.btn-tarea-edit:hover {
+  background: rgba(11, 61, 145, 0.16);
+  border-color: var(--primary);
+}
+.tarea-total { font-weight: 800; font-size: 14px; margin-left: auto; }
 
 .bg-green-intense { background: linear-gradient(135deg, #16a34a, #22c55e); }
 .bg-green-soft { background: linear-gradient(135deg, #65a30d, #84cc16); }
@@ -162,8 +204,6 @@ canvas { max-width: 100%; height: 220px !important; }
 .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
 .modal-backdrop.show { display: flex; }
 .modal { background: var(--surface); width: 100%; max-width: 500px; border-radius: 20px 20px 0 0; padding: 20px; max-height: 85vh; overflow-y: auto; }
-#modalConfirm { z-index: 100000; }
-
 .toast-wrap { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
 .toast { background: var(--surface); padding: 12px 18px; border-radius: 30px; box-shadow: 0 8px 24px rgba(0,0,0,.2); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--primary); }
 .toast.success { border-left-color: var(--success); }
@@ -284,6 +324,9 @@ canvas { max-width: 100%; height: 220px !important; }
 .admin-summary .as-line { display: flex; justify-content: space-between; padding: 2px 0; }
 .admin-summary .as-line.total { font-weight: 700; margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border); }
 
+/* ============================================================
+   TÉRMINOS Y PRIVACIDAD (MODAL)
+   ============================================================ */
 .terms-modal {
   max-width: 450px;
   padding: 25px 20px;
@@ -350,6 +393,9 @@ canvas { max-width: 100%; height: 220px !important; }
   border-top: 1px dashed var(--border);
 }
 
+/* ============================================================
+   NUEVO: SCROLL PARA TÉRMINOS INYECTADOS
+   ============================================================ */
 .terms-content-scroll {
   max-height: 50vh;
   overflow-y: auto;
@@ -370,6 +416,9 @@ canvas { max-width: 100%; height: 220px !important; }
 
 @keyframes termsPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
+/* ============================================================
+   ESTILOS DE MENÚ AYUDA (SEO)
+   ============================================================ */
 .ayuda-menu-links {
   display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;
   background: var(--surface-2); padding: 16px; border-radius: var(--radius);
@@ -388,6 +437,9 @@ canvas { max-width: 100%; height: 220px !important; }
 .help-article ul { margin: 0 0 16px 24px; color: var(--text-soft); font-size: 14px; line-height: 1.6; }
 .help-article li { margin-bottom: 6px; }
 
+/* ============================================================
+   FRASE MOTIVACIONAL ANIMADA Y COLORIDA
+   ============================================================ */
 .frase-card {
   margin-top: 20px;
   padding: 30px 25px;
@@ -469,6 +521,9 @@ canvas { max-width: 100%; height: 220px !important; }
   100% { background-position: 200% center; }
 }
 
+/* ============================================================
+   EFECTOS Y MEDALLAS
+   ============================================================ */
 .total-general.imparables {
   animation: totalImparable 1s ease-in-out infinite alternate;
 }
@@ -532,6 +587,7 @@ canvas { max-width: 100%; height: 220px !important; }
   100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
 }
 
+/* Confeti */
 .confeti-container {
   position: fixed;
   top: 0; left: 0;
@@ -551,6 +607,7 @@ canvas { max-width: 100%; height: 220px !important; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
+/* Bengalas */
 .bengala {
   position: absolute;
   width: 4px; height: 4px;
@@ -562,6 +619,9 @@ canvas { max-width: 100%; height: 220px !important; }
   100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
 }
 
+/* ============================================================
+   TOTAL ACUMULADO Y COLORES DINÁMICOS
+   ============================================================ */
 .total-acumulado-card {
   background: var(--surface);
   border-radius: var(--radius);
@@ -579,6 +639,7 @@ canvas { max-width: 100%; height: 220px !important; }
 .tac-progress-bar { background: #fff; height: 100%; width: 0%; border-radius: 8px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
 .tac-details { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.95; font-weight: 700; flex-wrap: wrap; gap: 8px; }
 
+/* Mensaje Superpuesto Dashboard */
 .tac-overlay-msg {
   position: absolute; top: 20px; right: 20px;
   background: rgba(255,255,255,0.3);
@@ -592,6 +653,7 @@ canvas { max-width: 100%; height: 220px !important; }
 .tac-yellow .tac-overlay-msg { background: rgba(0,0,0,0.1); }
 .tac-overlay-msg.show { opacity: 1; transform: scale(1); }
 
+/* Clases de colores dinámicas (usadas en Dashboard y Registro) */
 .tac-red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 .tac-yellow { background: linear-gradient(135deg, #facc15, #ca8a04); color: #1a2238 !important; }
 .tac-yellow .tac-amount, .tac-yellow .val, .dac-interactive.tac-yellow .lbl, .dac-interactive.tac-yellow .val { text-shadow: none; color: #1a2238 !important; }
@@ -603,6 +665,7 @@ canvas { max-width: 100%; height: 220px !important; }
 .tac-green-intense { background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 0 25px rgba(22, 163, 74, 0.5); }
 .tac-gold, .bg-gold { background: linear-gradient(135deg, #fbbf24, #d97706); box-shadow: 0 0 35px rgba(217, 119, 6, 0.7); color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
 
+/* Medallas */
 .tac-medal {
   position: absolute; right: 20px; bottom: 15px;
   font-size: 70px; opacity: 0; transform: scale(0) rotate(-20deg);
@@ -617,6 +680,7 @@ canvas { max-width: 100%; height: 220px !important; }
   transition: all 0.5s; pointer-events: none; z-index: 4;
 }
 
+/* Tarjeta Producción Día Anterior / Día Menos Productivo Interactiva */
 .dac-interactive {
   color: #fff !important;
   border: none !important;
@@ -624,7 +688,7 @@ canvas { max-width: 100%; height: 220px !important; }
   position: relative;
   transition: all 0.3s ease;
 }
-.dac-interactive.tac-gold { padding-right: 45px !important; } 
+.dac-interactive.tac-gold { padding-right: 45px !important; } /* espacio para medalla */
 .dac-interactive .lbl {
   color: rgba(255,255,255,0.9) !important;
   z-index: 2; position: relative;
@@ -650,6 +714,7 @@ canvas { max-width: 100%; height: 220px !important; }
   50% { transform: translateY(-12px) scale(1.1); filter: drop-shadow(0 0 20px rgba(255,255,255,0.9)); }
 }
 
+/* Ajustes Responsive - Evitar Scroll en Tablas Móviles */
 @media (max-width: 480px) {
   .hide-mob { display: none !important; }
   .td-desc { max-width: 90px; }
@@ -665,6 +730,9 @@ canvas { max-width: 100%; height: 220px !important; }
   .mensaje-impulso { font-size: 22px; padding: 30px 40px; }
 }
 
+/* ============================================================
+   EFECTO RAYO ANIMADO (LOGO)
+   ============================================================ */
 .electric-wrapper {
   position: relative;
   overflow: visible !important;
@@ -720,4 +788,80 @@ canvas { max-width: 100%; height: 220px !important; }
 @keyframes spark3 {
   0% { transform: translate(0, 0) scale(1); opacity: 1; box-shadow: 0 0 4px #a78bfa; }
   100% { transform: translate(-15px, 15px) scale(0); opacity: 0; }
+}
+
+/* ============================================================
+   ESTILOS PWA Y MODO OFFLINE
+   ============================================================ */
+.btn-pwa-install {
+  background: linear-gradient(135deg, #ffd000, #ff9100);
+  color: #0b172a;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(255, 145, 0, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: pulsePwa 2.5s infinite;
+}
+.btn-pwa-install:active {
+  transform: scale(0.96);
+}
+@keyframes pulsePwa {
+  0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(255, 145, 0, 0.4); }
+  50% { transform: scale(1.04); box-shadow: 0 4px 14px rgba(255, 208, 0, 0.7); }
+}
+
+.offline-bar {
+  background: #f59e0b;
+  color: #000;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  animation: slideDown .3s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pwa-install-modal {
+  max-width: 420px;
+}
+.pwa-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.pwa-feat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.pwa-feat-ico {
+  font-size: 20px;
+  line-height: 1;
+}
+.pwa-feat-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.pwa-feat-desc {
+  font-size: 11px;
+  color: var(--text-soft);
+  line-height: 1.4;
 }
