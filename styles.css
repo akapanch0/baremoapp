@@ -40,7 +40,7 @@ body {
   overflow-x: hidden;
 }
 .app-header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  position: sticky; top: 0; z-index: 50;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   color: #fff; padding: 14px 16px;
   box-shadow: var(--shadow);
@@ -74,7 +74,7 @@ body {
 .tab-btn { background: none; border: none; color: var(--text-soft); padding: 6px 2px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; font-weight: 600; cursor: pointer; }
 .tab-btn .ico { font-size: 20px; }
 .tab-btn.active { color: var(--primary); }
-main { padding: 110px 12px 100px; max-width: 720px; margin: 0 auto; }
+main { padding: 14px 12px 100px; max-width: 720px; margin: 0 auto; }
 .view { display: none; animation: fadeIn .35s ease; }
 .view.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -93,7 +93,7 @@ main { padding: 110px 12px 100px; max-width: 720px; margin: 0 auto; }
 .field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-soft); margin-bottom: 4px; text-transform: uppercase; }
 .input, .select { width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); font-size: 15px; font-family: inherit; }
 .input:disabled, .select:disabled { background: var(--surface-2); color: var(--text-soft); cursor: not-allowed; }
-.search-wrap { position: sticky; top: 105px; z-index: 30; background: var(--surface); padding: 10px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 10px; border: 1px solid var(--border); }
+.search-wrap { position: sticky; top: 0; z-index: 30; background: var(--surface); padding: 10px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 10px; border: 1px solid var(--border); }
 .search-row { display: grid; grid-template-columns: 1fr 80px; gap: 8px; }
 .search-input-wrap { position: relative; }
 .search-input-wrap .input { padding-left: 40px; font-weight: 600; }
@@ -118,11 +118,8 @@ th, td { padding: 10px 6px; text-align: left; border-bottom: 1px solid var(--bor
 th { font-size: 11px; text-transform: uppercase; font-weight: 700; }
 .td-desc { max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-tbody tr.adding { animation: rowIn .45s ease-out; }
-@keyframes rowIn {
-  0% { opacity: 0; transform: translateY(8px); background-color: rgba(11, 61, 145, 0.12); }
-  100% { opacity: 1; transform: translateY(0); background-color: transparent; }
-}
+tbody tr.adding { animation: rowIn .4s ease; }
+@keyframes rowIn { from { opacity: 0; } to { opacity: 1; } }
 .qty-input { width: 60px; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-weight: 600; text-align: center; }
 .del-btn { background: var(--danger); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; }
 .totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
@@ -132,55 +129,6 @@ tbody tr.adding { animation: rowIn .45s ease-out; }
 .total-general { padding: 16px; border-radius: var(--radius); text-align: center; color: #fff; font-weight: 800; margin-bottom: 12px; position: relative; overflow: hidden; }
 .total-general .lbl { font-size: 12px; opacity: .9; text-transform: uppercase; }
 .total-general .val { font-size: 28px; margin-top: 4px; position: relative; z-index: 2; }
-
-/* NUEVAS CLASES PARA ESTRUCTURA DE TAREAS Y ACORDEÓN */
-.tarea-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: all 0.3s ease; }
-.tarea-header { background: var(--surface-2); padding: 12px 14px; color: var(--text); border-bottom: 1px solid transparent; }
-.tarea-card.expanded .tarea-header { border-bottom-color: var(--border); }
-.tarea-body { display: none; }
-.tarea-card.expanded .tarea-body { display: block; }
-.expand-ico { transition: transform 0.3s; display: inline-block; font-size: 12px; color: var(--text-soft); }
-.tarea-card.expanded .expand-ico { transform: rotate(180deg); }
-.tarea-footer { padding: 12px 14px; background: var(--surface); display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); flex-wrap: wrap; gap: 10px; }
-.tarea-actions-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.btn-tarea-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-.btn-tarea-action:hover {
-  filter: brightness(0.95);
-  transform: translateY(-1px);
-}
-.btn-tarea-del {
-  color: #dc2626;
-  border-color: rgba(239, 68, 68, 0.35);
-  background: rgba(239, 68, 68, 0.08);
-}
-.btn-tarea-del:hover {
-  background: rgba(239, 68, 68, 0.16);
-  border-color: #dc2626;
-}
-.btn-tarea-edit {
-  color: var(--primary);
-  border-color: rgba(11, 61, 145, 0.35);
-  background: rgba(11, 61, 145, 0.08);
-}
-.btn-tarea-edit:hover {
-  background: rgba(11, 61, 145, 0.16);
-  border-color: var(--primary);
-}
-.tarea-total { font-weight: 800; font-size: 14px; margin-left: auto; }
 
 .bg-green-intense { background: linear-gradient(135deg, #16a34a, #22c55e); }
 .bg-green-soft { background: linear-gradient(135deg, #65a30d, #84cc16); }
@@ -587,7 +535,6 @@ canvas { max-width: 100%; height: 220px !important; }
   100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
 }
 
-/* Confeti */
 .confeti-container {
   position: fixed;
   top: 0; left: 0;
@@ -607,7 +554,6 @@ canvas { max-width: 100%; height: 220px !important; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
-/* Bengalas */
 .bengala {
   position: absolute;
   width: 4px; height: 4px;
@@ -639,7 +585,6 @@ canvas { max-width: 100%; height: 220px !important; }
 .tac-progress-bar { background: #fff; height: 100%; width: 0%; border-radius: 8px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
 .tac-details { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.95; font-weight: 700; flex-wrap: wrap; gap: 8px; }
 
-/* Mensaje Superpuesto Dashboard */
 .tac-overlay-msg {
   position: absolute; top: 20px; right: 20px;
   background: rgba(255,255,255,0.3);
@@ -653,7 +598,6 @@ canvas { max-width: 100%; height: 220px !important; }
 .tac-yellow .tac-overlay-msg { background: rgba(0,0,0,0.1); }
 .tac-overlay-msg.show { opacity: 1; transform: scale(1); }
 
-/* Clases de colores dinámicas (usadas en Dashboard y Registro) */
 .tac-red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 .tac-yellow { background: linear-gradient(135deg, #facc15, #ca8a04); color: #1a2238 !important; }
 .tac-yellow .tac-amount, .tac-yellow .val, .dac-interactive.tac-yellow .lbl, .dac-interactive.tac-yellow .val { text-shadow: none; color: #1a2238 !important; }
@@ -663,9 +607,8 @@ canvas { max-width: 100%; height: 220px !important; }
 .tac-yellow .tac-progress-bar { background: #1a2238; }
 .tac-green-soft { background: linear-gradient(135deg, #4ade80, #16a34a); }
 .tac-green-intense { background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 0 25px rgba(22, 163, 74, 0.5); }
-.tac-gold, .bg-gold { background: linear-gradient(135deg, #fbbf24, #d97706); box-shadow: 0 0 35px rgba(217, 119, 6, 0.7); color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+.tac-gold { background: linear-gradient(135deg, #fbbf24, #d97706); box-shadow: 0 0 35px rgba(217, 119, 6, 0.7); color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
 
-/* Medallas */
 .tac-medal {
   position: absolute; right: 20px; bottom: 15px;
   font-size: 70px; opacity: 0; transform: scale(0) rotate(-20deg);
@@ -680,7 +623,6 @@ canvas { max-width: 100%; height: 220px !important; }
   transition: all 0.5s; pointer-events: none; z-index: 4;
 }
 
-/* Tarjeta Producción Día Anterior / Día Menos Productivo Interactiva */
 .dac-interactive {
   color: #fff !important;
   border: none !important;
@@ -688,7 +630,7 @@ canvas { max-width: 100%; height: 220px !important; }
   position: relative;
   transition: all 0.3s ease;
 }
-.dac-interactive.tac-gold { padding-right: 45px !important; } /* espacio para medalla */
+.dac-interactive.tac-gold { padding-right: 45px !important; }
 .dac-interactive .lbl {
   color: rgba(255,255,255,0.9) !important;
   z-index: 2; position: relative;
@@ -714,7 +656,6 @@ canvas { max-width: 100%; height: 220px !important; }
   50% { transform: translateY(-12px) scale(1.1); filter: drop-shadow(0 0 20px rgba(255,255,255,0.9)); }
 }
 
-/* Ajustes Responsive - Evitar Scroll en Tablas Móviles */
 @media (max-width: 480px) {
   .hide-mob { display: none !important; }
   .td-desc { max-width: 90px; }
@@ -730,9 +671,6 @@ canvas { max-width: 100%; height: 220px !important; }
   .mensaje-impulso { font-size: 22px; padding: 30px 40px; }
 }
 
-/* ============================================================
-   EFECTO RAYO ANIMADO (LOGO)
-   ============================================================ */
 .electric-wrapper {
   position: relative;
   overflow: visible !important;
@@ -789,79 +727,445 @@ canvas { max-width: 100%; height: 220px !important; }
   0% { transform: translate(0, 0) scale(1); opacity: 1; box-shadow: 0 0 4px #a78bfa; }
   100% { transform: translate(-15px, 15px) scale(0); opacity: 0; }
 }
-
 /* ============================================================
-   ESTILOS PWA Y MODO OFFLINE
+   BOTÓN "📲 INSTALAR APP" (PWA) — aislado, no afecta otros botones
    ============================================================ */
-.btn-pwa-install {
-  background: linear-gradient(135deg, #ffd000, #ff9100);
-  color: #0b172a;
-  border: none;
-  padding: 8px 12px;
+.btn-install-pwa {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #ffdd66 0%, #ffb300 55%, #ff9d00 100%);
+  border: 1px solid rgba(255,255,255,.55);
+  color: #16233c;
+  padding: 8px 11px;
   border-radius: 10px;
   font-size: 11px;
   font-weight: 800;
-  cursor: pointer;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(255, 145, 0, 0.4);
-  transition: transform 0.2s, box-shadow 0.2s;
-  animation: pulsePwa 2.5s infinite;
-}
-.btn-pwa-install:active {
-  transform: scale(0.96);
-}
-@keyframes pulsePwa {
-  0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(255, 145, 0, 0.4); }
-  50% { transform: scale(1.04); box-shadow: 0 4px 14px rgba(255, 208, 0, 0.7); }
-}
-
-.offline-bar {
-  background: #f59e0b;
-  color: #000;
-  font-size: 11px;
-  font-weight: 800;
-  text-align: center;
-  padding: 6px 10px;
-  border-radius: 8px;
-  margin-top: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  animation: slideDown .3s ease;
-}
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.pwa-install-modal {
-  max-width: 420px;
-}
-.pwa-features-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.pwa-feat-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 12px;
-  background: var(--surface-2);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-}
-.pwa-feat-ico {
-  font-size: 20px;
   line-height: 1;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,.22);
+  animation: bmInstallPulse 2.6s ease-in-out infinite;
 }
-.pwa-feat-title {
-  font-size: 13px;
+.btn-install-pwa.is-visible { display: inline-flex; }
+.btn-install-pwa::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -60%;
+  width: 45%; height: 100%;
+  background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  animation: bmInstallShine 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.btn-install-pwa:active {
+  transform: scale(.95);
+  animation-play-state: paused;
+}
+@keyframes bmInstallPulse {
+  0%, 100% { transform: scale(1);     box-shadow: 0 2px 8px rgba(0,0,0,.22), 0 0 0 0 rgba(255,193,7,.45); }
+  50%      { transform: scale(1.045); box-shadow: 0 3px 12px rgba(0,0,0,.28), 0 0 0 6px rgba(255,193,7,0); }
+}
+@keyframes bmInstallShine {
+  0%   { left: -60%; }
+  55%  { left: 130%; }
+  100% { left: 130%; }
+}
+@media (max-width: 380px) {
+  .btn-install-pwa { padding: 7px 9px; font-size: 10px; letter-spacing: .3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-install-pwa { animation: none; }
+  .btn-install-pwa::after { animation: none; opacity: 0; }
+}
+
+/* ============================================================
+   TAREAS DEL DÍA + UBICACIÓN GPS — estilos nuevos aislados
+   ============================================================ */
+.btn-finalizar-tarea {
+  width: 100%;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #15a35b 0%, #0e8046 100%);
+  color: #fff;
+  border: none;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: .5px;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(14,128,70,.28);
+}
+.btn-finalizar-tarea:disabled { opacity: .85; cursor: progress; }
+.btn-finalizar-tarea.gps-buscando {
+  background: linear-gradient(135deg, #2563c9 0%, #0b3d91 100%);
+  animation: bmGpsPulse 1.2s ease-in-out infinite;
+}
+@keyframes bmGpsPulse { 0%,100% { opacity: 1; } 50% { opacity: .72; } }
+
+.tareas-dia { margin-top: 16px; }
+.tareas-dia-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.tareas-dia-title { font-size: 13px; font-weight: 800; color: var(--primary); letter-spacing: .4px; }
+.tareas-dia-count { background: var(--primary); color: #fff; font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 20px; }
+
+.tarea-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid #15a35b;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+.tarea-card.ubic-manual { border-left-color: #f0a422; }
+.tarea-card.ubic-ninguna { border-left-color: var(--text-soft); }
+.tarea-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.tarea-num { font-size: 15px; font-weight: 800; color: var(--primary); }
+.tarea-total { font-size: 17px; font-weight: 800; color: #15a35b; white-space: nowrap; }
+.tarea-total-lbl { font-size: 10px; color: var(--text-soft); font-weight: 600; text-transform: uppercase; display: block; text-align: right; }
+.tarea-row { font-size: 12px; margin-bottom: 3px; display: flex; gap: 5px; }
+.tarea-row .k { color: var(--text-soft); font-weight: 600; min-width: 62px; }
+.tarea-row .v { color: var(--text); font-weight: 600; word-break: break-word; }
+.tarea-badge { display: inline-block; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 6px; margin-left: 4px; vertical-align: middle; }
+.tarea-badge.gps { background: rgba(21,163,91,.15); color: #0e8046; }
+.tarea-badge.manual { background: rgba(240,164,34,.18); color: #a86c00; }
+.tarea-badge.sin { background: rgba(120,120,120,.15); color: var(--text-soft); }
+.tarea-mapa {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 6px; padding: 6px 11px;
+  background: rgba(37,99,201,.1); color: var(--primary);
+  border: 1px solid rgba(37,99,201,.28); border-radius: 8px;
+  font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none;
+}
+.tarea-baremos { margin-top: 9px; border-top: 1px dashed var(--border); padding-top: 8px; }
+.tarea-baremos-lbl { font-size: 11px; font-weight: 700; color: var(--text-soft); margin-bottom: 5px; }
+.tarea-baremo-item { font-size: 11.5px; padding: 3px 0; display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--border); }
+.tarea-baremo-item:last-child { border-bottom: none; }
+.tarea-baremo-item .tb-cod { font-weight: 700; color: var(--text); }
+.tarea-baremo-item .tb-desc { color: var(--text-soft); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tarea-baremo-item .tb-sub { font-weight: 700; white-space: nowrap; }
+.tarea-card-actions { display: flex; justify-content: flex-start; margin-top: 10px; }
+.tarea-del-btn {
+  background: rgba(214,45,45,.1); color: #c62828;
+  border: 1px solid rgba(214,45,45,.3); border-radius: 8px;
+  padding: 7px 12px; font-size: 12px; font-weight: 800; cursor: pointer;
+}
+
+.ubic-motivo {
+  background: rgba(240,164,34,.12); border: 1px solid rgba(240,164,34,.35);
+  color: #a86c00; border-radius: 8px; padding: 8px 10px;
+  font-size: 12px; font-weight: 600; margin-bottom: 10px;
+}
+.ubic-resumen {
+  background: rgba(37,99,201,.07); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 12px;
+  color: var(--text-soft); margin-bottom: 12px; line-height: 1.5;
+}
+.ubic-resumen strong { color: var(--text); }
+
+.mj-ubic {
+  background: rgba(37,99,201,.07); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px; margin-bottom: 10px; font-size: 12px;
+}
+.mj-ubic-title { font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
+.mj-ubic-row { padding: 5px 0; border-bottom: 1px solid var(--border); }
+.mj-ubic-row:last-child { border-bottom: none; }
+
+/* ============================================================
+   v5.8.36 - Formato de tarjeta de tarea (colapsable) y barra de
+   busqueda siempre visible. Bloque aditivo: no altera reglas previas.
+   ============================================================ */
+
+/* La barra "Buscar baremos" queda fija justo debajo de la cabecera */
+.search-wrap { top: var(--hdr-h, 92px); z-index: 45; }
+
+/* Cabecera de la tarjeta: clickeable para expandir / colapsar */
+.tarea-card-top { cursor: pointer; user-select: none; align-items: center; }
+.tarea-card-top:focus-visible { outline: 2px solid var(--primary-light); outline-offset: 2px; border-radius: 6px; }
+.tarea-caret { color: var(--text-soft); font-size: 12px; transition: transform .2s ease; flex: 0 0 auto; }
+.tarea-card.open .tarea-caret { transform: rotate(180deg); }
+
+/* Los baremos y el boton ELIMINAR se ven al expandir */
+.tarea-body { display: none; }
+.tarea-card.open .tarea-body { display: block; animation: fadeIn .2s ease; }
+
+/* Fila de direccion con chip y enlace al mapa */
+.tarea-row.dir { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tarea-row.dir .k { flex: 0 0 auto; }
+.dir-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 3px 10px;
+  font-size: 12.5px; font-weight: 600; color: var(--text);
+  max-width: 100%; word-break: break-word;
+}
+.dir-chip.manual { border-style: dashed; }
+.dir-chip.ninguna { color: var(--text-soft); font-weight: 500; }
+.tarea-row.dir .tarea-mapa { margin: 0; }
+
+/* Total de la tarea en linea */
+.tarea-row.total { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
+.tarea-row.total .k { font-weight: 700; }
+
+/* Tipo de trabajo: selector previo a FINALIZAR TAREA y chips con contador/filtro */
+.tipo-trabajo-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.tipo-trabajo-row label { font-size: 11px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: .4px; flex: 0 0 auto; }
+.tipo-trabajo-row .select { padding: 9px 12px; font-size: 14px; font-weight: 600; }
+
+.tareas-dia-tipos { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.tipo-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 4px 10px; font-size: 11.5px; font-weight: 700;
+  font-family: inherit; cursor: pointer; line-height: 1.4;
+}
+.tipo-chip .tc-n { background: rgba(0,0,0,.10); border-radius: 10px; padding: 0 6px; font-size: 11px; font-weight: 800; }
+.tipo-chip.activo { background: var(--primary); color: #fff; border-color: var(--primary); }
+.tipo-chip.activo .tc-n { background: rgba(255,255,255,.25); }
+.tipo-chip.vacio { opacity: .55; }
+.tipo-chip:active { transform: scale(.97); }
+
+.tarea-tipo {
+  display: inline-block; margin-left: 8px; padding: 1px 8px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 12px; font-size: 10.5px; font-weight: 700;
+  color: var(--text-soft); letter-spacing: .3px; vertical-align: middle;
+}
+.tareas-vacio { text-align: center; color: var(--text-soft); font-size: 13px; padding: 14px 8px; }
+
+/* ============================================================
+   v5.8.38 — Tipo de trabajo con checks de seleccion unica,
+   cabecera siempre visible y barra de busqueda sin superponerse.
+   Bloque aislado: no modifica reglas anteriores.
+   ============================================================ */
+
+/* La cabecera nunca desaparece al hacer scroll */
+.app-header { position: sticky; position: -webkit-sticky; top: 0; z-index: 60; }
+
+/* La barra de busqueda acompana el scroll: deja de taparse con las tareas */
+.search-wrap { position: relative; top: auto; z-index: 1; }
+
+/* Fila de tipo de trabajo */
+.tipo-trabajo-row {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 10px 12px; margin-bottom: 10px;
+}
+.tipo-trabajo-lbl {
+  display: block; font-size: 10px; font-weight: 800; color: var(--text-soft);
+  text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px;
+}
+.tipo-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Check individual: aspecto de casilla, comportamiento de opcion unica */
+.tipo-check {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 11px; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--bg); cursor: pointer; user-select: none;
+  font-size: 12px; font-weight: 700; color: var(--text-soft);
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.tipo-check-input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+.tipo-check-box {
+  width: 16px; height: 16px; flex: 0 0 auto; border-radius: 5px;
+  border: 2px solid var(--border); background: var(--surface);
+  display: grid; place-items: center; transition: all .15s ease;
+}
+.tipo-check-box::after {
+  content: '✓'; font-size: 11px; font-weight: 900; line-height: 1; color: #fff;
+  opacity: 0; transform: scale(.6); transition: all .15s ease;
+}
+.tipo-check.activo { border-color: var(--primary); background: rgba(11,61,145,.08); color: var(--text); }
+.tipo-check.activo .tipo-check-box { border-color: var(--primary); background: var(--primary); }
+.tipo-check.activo .tipo-check-box::after { opacity: 1; transform: scale(1); }
+.tipo-check-input:focus-visible + .tipo-check-box { outline: 2px solid var(--primary-light); outline-offset: 2px; }
+.tipo-check:active { transform: scale(.98); }
+
+/* ============================================================
+   v5.8.39 — Botones en una sola linea (Agregar / Finalizar tarea /
+   Cerrar jornada), tipos de trabajo compactos y tarjeta
+   "Total del dia" mas minimalista. Bloque aislado.
+   ============================================================ */
+
+/* Los tres botones en una sola fila: FINALIZAR TAREA queda al medio */
+.btn-row-3 { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 6px; align-items: stretch; }
+.btn-row-3 .btn { padding: 11px 6px; font-size: 12px; font-weight: 700; line-height: 1.15; text-align: center; width: 100%; }
+
+/* El boton finalizar deja de ocupar una linea propia, sin perder su estilo ni su animacion GPS */
+.btn-row-3 .btn-finalizar-tarea {
+  margin-bottom: 0;
+  padding: 11px 6px;
+  font-size: 11.5px;
+  letter-spacing: .2px;
+  border-radius: 10px;
+  box-shadow: 0 3px 9px rgba(14,128,70,.24);
+}
+
+@media (max-width: 380px) {
+  .btn-row-3 { gap: 5px; }
+  .btn-row-3 .btn { font-size: 10.5px; padding: 10px 4px; }
+  .btn-row-3 .btn-finalizar-tarea { font-size: 10.5px; }
+}
+
+/* Tipos de trabajo: texto mas chico para ocupar menos espacio */
+.tipo-trabajo-row { padding: 8px 10px; margin-bottom: 8px; }
+.tipo-trabajo-lbl { font-size: 9px; margin-bottom: 6px; letter-spacing: .5px; }
+.tipo-checks { gap: 5px; }
+.tipo-check { padding: 5px 8px; gap: 5px; font-size: 10.5px; border-radius: 999px; }
+.tipo-check-box { width: 13px; height: 13px; border-width: 1.5px; border-radius: 4px; }
+.tipo-check-box::after { font-size: 9px; }
+
+/* Tarjeta "Total del dia": mas fina y minimalista (conserva colores, medalla y reglas) */
+.total-general { padding: 9px 12px; border-radius: 12px; margin-bottom: 10px; }
+.total-general .lbl { font-size: 9.5px; letter-spacing: .8px; font-weight: 700; opacity: .88; }
+.total-general .val { font-size: 19px; margin-top: 1px; letter-spacing: -.3px; }
+.total-general .tg-medal { font-size: 24px; right: 10px; bottom: 2px; }
+
+/* Totales superiores tambien mas compactos, en linea con el resto */
+.totals { gap: 6px; margin-bottom: 10px; }
+.total-card { padding: 7px 6px; }
+.total-card .lbl { font-size: 9px; }
+.total-card .val { font-size: 14px; margin-top: 2px; }
+
+/* ============================================================
+   v5.8.40 — Cabecera y buscador siempre visibles, cabecera mejor
+   organizada, boton INSTALAR minimalista (antes de AYUDA),
+   tipos de trabajo en una sola linea y tarjetas de tareas del dia
+   mas compactas. Bloque aislado y aditivo.
+   ============================================================ */
+
+/* --- El scroll nunca tapa la cabecera ------------------------------------ */
+/* overflow-x: clip evita crear un contenedor de scroll (no rompe sticky) */
+html { overflow-x: clip; }
+body {
+  overflow-x: clip;
+  padding-top: var(--hdr-h, 92px);
+}
+
+.app-header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 300;
+  padding: calc(9px + env(safe-area-inset-top)) 12px 9px;
+  gap: 5px;
+  border-bottom: 1px solid rgba(255,255,255,.14);
+}
+
+/* Cabecera mejor organizada: titulo + acciones sin desbordes */
+.app-header .row-top { gap: 8px; min-width: 0; flex-wrap: nowrap; }
+.app-header h1 { font-size: clamp(15px, 4.4vw, 18px); gap: 7px; min-width: 0; }
+.app-header h1 .logo-ico { width: 26px; height: 26px; flex: 0 0 auto; }
+.header-actions { gap: 6px; flex: 0 0 auto; flex-wrap: nowrap; }
+.app-header .user-chip { flex-wrap: nowrap; white-space: nowrap; padding: 5px 9px; }
+.app-header .date-line { min-width: 0; justify-content: flex-end; }
+
+.btn-ayuda { padding: 6px 10px; font-size: 10.5px; letter-spacing: .6px; border-radius: 9px; }
+.icon-btn { width: 32px; height: 32px; border-radius: 9px; font-size: 15px; }
+
+/* --- Boton "Instalar app": minimalista, primero en la cabecera ----------- */
+.btn-install-pwa {
+  order: -1;                     /* siempre antes de AYUDA */
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.34);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 9px;
+  font-size: 10.5px;
   font-weight: 700;
-  color: var(--text);
-  margin-bottom: 2px;
+  letter-spacing: .3px;
+  text-transform: none;
+  gap: 5px;
+  box-shadow: none;
+  animation: none;
 }
-.pwa-feat-desc {
-  font-size: 11px;
-  color: var(--text-soft);
-  line-height: 1.4;
+.btn-install-pwa::after { content: none; animation: none; }
+.btn-install-pwa:active { background: rgba(255,255,255,.28); transform: scale(.96); }
+.btn-install-pwa .bip-ico { font-size: 12px; line-height: 1; }
+
+/* --- La barra de busqueda tampoco desaparece ----------------------------- */
+/* Queda pegada justo debajo de la cabecera fija (nunca se superponen) */
+.search-wrap {
+  position: sticky; position: -webkit-sticky;
+  top: calc(var(--hdr-h, 92px) + 6px);
+  z-index: 120;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+.search-list { max-height: min(260px, 42vh); }
+
+/* --- Tipo de trabajo: checks chicos y lineales --------------------------- */
+.tipo-trabajo-row { display: block; padding: 8px 9px; }
+.tipo-trabajo-lbl { display: block; white-space: nowrap; }
+.tipo-checks { flex-wrap: nowrap; gap: 4px; align-items: stretch; }
+.tipo-check {
+  flex: 1 1 0; min-width: 0;
+  justify-content: center;
+  padding: 5px 5px;
+  gap: 4px;
+  border-radius: 8px;
+  font-size: clamp(8.5px, 2.5vw, 11px);
+  line-height: 1.15;
+  text-align: center;
+}
+.tipo-check-txt, .tipo-check-short { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tipo-check-short { display: none; }
+.tipo-check-box { width: 12px; height: 12px; border-width: 1.5px; border-radius: 4px; }
+.tipo-check-box::after { font-size: 8px; }
+
+/* Pantallas medianas y chicas: etiquetas abreviadas para no romper la linea */
+@media (max-width: 560px) {
+  .tipo-check-txt { display: none; }
+  .tipo-check-short { display: inline; }
+}
+@media (max-width: 400px) {
+  .tipo-checks { gap: 3px; }
+  .tipo-check { padding: 5px 3px; gap: 3px; }
+  .tipo-check-box { width: 10px; height: 10px; border-radius: 3px; }
+  .tipo-check-box::after { font-size: 7px; }
+}
+/* Pantallas muy angostas: el check se vuelve solo estado de la pastilla */
+@media (max-width: 330px) {
+  .tipo-check-box { display: none; }
+}
+
+/* --- Tarjetas de tareas del dia mas compactas ---------------------------- */
+.tareas-dia { margin-top: 12px; }
+.tarea-card {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border-left-width: 3px;
+  margin-bottom: 7px;
+}
+.tarea-card-top { margin-bottom: 4px; gap: 6px; }
+.tarea-num { font-size: 12.5px; letter-spacing: .2px; }
+.tarea-tipo { margin-left: 6px; padding: 1px 6px; font-size: 9.5px; }
+.tarea-row { font-size: 11.5px; margin-bottom: 1px; }
+.tarea-row .k { min-width: 0; }
+.tarea-row.meta { display: flex; flex-wrap: wrap; gap: 5px; color: var(--text-soft); font-weight: 600; }
+.tarea-row.meta .v { color: var(--text-soft); font-weight: 600; }
+.tarea-row.meta .meta-sep { opacity: .5; }
+.tarea-row.dir { gap: 5px; }
+.dir-chip { padding: 2px 8px; font-size: 11.5px; border-radius: 12px; }
+.tarea-mapa { margin-top: 0; padding: 3px 8px; font-size: 11px; border-radius: 7px; }
+.tarea-row.total { margin-top: 3px; }
+.tarea-total { font-size: 14.5px; }
+.tarea-caret { font-size: 10px; }
+.tarea-baremos { margin-top: 7px; padding-top: 6px; }
+.tarea-baremo-item { font-size: 11px; padding: 2px 0; }
+.tarea-card-actions { margin-top: 8px; }
+.tarea-del-btn { padding: 5px 10px; font-size: 11px; }
+
+/* Cabecera en pantallas muy angostas: el titulo nunca choca con las acciones */
+.app-header h1 { overflow: hidden; }
+@media (max-width: 360px) {
+  .app-header { padding-left: 10px; padding-right: 10px; }
+  .app-header h1 { font-size: 14px; gap: 6px; }
+  .app-header h1 .logo-ico { width: 22px; height: 22px; }
+  .header-actions { gap: 5px; }
+  .btn-install-pwa { padding: 6px 8px; }
+  .btn-install-pwa .bip-txt { display: none; }   /* solo icono: minimalista */
+  .btn-ayuda { padding: 6px 8px; font-size: 10px; letter-spacing: .3px; }
+  .icon-btn { width: 30px; height: 30px; font-size: 14px; }
 }

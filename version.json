@@ -1,6 +1,5 @@
 {
-  "version": "5.8.39",
-  "releaseDate": "2026-08-19",
-  "changelog": "Mapas de jurisdicción para San Martín, Pilar-Escobar, Olivos y Tigre generados e integrados con precarga integral y normalización resiliente de zonas."
+  "version": "5.8.40",
+  "releaseDate": "2026-08-21",
+  "changelog": "Cabecera fija que nunca desaparece al hacer scroll y barra de busqueda siempre visible debajo de ella. Cabecera mejor organizada: boton Instalar app minimalista ubicado antes de AYUDA. Casillas de tipo de trabajo mas chicas y en una sola linea, con etiquetas abreviadas en pantallas angostas. Tarjetas de tareas del dia finalizadas mas compactas (fecha y zona en una sola linea). Actualizacion no destructiva: se conservan todos los datos existentes."
 }
-

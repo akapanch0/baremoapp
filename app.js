@@ -1,833 +1,16 @@
 /* ============================================================
-   BAREMOS v5.8.33 - app.js COMPLETO (REPARACIÓN INTEGRAL Y TAREAS)
+   BAREMOS v5.8.40 - app.js COMPLETO
    ============================================================ */
-const DEFAULT_BAREMOS = [
-  {
-    "baremo": "O111302",
-    "descripcion": "Por verificacion completa T1 bajo tension de acometida y equipo de medicion en instalacion aereas. Por suministro.",
-    "precio": 7625
-  },
-  {
-    "baremo": "O111303",
-    "descripcion": "Por verificacion completa T1 bajo tension de acometida y equipo de medicion en instalacion subterraneas. Por suministro.",
-    "precio": 3726
-  },
-  {
-    "baremo": "O111304",
-    "descripcion": "Cambio de medidor monofasico (Tarea Asociada)",
-    "precio": 2930
-  },
-  {
-    "baremo": "O111305",
-    "descripcion": "Cambio de medidores trifasicos T1 y T2, en instalaciones aereas asociado a la verificacion de equipos de medicion u otra tarea. Por medidor",
-    "precio": 3176
-  },
-  {
-    "baremo": "O111306",
-    "descripcion": "Cambio de la/s tapa/s existente por tapa y termomagnetica mono/trifasica en acometidas aereas",
-    "precio": 2224
-  },
-  {
-    "baremo": "O111307",
-    "descripcion": "Verificacion ocular sin accion. Tarea asociada.",
-    "precio": 1335
-  },
-  {
-    "baremo": "O111308",
-    "descripcion": "Confeccion de acta por fraude. Tarea asociada.",
-    "precio": 3247
-  },
-  {
-    "baremo": "O111309",
-    "descripcion": "Retiro de conexiones clandestinas en habitaculo, en acometida o en linea, de clientes de cualquier tarifa. Tarea asociada.",
-    "precio": 1391
-  },
-  {
-    "baremo": "O111310",
-    "descripcion": "Conexión monofasica con cable concentrico, sin cruce de calle, hasta bornera de medidor o proteccion. Tarea asociada. Incluye colocacion de herrajes de retension.",
-    "precio": 9856
-  },
-  {
-    "baremo": "O111311",
-    "descripcion": "Conexión monofasica con cable concentrico, con cruce de calle, hasta bornera de medidor o proteccion.",
-    "precio": 11570
-  },
-  {
-    "baremo": "O111312",
-    "descripcion": "Conexión trifasica con cable concentrico o LAPE, sin cruce de calle, hasta bornera de medidor o proteccion. Tarea asociada. Incluye colocacion de herrajes de retension.",
-    "precio": 19307
-  },
-  {
-    "baremo": "O111313",
-    "descripcion": "Conexión trifasica con cable concentrico o LAPE, con cruce de calle, hasta bornera de medidor o proteccion. Tarea asociada. Incluye colocacion de herrajes de retension.",
-    "precio": 23308
-  },
-  {
-    "baremo": "O111314",
-    "descripcion": "Retiro de acometida mono/trifasica sin cruce de calle, por suspension de suministros desde linea o caja de interconexion. Tarea asociada.",
-    "precio": 2118
-  },
-  {
-    "baremo": "O111315",
-    "descripcion": "Retiro de acometida mono/trifasica con cruce de calle, por suspension de suministros desde linea o caja de interconexion. Tarea asociada.",
-    "precio": 3653
-  },
-  {
-    "baremo": "O111316",
-    "descripcion": "Instalacion de medidor trifasico, DIME agrupados.",
-    "precio": 4056
-  },
-  {
-    "baremo": "O111317",
-    "descripcion": "Instalacion de medidor monofasico, tapa y termomagnetica. DIME agrupados.",
-    "precio": 4524
-  },
-  {
-    "baremo": "O111318",
-    "descripcion": "Retiro de medidor mono o trifasico. DIME agrupados.",
-    "precio": 2984
-  },
-  {
-    "baremo": "O111319",
-    "descripcion": "Verificacion de funcionamiento y determinacion del error IN SITU de medidor mono o trifasico T1",
-    "precio": 3610
-  },
-  {
-    "baremo": "O111320",
-    "descripcion": "Verificacion ocular con accion electricas en clientes T1. Tarea asociada.",
-    "precio": 2256
-  },
-  {
-    "baremo": "O111321",
-    "descripcion": "Soldadura contrapa metalica en medidor o gabinete colectivo. Tarea asociada.",
-    "precio": 2382
-  },
-  {
-    "baremo": "O111322",
-    "descripcion": "Instalacion de caja antihurto en caja de medidor monofasico existente.",
-    "precio": 3176
-  },
-  {
-    "baremo": "O111812",
-    "descripcion": "Verif Medidor autoadministrado",
-    "precio": 10134
-  },
-  {
-    "baremo": "O111813",
-    "descripcion": "Verif.Med.auto adm.c/Cbio medidor",
-    "precio": 9946
-  },
-  {
-    "baremo": "O111814",
-    "descripcion": "Verif. Medidor auto administr s/ascenso",
-    "precio": 2245
-  },
-  {
-    "baremo": "O111832",
-    "descripcion": "Reclamo/Verificación MIDE SIN ASCENSO",
-    "precio": 4119
-  },
-  {
-    "baremo": "O111830",
-    "descripcion": "MIDE piso: Conex UTD+Caja IP+Kit Caño",
-    "precio": 10394
-  },
-  {
-    "baremo": "O111803",
-    "descripcion": "Verif. MIDE c/HIDRO Incl Cambio UM/UTD",
-    "precio": 10133
-  },
-  {
-    "baremo": "O111810",
-    "descripcion": "Instalación de medidor Bicuerpo comunicado PLC",
-    "precio": 7716
-  },
-  {
-    "baremo": "O111811",
-    "descripcion": "Conexión sobre poste UM ADICIONAL",
-    "precio": 4699
-  },
-  {
-    "baremo": "O111831",
-    "descripcion": "Gest.contratación medidores auto-admin",
-    "precio": 4119
-  },
-  {
-    "baremo": "O111820",
-    "descripcion": "Multimed: Montaj Caja + Conexión de UM´s",
-    "precio": 49132
-  },
-  {
-    "baremo": "O111822",
-    "descripcion": "Multimed: Instal Concentrador MIDE",
-    "precio": 27962.38
-  },
-  {
-    "baremo": "O111823",
-    "descripcion": "Multimed: Instal Adic h/5 UM Post montaj",
-    "precio": 8975
-  },
-  {
-    "baremo": "O111824",
-    "descripcion": "Multimed: Tendido Agrupado d Concéntrico",
-    "precio": 170
-  },
-  {
-    "baremo": "O111801",
-    "descripcion": "Instal / Reloc Caja al vuelo y UM-MIDE",
-    "precio": 8641
-  },
-  {
-    "baremo": "O111802",
-    "descripcion": "Conexión al Vuelo de UM ADICIONAL",
-    "precio": 7927
-  },
-  {
-    "baremo": "M120801",
-    "descripcion": "Tendido de lape o concentrico 4 x 16 mm2",
-    "precio": 350
-  },
-  {
-    "baremo": "M120802",
-    "descripcion": "Tendido LAPE <= 3 x 95/50 mm2",
-    "precio": 514
-  },
-  {
-    "baremo": "N120804",
-    "descripcion": "Coloc.vaina autosold.en conector exist.",
-    "precio": 1535
-  },
-  {
-    "baremo": "O220201",
-    "descripcion": "Susp.sumin.T1óT2 de bonera med. en Pcia",
-    "precio": 4319
-  },
-  {
-    "baremo": "O220202",
-    "descripcion": "Susp.sum.T1óT2 d/toma/otro med. en Pcia",
-    "precio": 4725
-  },
-  {
-    "baremo": "O220203",
-    "descripcion": "Susp.sumin. dde termomag. en Pcia",
-    "precio": 2776
-  },
-  {
-    "baremo": "O220204",
-    "descripcion": "Susp.sumin.mono/trif.e/altura en Pcia",
-    "precio": 5080
-  },
-  {
-    "baremo": "O220205",
-    "descripcion": "Retiro acomet. s/cruce p/susp. en Pcia",
-    "precio": 4096
-  },
-  {
-    "baremo": "O220206",
-    "descripcion": "Retiro acomet. c/cruce p/susp.en Pcia",
-    "precio": 8725
-  },
-  {
-    "baremo": "O220210",
-    "descripcion": "SUSP MEDIDOR C/HIDRO EN CAJA MULTIMED",
-    "precio": 7717
-  },
-  {
-    "baremo": "O220401",
-    "descripcion": "Retiro med.T1óT2 p/corte servicio Pcia",
-    "precio": 4121
-  },
-  {
-    "baremo": "O220402",
-    "descripcion": "Retiro acomet. sin cruce p/corte en Pcia",
-    "precio": 6966
-  },
-  {
-    "baremo": "O220403",
-    "descripcion": "Retiro acomet. con cruce p/corte en Pcia",
-    "precio": 7642
-  },
-  {
-    "baremo": "O220404",
-    "descripcion": "Ret. med. y acometida sin cruce en Pcia",
-    "precio": 9499
-  },
-  {
-    "baremo": "O220405",
-    "descripcion": "Ret. med. y acometida con cruce en Pcia",
-    "precio": 10269
-  },
-  {
-    "baremo": "O220410",
-    "descripcion": "RETIRO MEDIDOR C/HIDRO EN CAJA MULTIMED",
-    "precio": 7667
-  },
-  {
-    "baremo": "O220601",
-    "descripcion": "Rehab.sumin.dde bonera med.monof en Pcia",
-    "precio": 6501
-  },
-  {
-    "baremo": "O220602",
-    "descripcion": "Rehab.sumin.dde bonera med.trif en Pcia",
-    "precio": 8072
-  },
-  {
-    "baremo": "O220603",
-    "descripcion": "Rehab.sumin.dde protec.termomag. en Pcia",
-    "precio": 4633
-  },
-  {
-    "baremo": "O220604",
-    "descripcion": "Reinstalación medidor monofásico en Pcia",
-    "precio": 4877
-  },
-  {
-    "baremo": "O220605",
-    "descripcion": "Reinstalación medidor trifásico en Pcia",
-    "precio": 5880
-  },
-  {
-    "baremo": "O220607",
-    "descripcion": "Rehab.T1óT2 d/toma/otro med.trif en Pcia",
-    "precio": 6682
-  },
-  {
-    "baremo": "O220608",
-    "descripcion": "Rehab sumin. Mono/trif en altura",
-    "precio": 7382
-  },
-  {
-    "baremo": "O220609",
-    "descripcion": "Reinst.acometida monof.sin cruce en Pcia",
-    "precio": 12133
-  },
-  {
-    "baremo": "O220610",
-    "descripcion": "Reinst.acometida trif.sin cruce en Pcia",
-    "precio": 10553
-  },
-  {
-    "baremo": "O220611",
-    "descripcion": "Reinst.acometida monof.con cruce en Pcia",
-    "precio": 12620
-  },
-  {
-    "baremo": "O220612",
-    "descripcion": "Reinst.acometida trif.con cruce en Pcia",
-    "precio": 11167
-  },
-  {
-    "baremo": "O220613",
-    "descripcion": "Reinst.acom y med.monof. s/cruce en Pcia",
-    "precio": 14405
-  },
-  {
-    "baremo": "O220614",
-    "descripcion": "Reinst.acom y med.trifas.s/cruce en Pcia",
-    "precio": 14781
-  },
-  {
-    "baremo": "O220615",
-    "descripcion": "Reinst.acom y med.monof. c/cruce en Pcia",
-    "precio": 10299
-  },
-  {
-    "baremo": "O220616",
-    "descripcion": "Reinst.acom y med.trifas.c/cruce en Pcia",
-    "precio": 15520
-  },
-  {
-    "baremo": "O220620",
-    "descripcion": "REHAB MEDIDOR C/HIDRO EN CAJA MULTIMED",
-    "precio": 8947
-  },
-  {
-    "baremo": "O220701",
-    "descripcion": "Retiro conexión clandestina",
-    "precio": 2822
-  },
-  {
-    "baremo": "O220702",
-    "descripcion": "Verif.ocular susp,corte o rehab",
-    "precio": 2634
-  },
-  {
-    "baremo": "O220703",
-    "descripcion": "Acción fallida",
-    "precio": 2186
-  },
-  {
-    "baremo": "O220704",
-    "descripcion": "Cambio de medidor tarea asociada",
-    "precio": 1490
-  },
-  {
-    "baremo": "O220705",
-    "descripcion": "Repos. O cambio tapa y termica asoc",
-    "precio": 2321
-  },
-  {
-    "baremo": "O220706",
-    "descripcion": "Cbio/rep pipeta caño pilar (asoc DIME",
-    "precio": 3200
-  },
-  {
-    "baremo": "M111201",
-    "descripcion": "Fundación hormigón en terreno normal",
-    "precio": 29300
-  },
-  {
-    "baremo": "M120601",
-    "descripcion": "Inst.rienda sple con anclaje articulado",
-    "precio": 33973
-  },
-  {
-    "baremo": "M120602",
-    "descripcion": "Inst.rienda sple con anclaje helicoidal",
-    "precio": 17198
-  },
-  {
-    "baremo": "M120603",
-    "descripcion": "Instalación de tensor en vano abierto",
-    "precio": 20067
-  },
-  {
-    "baremo": "M120604",
-    "descripcion": "Retiro rienda o tensor en vano abierto",
-    "precio": 4599
-  },
-  {
-    "baremo": "M120701",
-    "descripcion": "Inst.herrajes term.o sostén e/pte exist.",
-    "precio": 3133
-  },
-  {
-    "baremo": "O110301",
-    "descripcion": "Cbio tapa/s c/termomag.aérea,no asociado",
-    "precio": 5056
-  },
-  {
-    "baremo": "O110302",
-    "descripcion": "Cambio tapa/s c/termomag.aérea,asociado",
-    "precio": 2556
-  },
-  {
-    "baremo": "O111323",
-    "descripcion": "Fijac y sell de marco y Coloc mirilla",
-    "precio": 2382
-  },
-  {
-    "baremo": "O111324",
-    "descripcion": "Colocación de mirilla",
-    "precio": 1198
-  },
-  {
-    "baremo": "M120901",
-    "descripcion": "Ret.LABT.convenc.desmont.pequeños disp.",
-    "precio": 106
-  },
-  {
-    "baremo": "M120902",
-    "descripcion": "Ret.LABT.preensambl.desmont.pqños disp.",
-    "precio": 170
-  },
-  {
-    "baremo": "M121001",
-    "descripcion": "Inst.caja interconexión mono/trifasica",
-    "precio": 7397
-  },
-  {
-    "baremo": "M121101",
-    "descripcion": "Instalación jabalina de p.a.t.en L.A.B.T",
-    "precio": 14687
-  },
-  {
-    "baremo": "M121201",
-    "descripcion": "Coloc. manta termocontraible en LAPE",
-    "precio": 3787
-  },
-  {
-    "baremo": "M121301",
-    "descripcion": "Traspaso acometida por cbio conduc. LABT",
-    "precio": 778
-  },
-  {
-    "baremo": "M420103",
-    "descripcion": "Conex.monof.c/c.conc.dde linea sin cruce",
-    "precio": 7292
-  },
-  {
-    "baremo": "M420104",
-    "descripcion": "Conex.monof.c/c.conc.dde linea con cruce",
-    "precio": 9731
-  },
-  {
-    "baremo": "M420107",
-    "descripcion": "Conexión trifásica desde línea sin cruce",
-    "precio": 12774
-  },
-  {
-    "baremo": "M420108",
-    "descripcion": "Conexión trifásica desde línea con cruce",
-    "precio": 16124
-  },
-  {
-    "baremo": "M420302",
-    "descripcion": "Instalación pilar (madera) carenciado con 1 caja. Por pilar.",
-    "precio": 15916
-  },
-  {
-    "baremo": "M420303",
-    "descripcion": "Retiro de pilar carenciado.",
-    "precio": 6845
-  },
-  {
-    "baremo": "M420304",
-    "descripcion": "Instalación de caja para medidor (monofásico o trifásico), adicional en pilar existente (posición izquierda o derecha) o montada sobre pared. Por 2.243,00",
-    "precio": 2243
-  },
-  {
-    "baremo": "M420305",
-    "descripcion": "Col.caño adicional en pilar exist/pared",
-    "precio": 3694
-  },
-  {
-    "baremo": "M420401",
-    "descripcion": "Retiro y reinst.artefacto alumb.público",
-    "precio": 11817
-  },
-  {
-    "baremo": "M420402",
-    "descripcion": "Provisión/colocación fotocélula para AP",
-    "precio": 5502
-  },
-  {
-    "baremo": "N121103",
-    "descripcion": "Aplomado de pilar carenciado existente",
-    "precio": 8732
-  },
-  {
-    "baremo": "N410301",
-    "descripcion": "PODA PUNTUAL EQUILIBRADA 1 a 2 árboles",
-    "precio": 6428
-  },
-  {
-    "baremo": "N221601",
-    "descripcion": "Reparación de avería conex.cliente",
-    "precio": 2458
-  },
-  {
-    "baremo": "N221602",
-    "descripcion": "Reparación de averia red BT",
-    "precio": 20032
-  },
-  {
-    "baremo": "N221605",
-    "descripcion": "Reclamo fallido/reposición termomag.",
-    "precio": 5803
-  },
-  {
-    "baremo": "N221901",
-    "descripcion": "Cierre/apertura de red en buzón",
-    "precio": 2437
-  },
-  {
-    "baremo": "N221902",
-    "descripcion": "Cierre/apertura de red en caja esquinera",
-    "precio": 3494
-  },
-  {
-    "baremo": "N222104",
-    "descripcion": "Cbio tapa c/termomag. subterr, asociado",
-    "precio": 707
-  },
-  {
-    "baremo": "N310601",
-    "descripcion": "Cbio conexionado completo MT en plataf.",
-    "precio": 88259
-  },
-  {
-    "baremo": "N121401",
-    "descripcion": "Reparación de avería en red aérea BT",
-    "precio": 17765
-  },
-  {
-    "baremo": "N121402",
-    "descripcion": "Repar.de avería en cruce,acomet.o medic.",
-    "precio": 10021
-  },
-  {
-    "baremo": "N121403",
-    "descripcion": "Reposición termomagnética, única tarea.",
-    "precio": 5566
-  },
-  {
-    "baremo": "N121404",
-    "descripcion": "Reposic.del servicio c/ramal provisorio",
-    "precio": 4026
-  },
-  {
-    "baremo": "N121405",
-    "descripcion": "Rep.fallida instal. Edenor y clte normal",
-    "precio": 5566
-  },
-  {
-    "baremo": "N121406",
-    "descripcion": "Rep.fallida problema interno cliente",
-    "precio": 5225
-  },
-  {
-    "baremo": "N121412",
-    "descripcion": "Recl MIDE CON ASCENSO tareaaltura y piso",
-    "precio": 8429
-  },
-  {
-    "baremo": "N121432",
-    "descripcion": "Recl MIDE SIN ASCENSO -tareas desde piso",
-    "precio": 4870
-  },
-  {
-    "baremo": "N121801",
-    "descripcion": "Cbio medidor monofás.T1 aérea, asociado",
-    "precio": 8357
-  },
-  {
-    "baremo": "N121804",
-    "descripcion": "Cbio tapa/s c/termomag. aérea, asociado",
-    "precio": 3891
-  },
-  {
-    "baremo": "N121603",
-    "descripcion": "Cbio/rep pipeta caño pilar (tarea asoc)",
-    "precio": 1343
-  },
-  {
-    "baremo": "N120607",
-    "descripcion": "Cbio conex.monofás.c/c concent.s/cruce",
-    "precio": 7558
-  },
-  {
-    "baremo": "N120608",
-    "descripcion": "Cbio conex.monofás.c/c concent.c/cruce",
-    "precio": 9256
-  },
-  {
-    "baremo": "N120703",
-    "descripcion": "Reparación de conductores LABT convenc.",
-    "precio": 4749
-  },
-  {
-    "baremo": "N120704",
-    "descripcion": "Reparación de conductor neutro de LAPE",
-    "precio": 13890
-  },
-  {
-    "baremo": "N120705",
-    "descripcion": "Rep.conduc.cruce de calle LAPE o convenc",
-    "precio": 3876
-  },
-  {
-    "baremo": "N120802",
-    "descripcion": "Desconexión,reconex.o retiro de puentes",
-    "precio": 3761
-  },
-  {
-    "baremo": "N120803",
-    "descripcion": "Cambio uno ó más morsetos por conexión",
-    "precio": 4517
-  },
-  {
-    "baremo": "N111103",
-    "descripcion": "Colocación de disuasivos de aves",
-    "precio": 1375
-  },
-  {
-    "baremo": "N110202",
-    "descripcion": "Ejecución empalmes rectos d/conduct.LAMT",
-    "precio": 56995
-  },
-  {
-    "baremo": "M110201",
-    "descripcion": "Poste simple H°A° L.Vertical o Compacta",
-    "precio": 59014
-  },
-  {
-    "baremo": "M111104",
-    "descripcion": "Retiro poste simpe de madera de LAMT",
-    "precio": 8264
-  },
-  {
-    "baremo": "M120201",
-    "descripcion": "Instalación completa poste simple sosten, terminal, amarre (simple o doble, con o sin desvio/derivación), de madera, de hasta 9 metros de altura.",
-    "precio": 18448
-  },
-  {
-    "baremo": "M120202",
-    "descripcion": "Instalación completa poste simple sosten, terminal, amarre (simple o doble, con o sin desvio/derivación), de madera, de 11 metros de altura. La p",
-    "precio": 31918
-  },
-  {
-    "baremo": "M120301",
-    "descripcion": "Instalación completa poste simple terminal de madera, de hasta 9 metros de altura, con contraposte. Incluye provisión y tratamiento de durmientes",
-    "precio": 76779
-  },
-  {
-    "baremo": "M120302",
-    "descripcion": "Inst.poste madera c/contraposte de 11m",
-    "precio": 95833
-  },
-  {
-    "baremo": "M120305",
-    "descripcion": "Inst.poste simple H° hasta 9 m c/fund.",
-    "precio": 102040
-  },
-  {
-    "baremo": "M120401",
-    "descripcion": "Transf.pte sple e/term.<=9 m c/ctrpte",
-    "precio": 40923
-  },
-  {
-    "baremo": "M120501",
-    "descripcion": "Retiro poste o contraposte madera h/11m",
-    "precio": 6765
-  },
-  {
-    "baremo": "M120502",
-    "descripcion": "Ret.poste doble o poste c/ctrposte h/11m",
-    "precio": 12985
-  },
-  {
-    "baremo": "M120503",
-    "descripcion": "Retiro poste hormigon s/fundación h/9m",
-    "precio": 27307
-  },
-  {
-    "baremo": "N120101",
-    "descripcion": "Cambio poste simple sostén madera h/9m",
-    "precio": 24416
-  },
-  {
-    "baremo": "N120102",
-    "descripcion": "Cambio poste simple sostén madera 11m",
-    "precio": 28153
-  },
-  {
-    "baremo": "N120104",
-    "descripcion": "Cbio pte sple term/amarre madera h/9m",
-    "precio": 34603
-  },
-  {
-    "baremo": "N120105",
-    "descripcion": "Cbio poste simple term/amarre madera 11m",
-    "precio": 37174
-  },
-  {
-    "baremo": "N120201",
-    "descripcion": "Cbio poste y contraposte d/madera h/9m",
-    "precio": 92708
-  },
-  {
-    "baremo": "N120202",
-    "descripcion": "Cbio poste y contraposte de madera 11m",
-    "precio": 67924
-  },
-  {
-    "baremo": "N120203",
-    "descripcion": "Cambio postes dobles de madera h/9m",
-    "precio": 92858
-  },
-  {
-    "baremo": "N120204",
-    "descripcion": "Cambio postes dobles de madera 11m",
-    "precio": 94396
-  },
-  {
-    "baremo": "N120205",
-    "descripcion": "Cambio contraposte en línea de h/9m",
-    "precio": 39358
-  },
-  {
-    "baremo": "N120206",
-    "descripcion": "Cambio contraposte en línea de 11m",
-    "precio": 46330
-  },
-  {
-    "baremo": "N120207",
-    "descripcion": "Sunchado poste c/prov/coloc.pte tutor",
-    "precio": 10350
-  },
-  {
-    "baremo": "N120302",
-    "descripcion": "Retensado de rienda existente",
-    "precio": 3962
-  },
-  {
-    "baremo": "N120403",
-    "descripcion": "Cambio de cruceta simple sostén",
-    "precio": 3962
-  },
-  {
-    "baremo": "N120501",
-    "descripcion": "Cambio de conductores LAPE",
-    "precio": 905
-  },
-  {
-    "baremo": "N120605",
-    "descripcion": "Cbio conex.monof.conv.x concent.s/cruce",
-    "precio": 9728
-  },
-  {
-    "baremo": "N120606",
-    "descripcion": "Cbio conex.monof.conv.x concent c/cruce",
-    "precio": 12976
-  },
-  {
-    "baremo": "N120702",
-    "descripcion": "Tensado de LABT preensamblada existente",
-    "precio": 243
-  },
-  {
-    "baremo": "N121101",
-    "descripcion": "Aplomado poste simple de madera exist.",
-    "precio": 10810
-  },
-  {
-    "baremo": "N121102",
-    "descripcion": "Aplomado poste doble de madera exist.",
-    "precio": 18247
-  },
-  {
-    "baremo": "N121104",
-    "descripcion": "Aplomado de columna H°A° en LABT",
-    "precio": 6788
-  },
-  {
-    "baremo": "N121203",
-    "descripcion": "Retiro conduc.cortados energiz.s/reparar",
-    "precio": 3242
-  },
-  {
-    "baremo": "N121701",
-    "descripcion": "Cbio masivo poste sple de madera h/9m",
-    "precio": 24416
-  },
-  {
-    "baremo": "N121702",
-    "descripcion": "Cambio poste simple sostén madera 11m",
-    "precio": 29229
-  }
-];
+const APP_VERSION = '5.8.40';
 
-const APP_VERSION = '5.8.38';
-
+/* Control de versión de Términos y Condiciones */
 const CURRENT_TERMS_VERSION = 1;
 
 const State = {
   user: null,
   jornada: null,
-  currentTarea: { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 },
-  baremo: [...DEFAULT_BAREMOS],
+  items: [],
+  baremo: [],
   theme: 'light',
   currentVersion: null,
   histFilter: 'hoy',
@@ -839,10 +22,7 @@ const State = {
   mensaje150kMostrado: false,
   mensaje125kMostrado: false,
   mensaje100kMostrado: false,
-  metaAlcanzada: false,
-  notifEnabled: false,
-  notifTime: '18:00',
-  lastNotifDate: null
+  metaAlcanzada: false
 };
 
 const $ = (s, p = document) => p.querySelector(s);
@@ -870,7 +50,7 @@ function getConfigMes(monto) {
 }
 
 /* ============================================================
-   CONTENIDO MENÚ LEGAL
+   CONTENIDO MENÚ LEGAL (FUENTE DE VERDAD)
    ============================================================ */
 const INFO_CONTENT = {
   privacidad: {
@@ -883,7 +63,7 @@ const INFO_CONTENT = {
   },
   legal: {
     title: "Aviso Legal",
-    html: `<p>BAREMO es un proyecto independiente y freelance, sin asociaciones con empresas, entidades o marcas del sector eléctrico.</p><p>La información presentada en el sitio y la aplicación tiene fines operativos y organizativos para contratistas.</p><p>No se garantiza la exactitud de los cálculos o registros generados por el usuario, ya que cada contratista maneja sus propios Baremos y estos pueden variar.</p><p>El desarrollador no asume responsabilidad por decisions comerciales tomadas a partir del uso de la aplicación.</p>`
+    html: `<p>BAREMO es un proyecto independiente y freelance, sin asociaciones con empresas, entidades o marcas del sector eléctrico.</p><p>La información presentada en el sitio y la aplicación tiene fines operativos y organizativos para contratistas.</p><p>No se garantiza la exactitud de los cálculos o registros generados por el usuario, ya que cada contratista maneja sus propios Baremos y estos pueden variar.</p><p>El desarrollador no asume responsabilidad por decisiones comerciales tomadas a partir del uso de la aplicación.</p>`
   },
   contacto: {
     title: "Contacto",
@@ -909,162 +89,56 @@ function showInfoModal(key) {
 }
 
 /* ============================================================
-   ZONAS Y MAPAS (PRECARGA INTEGRAL Y VISUALIZACIÓN RÁPIDA)
+   ZONAS Y MAPAS
    ============================================================ */
 const ZONA_MAPAS = {
-  'Trujui': { archivo: 'trujui.png', nombre: 'Trujui', id: 'Trujui' },
-  'Cuartel V': { archivo: 'cuartelv.png', nombre: 'Cuartel V', id: 'Cuartel V' },
-  'Moreno': { archivo: 'moreno.png', nombre: 'Moreno', id: 'Moreno' },
-  'Gral. Rodríguez': { archivo: 'gralrodriguez.png', nombre: 'Gral. Rodríguez', id: 'Gral. Rodríguez' },
-  'Tigre': { archivo: 'tigre.png', nombre: 'Tigre', id: 'Tigre' },
-  'San Martín': { archivo: 'sanmartin.png', nombre: 'San Martín', id: 'San Martín' },
-  'Olivos': { archivo: 'olivos.png', nombre: 'Olivos', id: 'Olivos' },
-  'Pilar-Escobar': { archivo: 'pilarescobar.png', nombre: 'Pilar-Escobar', id: 'Pilar-Escobar' }
+  'Trujui': { archivo: 'trujui.png', nombre: 'Trujui' },
+  'Cuartel V': { archivo: 'cuartelv.png', nombre: 'Cuartel V' },
+  'Moreno': { archivo: 'moreno.png', nombre: 'Moreno' },
+  'Gral. Rodríguez': { archivo: 'gralrodriguez.png', nombre: 'Gral. Rodríguez' },
+  'Tigre': { archivo: 'tigre.png', nombre: 'Tigre' },
+  'San Martín': { archivo: 'sanmartin.png', nombre: 'San Martín' },
+  'Olivos': { archivo: 'olivos.png', nombre: 'Olivos' },
+  'Pilar-Escobar': { archivo: 'pilarescobar.png', nombre: 'Pilar-Escobar' }
 };
 
-function normalizeZonaString(z) {
-  if (!z) return '';
-  return String(z)
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '');
-}
-
-function getMapaInfo(zona) {
-  if (!zona) return null;
-  if (ZONA_MAPAS[zona]) return ZONA_MAPAS[zona];
-  
-  const norm = normalizeZonaString(zona);
-  if (!norm) return null;
-
-  for (const k of Object.keys(ZONA_MAPAS)) {
-    if (normalizeZonaString(k) === norm) {
-      return ZONA_MAPAS[k];
-    }
-  }
-
-  if (norm.includes('sanmartin') || (norm.includes('martin') && !norm.includes('martelli'))) return ZONA_MAPAS['San Martín'];
-  if (norm.includes('pilar') || norm.includes('escobar')) return ZONA_MAPAS['Pilar-Escobar'];
-  if (norm.includes('olivo') || norm.includes('vicentelopez')) return ZONA_MAPAS['Olivos'];
-  if (norm.includes('tigre')) return ZONA_MAPAS['Tigre'];
-  if (norm.includes('cuartel')) return ZONA_MAPAS['Cuartel V'];
-  if (norm.includes('rodriguez') || norm.includes('gralrodriguez')) return ZONA_MAPAS['Gral. Rodríguez'];
-  if (norm.includes('moreno')) return ZONA_MAPAS['Moreno'];
-  if (norm.includes('trujui')) return ZONA_MAPAS['Trujui'];
-
-  return null;
-}
-
-const preloadedMapImages = {};
-
-function preloadMapas() {
-  Object.keys(ZONA_MAPAS).forEach(k => {
-    const m = ZONA_MAPAS[k];
-    const im = new Image();
-    im.src = `maps/${m.archivo}`;
-    preloadedMapImages[k] = im;
-    preloadedMapImages[m.archivo] = im;
-    preloadedMapImages[normalizeZonaString(k)] = im;
-  });
-}
-
-function renderMapaIntoElements(zona, elements) {
-  const { container, img, placeholder, titulo, nombre } = elements;
+function mostrarMapaZona(zona) {
+  const container = $('#zonaMapaContainer');
+  const img = $('#zonaMapaImg');
+  const placeholder = $('#zonaMapaPlaceholder');
+  const titulo = $('#zonaMapaTitulo');
+  const nombre = $('#zonaMapaNombre');
   if (!container) return;
-
-  const mapa = getMapaInfo(zona);
-
-  if (!zona || !mapa) {
-    if (titulo) titulo.textContent = 'Previsualización de Mapa';
-    if (nombre) nombre.textContent = 'Seleccioná una zona';
-    if (img) img.style.display = 'none';
-    if (placeholder) {
-      placeholder.innerHTML = `<div><span class="zmp-ico">🗺️</span><span>Seleccioná una zona para ver el mapa</span></div>`;
-      placeholder.style.display = 'grid';
-    }
-    container.classList.add('show');
+  if (!zona || !ZONA_MAPAS[zona]) {
+    container.classList.remove('show');
     return;
   }
-
-  if (titulo) titulo.textContent = `Zona: ${mapa.nombre}`;
-  if (nombre) nombre.textContent = mapa.nombre;
-
-  const targetSrc = `maps/${mapa.archivo}`;
-
-  // Si ya tenemos la imagen precargada en memoria o en DOM
-  const normKey = normalizeZonaString(mapa.nombre);
-  const preloaded = preloadedMapImages[mapa.nombre] || preloadedMapImages[normKey] || preloadedMapImages[mapa.archivo];
-  if (preloaded && preloaded.complete && preloaded.naturalWidth > 0) {
-    if (img) {
-      img.src = targetSrc;
-      img.style.display = 'block';
-    }
-    if (placeholder) placeholder.style.display = 'none';
-    container.classList.add('show');
-    return;
-  }
-
-  if (img) img.style.display = 'none';
-  if (placeholder) {
-    placeholder.innerHTML = `<div><span class="zmp-ico">⏳</span><span>Cargando mapa de ${mapa.nombre}...</span></div>`;
-    placeholder.style.display = 'grid';
-  }
-  container.classList.add('show');
-
+  const mapa = ZONA_MAPAS[zona];
+  titulo.textContent = `Zona: ${mapa.nombre}`;
+  nombre.textContent = mapa.nombre;
+  img.style.display = 'none';
+  placeholder.innerHTML = `<div><span class="zmp-ico">⏳</span><span>Cargando mapa...</span></div>`;
+  placeholder.style.display = 'grid';
+  container.classList.remove('show');
+  void container.offsetWidth;
   const nuevaImg = new Image();
   nuevaImg.onload = () => {
-    preloadedMapImages[mapa.nombre] = nuevaImg;
-    preloadedMapImages[normKey] = nuevaImg;
-    preloadedMapImages[mapa.archivo] = nuevaImg;
-    if (img) {
-      img.src = targetSrc;
-      img.style.display = 'block';
-    }
-    if (placeholder) placeholder.style.display = 'none';
+    img.src = `maps/${mapa.archivo}`;
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
     container.classList.add('show');
   };
   nuevaImg.onerror = () => {
-    if (placeholder) {
-      placeholder.innerHTML = `<div><span class="zmp-ico">⚠️</span><span>Mapa no disponible para ${mapa.nombre}</span></div>`;
-      placeholder.style.display = 'grid';
-    }
+    placeholder.innerHTML = `<div><span class="zmp-ico">⚠️</span><span>Mapa no disponible</span></div>`;
+    placeholder.style.display = 'grid';
     container.classList.add('show');
   };
-  nuevaImg.src = targetSrc;
-}
-
-function mostrarMapaZona(zona) {
-  renderMapaIntoElements(zona, {
-    container: $('#zonaMapaContainer'),
-    img: $('#zonaMapaImg'),
-    placeholder: $('#zonaMapaPlaceholder'),
-    titulo: $('#zonaMapaTitulo'),
-    nombre: $('#zonaMapaNombre')
-  });
-}
-
-function mostrarMapaModalZona(zona) {
-  renderMapaIntoElements(zona, {
-    container: $('#modalZonaMapaContainer'),
-    img: $('#modalZonaMapaImg'),
-    placeholder: $('#modalZonaMapaPlaceholder'),
-    titulo: $('#modalZonaMapaTitulo'),
-    nombre: $('#modalZonaMapaNombre')
-  });
+  nuevaImg.src = `maps/${mapa.archivo}`;
 }
 
 function setupMapaZona() {
   const s = $('#loginZona');
-  if (s) {
-    s.addEventListener('change', e => mostrarMapaZona(e.target.value));
-    s.addEventListener('input', e => mostrarMapaZona(e.target.value));
-  }
-  const z2 = $('#newZonaSelect');
-  if (z2) {
-    z2.addEventListener('change', e => mostrarMapaModalZona(e.target.value));
-    z2.addEventListener('input', e => mostrarMapaModalZona(e.target.value));
-  }
+  if (s) s.addEventListener('change', e => mostrarMapaZona(e.target.value));
 }
 
 /* ============================================================
@@ -1296,31 +370,22 @@ function toast(msg, type='info') {
 function confirmDialog(msg) {
   return new Promise(res => {
     const m = $('#modalConfirm');
-    if (!m) { res(true); return; }
-    
     const activeModals = $$('.modal-backdrop.show').filter(mod => mod.id !== 'modalConfirm');
     activeModals.forEach(mod => mod.classList.remove('show'));
 
-    const msgEl = $('#modalConfirmMsg');
-    if (msgEl) msgEl.textContent = msg;
+    $('#modalConfirmMsg').textContent = msg;
     m.classList.add('show');
 
-    const btnOk = $('#confirmOk');
-    if (btnOk) {
-      btnOk.onclick = () => {
-        m.classList.remove('show');
-        res(true);
-      };
-    }
+    $('#confirmOk').onclick = () => {
+      m.classList.remove('show');
+      res(true);
+    };
     
-    const btnCancel = $('#confirmCancel');
-    if (btnCancel) {
-      btnCancel.onclick = () => {
-        m.classList.remove('show');
-        activeModals.forEach(mod => mod.classList.add('show'));
-        res(false);
-      };
-    }
+    $('#confirmCancel').onclick = () => {
+      m.classList.remove('show');
+      activeModals.forEach(mod => mod.classList.add('show'));
+      res(false);
+    };
   });
 }
 
@@ -1378,7 +443,11 @@ async function registerSW() {
   if (!('serviceWorker' in navigator)) return;
   try {
     swRegistration = await navigator.serviceWorker.register('./sw.js');
-    if (swRegistration.waiting) checkForUpdate(true);
+    
+    if (swRegistration.waiting) {
+        checkForUpdate(true);
+    }
+
     swRegistration.addEventListener('updatefound', () => {
       const newWorker = swRegistration.installing;
       newWorker.addEventListener('statechange', () => {
@@ -1432,15 +501,21 @@ function showUpdateNotification() {
     notification.remove();
     const btn = document.getElementById('updateNowBtn');
     if(btn) { btn.innerText = "Actualizando..."; btn.disabled = true; }
+    
     try {
       if (swRegistration && swRegistration.waiting) {
         swRegistration.waiting.postMessage('SKIP_WAITING');
       }
       const regs = await navigator.serviceWorker.getRegistrations();
-      for (let reg of regs) await reg.unregister();
+      for (let reg of regs) {
+        await reg.unregister();
+      }
       const keys = await caches.keys();
-      for (let key of keys) await caches.delete(key);
+      for (let key of keys) {
+        await caches.delete(key);
+      }
     } catch(e) {}
+    
     window.location.href = window.location.pathname + '?updated=true&t=' + Date.now();
   };
   
@@ -1458,8 +533,10 @@ async function checkForUpdate(silent = false) {
   if (!silent) toast('Buscando actualizaciones...', 'info');
   try {
     if (swRegistration) await swRegistration.update();
+    
     const r = await fetch('./version.json?t=' + Date.now(), { cache: 'no-store' });
     const remoteData = await r.json();
+    
     if (isNewerVersion(remoteData.version, APP_VERSION)) {
       State.updateAvailable = true;
       showUpdateNotification();
@@ -1476,193 +553,40 @@ async function checkForUpdate(silent = false) {
    TÉRMINOS Y PRIVACIDAD (CONTROL SEGURO)
    ============================================================ */
 function getAcceptedTermsVersion() {
-  try { return parseInt(localStorage.getItem('baremos_terms_version')) || 0; }
-  catch(e) { return 0; }
+  try {
+    return parseInt(localStorage.getItem('baremos_terms_version')) || 0;
+  } catch(e) {
+    console.warn('No se pudo leer localStorage para términos:', e);
+    return 0;
+  }
 }
 
 function setAcceptedTermsVersion() {
-  try { localStorage.setItem('baremos_terms_version', CURRENT_TERMS_VERSION.toString()); }
-  catch(e) { console.warn('Error saving terms:', e); }
-}
-
-function isTermsAcceptedForUser(legajo) {
-  if (!legajo) return false;
   try {
-    return localStorage.getItem('baremos_terms_user_' + legajo) === String(CURRENT_TERMS_VERSION);
+    localStorage.setItem('baremos_terms_version', CURRENT_TERMS_VERSION.toString());
   } catch(e) {
-    return false;
+    console.warn('No se pudo guardar en localStorage:', e);
   }
 }
 
-function setTermsAcceptedForUser(legajo) {
-  setAcceptedTermsVersion();
-  if (legajo) {
-    try {
-      localStorage.setItem('baremos_terms_user_' + legajo, String(CURRENT_TERMS_VERSION));
-    } catch(e) {}
-  }
-}
-
-function mostrarPopupTerminos(onAcceptCallback) {
+function mostrarPopupTerminos() {
+  $$('.view').forEach(v => v.classList.remove('active'));
+  $$('.tab-btn').forEach(b => b.classList.remove('active'));
+  
   const modal = $('#modalTerms');
   const content = $('#termsModalContent');
+  
   if (!modal) {
     console.error('CRÍTICO: No se encontró el modal de términos en el DOM.');
-    if (onAcceptCallback) onAcceptCallback();
-    else continuarInicio();
+    continuarInicio();
     return;
   }
+  
   if (content && INFO_CONTENT && INFO_CONTENT.terminos) {
     content.innerHTML = INFO_CONTENT.terminos.html;
   }
-  modal.classList.add('show');
-
-  const btnAccept = $('#btnAcceptTerms');
-  if (btnAccept) {
-    btnAccept.onclick = async (e) => {
-      e.preventDefault();
-      setTermsAcceptedForUser(State.user?.legajo);
-      modal.classList.remove('show');
-      if (onAcceptCallback) {
-        await onAcceptCallback();
-      } else {
-        await continuarInicio();
-      }
-    };
-  }
-}
-
-/* ============================================================
-   MIGRACIÓN SEGURA PARA ESTRUCTURA HEREDADA
-   ============================================================ */
-function getSafeItems(j) {
-  let safeItems = [];
-  if (j.items && j.items.length > 0) {
-      safeItems = j.items;
-  } else if (j.tareas && j.tareas.length > 0) {
-      j.tareas.forEach(t => { if (t.items) safeItems = safeItems.concat(t.items); });
-  }
-  return safeItems;
-}
-
-function getNormalizedTareas(j) {
-  if (j.tareas && j.tareas.length > 0) return j.tareas;
-  if (j.items && j.items.length > 0) {
-    return [{
-      id: j.id || Date.now(),
-      referencia: 'Registros Anteriores',
-      fecha: j.fecha,
-      hora: '',
-      zona: j.zona || '-',
-      items: j.items,
-      total: j.items.reduce((a, it) => a + (it.subtotal || 0), 0)
-    }];
-  }
-  return [];
-}
-
-/* ============================================================
-   PWA CONTROLLER, OFFLINE ENGINE & INSTALLATION
-   ============================================================ */
-let deferredPrompt = null;
-
-function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches || 
-         window.navigator.standalone === true || 
-         document.referrer.includes('android-app://');
-}
-
-function initPWA() {
-  const btnInstall = $('#btnInstallPwa');
-  const modalInstall = $('#modalInstallPwa');
-  const btnClose = $('#btnPwaModalClose');
-  const btnAction = $('#btnPwaModalAction');
-  const iosBox = $('#pwaIosInstructions');
-  const offlineBar = $('#offlineBar');
-
-  function updateNetworkStatus() {
-    if (offlineBar) {
-      offlineBar.style.display = navigator.onLine ? 'none' : 'block';
-    }
-  }
-
-  window.addEventListener('online', () => {
-    updateNetworkStatus();
-    toast('Conexión a internet restablecida', 'success');
-  });
-
-  window.addEventListener('offline', () => {
-    updateNetworkStatus();
-    toast('⚡ Modo Offline activo: podés seguir trabajando normalmente', 'warn');
-  });
-
-  updateNetworkStatus();
-
-  // Capturar evento de instalación nativa PWA
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (btnInstall && !isStandalone()) {
-      btnInstall.style.display = 'inline-flex';
-    }
-  });
-
-  window.addEventListener('appinstalled', () => {
-    deferredPrompt = null;
-    if (btnInstall) btnInstall.style.display = 'none';
-    if (modalInstall) modalInstall.classList.remove('show');
-    toast('🎉 ¡BAREMOS instalada con éxito!', 'success');
-    renderAjustes();
-  });
-
-  const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-  if (isIos && !isStandalone() && btnInstall) {
-    btnInstall.style.display = 'inline-flex';
-  }
-
-  window.openPwaInstallModal = function() {
-    if (!modalInstall) return;
-    if (isStandalone()) {
-      toast('BAREMOS ya está instalada en tu dispositivo', 'success');
-      return;
-    }
-    if (isIos) {
-      if (iosBox) iosBox.style.display = 'block';
-      if (btnAction) {
-        btnAction.textContent = '¡Entendido!';
-        btnAction.onclick = () => modalInstall.classList.remove('show');
-      }
-    } else {
-      if (iosBox) iosBox.style.display = 'none';
-      if (btnAction) {
-        btnAction.textContent = '📲 Instalar App';
-        btnAction.onclick = async () => {
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            if (outcome === 'accepted') {
-              if (btnInstall) btnInstall.style.display = 'none';
-            }
-          } else {
-            toast('Para instalar, abrí el menú de tu navegador y seleccioná "Instalar aplicación"', 'info');
-          }
-          modalInstall.classList.remove('show');
-        };
-      }
-    }
-    modalInstall.classList.add('show');
-  };
-
-  if (btnInstall) btnInstall.onclick = window.openPwaInstallModal;
-  if (btnClose) btnClose.onclick = () => modalInstall.classList.remove('show');
   
-  if (modalInstall) {
-    modalInstall.onclick = e => {
-      if (e.target === modalInstall) modalInstall.classList.remove('show');
-    };
-  }
+  modal.classList.add('show');
 }
 
 /* ============================================================
@@ -1676,44 +600,40 @@ async function init() {
     loadVersion();
     const sv = $('#splashVersion');
     if (sv && State.currentVersion) sv.textContent = `v${State.currentVersion}`;
-    preloadMapas();
     await loadUser();
-    await loadNotificationSettings();
-    startNotificationScheduler();
-    initPWA();
-    initGeoTracking();
   } catch(e) {
     console.error('[Init Error]', e);
     toast('Error al cargar datos iniciales: ' + e.message, 'error');
   }
   
   setTimeout(() => {
-    try {
-      const splash = $('.splash');
-      if (splash) splash.classList.add('hide');
-      
+    const splash = $('.splash');
+    if (splash) splash.classList.add('hide');
+    
+    const acceptedVersion = getAcceptedTermsVersion();
+    if (acceptedVersion < CURRENT_TERMS_VERSION) {
+      mostrarPopupTerminos();
+    } else {
       continuarInicio();
-    } catch(err) {
-      console.error('[Splash Fallback Error]', err);
-      continuarInicio(); 
     }
   }, 800);
   
   try {
     await registerSW();
     setTimeout(() => checkForUpdate(true), 3000);
-  } catch(e) {}
+  } catch(e) {
+    console.warn('[SW Error]', e);
+  }
 }
 
 async function continuarInicio() {
   if (State.user) {
-    try { await loadOrCreateJornada(); } catch (e) {}
-    showApp();
-    if (!isTermsAcceptedForUser(State.user.legajo)) {
-      mostrarPopupTerminos(async () => {
-        showApp();
-      });
+    try {
+      await loadOrCreateJornada();
+    } catch (e) {
+      console.error('[Jornada Error]', e);
     }
+    showApp();
   } else { 
     showLogin(); 
   }
@@ -1731,10 +651,11 @@ function toggleTheme() {
   toast(`Modo ${State.theme === 'light' ? 'claro' : 'oscuro'}`, 'success');
 }
 
-/* NORMALIZACIÓN SEGURA DE BAREMOS EN ARRANQUE */
+/* ============================================================
+   NORMALIZACIÓN SEGURA Y CARGA DE BAREMOS PRECARGADOS
+   ============================================================ */
 async function loadBaremo() {
-  let d = [];
-  try { d = await dbGetAll('baremo'); } catch(e) { console.warn(e); }
+  let d = await dbGetAll('baremo');
   
   const normalizeArray = (arr) => {
     return arr.map(r => ({
@@ -1744,43 +665,35 @@ async function loadBaremo() {
     })).filter(r => r.baremo !== '' && r.baremo !== 'undefined');
   };
 
-  const CURRENT_BAREMO_VERSION = '2026.08.18-v3-163items';
-  let baremosLoadedCfg = null;
-  try {
-    baremosLoadedCfg = await dbGet('config', 'baremos_preestablecidos_loaded');
-  } catch(e) {}
-
-  const needsUpdate = !d || d.length !== DEFAULT_BAREMOS.length || !baremosLoadedCfg || baremosLoadedCfg.value !== CURRENT_BAREMO_VERSION;
-
-  if (needsUpdate) {
-    try {
-      let norm = [...DEFAULT_BAREMOS];
-      try {
-        const r = await fetch('baremo.json?v=' + Date.now(), { cache: 'no-store' });
-        if (r.ok) {
-          const j = await r.json();
-          const arr = Array.isArray(j) ? j : (j.baremos || j.data || [j]);
-          const fetchedNorm = normalizeArray(arr);
-          if (fetchedNorm.length >= DEFAULT_BAREMOS.length) norm = fetchedNorm;
-        }
-      } catch(e) {}
-
-      if (norm.length > 0) {
-        if (d && d.length > 0) {
-          for (const o of d) if (o.baremo) await dbDelete('baremo', o.baremo);
-        }
-        for (const i of norm) await dbPut('baremo', i);
-        try {
-          await dbPut('config', { key: 'baremos_preestablecidos_loaded', value: CURRENT_BAREMO_VERSION });
-        } catch(e) {}
-        d = await dbGetAll('baremo');
-      }
-    } catch(e) {
-      console.warn('[loadBaremo] Error sincronizando:', e);
-    }
+  let needsRepair = false;
+  if (d.length > 0) {
+    needsRepair = d.some(b => b.descripcion === undefined || b.precio === undefined);
   }
 
-  State.baremo = normalizeArray(d && d.length ? d : DEFAULT_BAREMOS);
+  if (d.length === 0 || needsRepair) {
+    try {
+      const r = await fetch('baremo.json', { cache: 'no-store' });
+      if (r.ok) {
+        const j = await r.json();
+        let arr = Array.isArray(j) ? j : (j.baremos || j.data || [j]);
+        const norm = normalizeArray(arr);
+        
+        if (norm.length > 0) {
+          if (needsRepair) {
+            for (const o of d) {
+              if (o.baremo) await dbDelete('baremo', o.baremo);
+            }
+          }
+          for (const i of norm) await dbPut('baremo', i);
+          d = await dbGetAll('baremo');
+        }
+      }
+    } catch(e) {
+      console.warn('Error cargando baremo.json:', e);
+    }
+  }
+  
+  State.baremo = normalizeArray(d);
 }
 
 async function updateBaremoFromFile(file) {
@@ -1809,86 +722,14 @@ async function updateBaremoFromFile(file) {
 }
 
 async function loadUser() {
-  try {
-    let activeLegajo = null;
-    try {
-      const c = await dbGet('config', 'activeUser');
-      if (c && c.value) activeLegajo = c.value;
-    } catch(e) {}
-
-    if (!activeLegajo) {
-      activeLegajo = localStorage.getItem('baremos_active_user');
-    }
-
-    if (activeLegajo) {
-      let u = null;
-      try {
-        u = await dbGet('usuarios', String(activeLegajo));
-      } catch(e) {}
-
-      if (!u) {
-        try {
-          const allUsers = await dbGetAll('usuarios');
-          u = allUsers.find(x => String(x.legajo) === String(activeLegajo));
-        } catch(e) {}
-      }
-
-      if (!u) {
-        try {
-          const savedData = localStorage.getItem('baremos_active_user_data');
-          if (savedData) {
-            const parsed = JSON.parse(savedData);
-            if (parsed && (String(parsed.legajo) === String(activeLegajo) || !activeLegajo)) {
-              u = parsed;
-              try { await dbPut('usuarios', u); } catch(e) {}
-            }
-          }
-        } catch(e) {}
-      }
-
-      if (u) {
-        State.user = u;
-        localStorage.setItem('baremos_active_user', String(u.legajo));
-        localStorage.setItem('baremos_active_user_data', JSON.stringify(u));
-        try { await dbPut('config', { key: 'activeUser', value: String(u.legajo) }); } catch(e) {}
-      }
-    }
-  } catch(e) {
-    console.error('[loadUser Error]', e);
-  }
+  const c = await dbGet('config', 'activeUser');
+  if (c?.value) State.user = await dbGet('usuarios', c.value);
 }
 
 function showLogin() {
   $$('.view').forEach(v => v.classList.remove('active'));
   $$('.tab-btn').forEach(b => b.classList.remove('active'));
-  const vl = $('#viewLogin');
-  if(vl) vl.classList.add('active');
-
-  setupMapaZona();
-
-  // Precargar / recordar campos si existen en memoria local
-  const savedUserJson = localStorage.getItem('baremos_active_user_data');
-  if (savedUserJson) {
-    try {
-      const su = JSON.parse(savedUserJson);
-      if (su) {
-        if (su.nombre && $('#loginNombre')) $('#loginNombre').value = su.nombre;
-        if (su.legajo && $('#loginLegajo')) $('#loginLegajo').value = su.legajo;
-        if (su.zona && $('#loginZona')) {
-          $('#loginZona').value = su.zona;
-          mostrarMapaZona(su.zona);
-        }
-      }
-    } catch(e) {}
-  }
-
-  const s = $('#loginZona');
-  if (s && s.value) {
-    mostrarMapaZona(s.value);
-  } else {
-    mostrarMapaZona('');
-  }
-
+  $('#viewLogin')?.classList.add('active');
   const f = $('#loginForm');
   if (f) {
     f.onsubmit = async e => {
@@ -1898,51 +739,29 @@ function showLogin() {
       const z = $('#loginZona').value;
       if (!n || !l) { toast('Completá todos los campos', 'warn'); return; }
       if (!z) { toast('Seleccioná zona', 'warn'); return; }
-
-      const userData = { nombre: n, legajo: l, zona: z, creado: ahora() };
-
-      try {
-        await dbPut('usuarios', userData);
-        await dbPut('config', { key: 'activeUser', value: l });
-      } catch(err) {
-        console.warn('[DB Login Save]', err);
-      }
-
-      localStorage.setItem('baremos_active_user', l);
-      localStorage.setItem('baremos_active_user_data', JSON.stringify(userData));
-
-      State.user = userData;
+      await dbPut('usuarios', { nombre: n, legajo: l, zona: z, creado: ahora() });
+      await dbPut('config', { key: 'activeUser', value: l });
+      State.user = { nombre: n, legajo: l, zona: z };
       $('#viewLogin').classList.remove('active');
-      initGeoTracking();
-      try {
-        await loadOrCreateJornada();
-      } catch(err) {
-        console.warn('[Login Jornada Load]', err);
-      }
+      await loadOrCreateJornada();
       showApp();
-
-      if (!isTermsAcceptedForUser(l)) {
-        mostrarPopupTerminos(async () => {
-          showApp();
-          toast(`¡Bienvenido ${n}!`, 'success');
-        });
-      } else {
-        toast(`¡Bienvenido ${n}!`, 'success');
-      }
+      toast(`¡Bienvenido ${n}!`, 'success');
     };
   }
 }
 
 async function cerrarSesion() {
   if (!await confirmDialog('¿Cerrar sesión?\n\n⚠️ Deberás ingresar con NOMBRE y LEGAJO.\n\nTus datos se mantendrán.')) return;
-  try { await dbPut('config', { key: 'activeUser', value: '' }); } catch(e) {}
-  localStorage.removeItem('baremos_active_user');
-  localStorage.removeItem('baremos_active_user_data');
-  State.user = null; State.jornada = null; State.items = []; State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 };
-  const h = $('#headerUser'); if (h) h.textContent = 'Ingresar';
-  const hz = $('#headerUserZona'); if (hz) hz.textContent = '';
-  const bz = $('#btnChangeZona'); if (bz) bz.style.display = 'none';
-  const sw = $('#modalSwitchUser'); if (sw) sw.classList.remove('show');
+  await dbPut('config', { key: 'activeUser', value: '' });
+  State.user = null; State.jornada = null; State.items = [];
+  const h = $('#headerUser');
+  if (h) h.textContent = 'Ingresar';
+  const hz = $('#headerUserZona');
+  if (hz) hz.textContent = '';
+  const bz = $('#btnChangeZona');
+  if (bz) bz.style.display = 'none';
+  
+  $('#modalSwitchUser')?.classList.remove('show');
   showLogin();
   toast('Sesión cerrada', 'success');
 }
@@ -1950,6 +769,7 @@ async function cerrarSesion() {
 async function eliminarUsuario(leg) {
   const u = await dbGet('usuarios', leg);
   if (!u) return;
+  
   if (!await confirmDialog(`🗑️ ¿Eliminar "${u.nombre}"?\n\n⚠️ IRREVERSIBLE. Se borrarán jornadas, combustible, quincenas y perfil.`)) return;
   
   for (const j of await dbGetByIndex('jornadas', 'legajo', leg)) await dbDelete('jornadas', j.id);
@@ -1958,11 +778,9 @@ async function eliminarUsuario(leg) {
   await dbDelete('usuarios', leg);
   
   if (State.user?.legajo === leg) {
-    try { await dbPut('config', { key: 'activeUser', value: '' }); } catch(e) {}
-    localStorage.removeItem('baremos_active_user');
-    localStorage.removeItem('baremos_active_user_data');
-    State.user = null; State.jornada = null; State.items = []; State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 };
-    const sw = $('#modalSwitchUser'); if(sw) sw.classList.remove('show');
+    await dbPut('config', { key: 'activeUser', value: '' });
+    State.user = null; State.jornada = null; State.items = [];
+    $('#modalSwitchUser')?.classList.remove('show');
     showLogin();
     toast('Usuario eliminado', 'success');
   } else {
@@ -1975,7 +793,7 @@ async function switchUser() {
   const users = await dbGetAll('usuarios');
   const m = $('#modalSwitchUser');
   const lst = $('#userList');
-  if (!lst || !m) return;
+  if (!lst) return;
   lst.innerHTML = '';
   users.forEach(u => {
     const div = document.createElement('div');
@@ -1989,20 +807,11 @@ async function switchUser() {
       else if (a === 'logout') { e.stopPropagation(); await cerrarSesion(); }
       else {
         State.user = u;
-        localStorage.setItem('baremos_active_user', String(u.legajo));
-        localStorage.setItem('baremos_active_user_data', JSON.stringify(u));
-        try { await dbPut('config', { key: 'activeUser', value: u.legajo }); } catch(e) {}
+        await dbPut('config', { key: 'activeUser', value: u.legajo });
         m.classList.remove('show');
-        try { await loadOrCreateJornada(); } catch(err) {}
+        await loadOrCreateJornada();
         showApp();
-        if (!isTermsAcceptedForUser(u.legajo)) {
-          mostrarPopupTerminos(async () => {
-            showApp();
-            toast(`Sesión: ${u.nombre}`, 'success');
-          });
-        } else {
-          toast(`Sesión: ${u.nombre}`, 'success');
-        }
+        toast(`Sesión: ${u.nombre}`, 'success');
       }
     };
     lst.appendChild(div);
@@ -2011,51 +820,30 @@ async function switchUser() {
   ab.className = 'btn btn-primary';
   ab.style.marginTop = '10px';
   ab.innerHTML = '➕ Nuevo usuario';
-  ab.onclick = () => { m.classList.remove('show'); showLogin(); };
+  ab.onclick = () => { 
+      m.classList.remove('show'); 
+      showLogin(); 
+  };
   lst.appendChild(ab);
   m.classList.add('show');
 }
 
 async function loadOrCreateJornada() {
   const f = hoy();
-  let ex = [];
-  try {
-    ex = await dbGetByIndex('jornadas', 'fechaLegajo', [f, State.user.legajo]);
-  } catch(e) {
-    try {
-      const allJ = await dbGetAll('jornadas');
-      ex = allJ.filter(j => j.fecha === f && String(j.legajo) === String(State.user.legajo));
-    } catch(e2) {}
-  }
+  const ex = await dbGetByIndex('jornadas', 'fechaLegajo', [f, State.user.legajo]);
   const ab = ex.filter(j => !j.cerrada);
   State.mensaje200kMostrado = false;
   State.mensaje150kMostrado = false;
   State.mensaje125kMostrado = false;
   State.mensaje100kMostrado = false;
-  
   if (ab.length > 0) {
     State.jornada = ab[ab.length - 1];
-    if (!State.jornada.tareas) {
-      if (State.jornada.items && State.jornada.items.length > 0) {
-        State.jornada.tareas = [{
-          id: Date.now() + Math.random(),
-          fecha: State.jornada.fecha,
-          hora: '',
-          zona: State.jornada.zona || '-',
-          items: State.jornada.items,
-          total: State.jornada.items.reduce((a, i) => a + (i.subtotal || 0), 0)
-        }];
-      } else {
-        State.jornada.tareas = [];
-      }
-    }
-    State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 };
+    State.items = State.jornada.items || [];
+    State.tareas = State.jornada.tareas || [];
   } else if (ex.length > 0) {
     if (await confirmDialog('Jornada cerrada hoy. ¿Crear nueva?')) await crearJornadaNueva();
-    else { State.jornada = null; State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 }; }
-  } else {
-    await crearJornadaNueva();
-  }
+    else { State.jornada = null; State.items = []; State.tareas = []; }
+  } else await crearJornadaNueva();
 }
 
 async function crearJornadaNueva() {
@@ -2063,191 +851,104 @@ async function crearJornadaNueva() {
   State.mensaje150kMostrado = false;
   State.mensaje125kMostrado = false;
   State.mensaje100kMostrado = false;
-  const j = { fecha: hoy(), horaInicio: ahora(), ultimaMod: ahora(), legajo: State.user.legajo, usuario: State.user.nombre, zona: State.user.zona, tareas: [], items: [], cerrada: false, total: 0 };
+  const j = { fecha: hoy(), horaInicio: ahora(), ultimaMod: ahora(), legajo: State.user.legajo, usuario: State.user.nombre, zona: State.user.zona, items: [], tareas: [], cerrada: false, total: 0 };
   j.id = await dbAdd('jornadas', j);
-  State.jornada = j; 
-  State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 };
+  State.jornada = j; State.items = []; State.tareas = [];
 }
 
 async function saveJornada() {
   if (!State.jornada) return;
+  State.jornada.items = State.items;
+  State.jornada.tareas = Array.isArray(State.tareas) ? State.tareas : (State.jornada.tareas || []);
   State.jornada.ultimaMod = ahora();
-  State.jornada.total = (State.jornada.tareas || []).reduce((a, t) => a + t.total, 0);
-  State.jornada.cantidadRegistros = (State.jornada.tareas || []).length;
-  State.jornada.cantidadItems = (State.jornada.tareas || []).reduce((a, t) => a + t.items.reduce((sa, i) => sa + i.cantidad, 0), 0);
+  State.jornada.total = State.items.reduce((a, i) => a + i.subtotal, 0);
+  State.jornada.cantidadRegistros = State.items.length;
+  State.jornada.cantidadItems = State.items.reduce((a, i) => a + i.cantidad, 0);
   await dbPut('jornadas', State.jornada);
 }
 
 async function cerrarJornada() {
   if (!State.jornada) { toast('No hay jornada', 'warn'); return; }
-  if (State.currentTarea && State.currentTarea.items && State.currentTarea.items.length > 0) {
-    toast('Finaliza o elimina la tarea en curso antes de cerrar la jornada', 'warn');
-    return;
-  }
   if (!await confirmDialog('¿Cerrar jornada? No podrá editarse.')) return;
   State.jornada.cerrada = true;
   State.jornada.horaCierre = ahora();
   await saveJornada();
   toast('Jornada cerrada', 'success');
-  State.jornada = null; 
-  State.currentTarea = { id: null, fecha: '', hora: '', zona: '', items: [], total: 0 };
+  State.jornada = null; State.items = []; State.tareas = [];
   await crearJornadaNueva();
   renderAll();
 }
 
 /* ============================================================
-   SETUP REGISTRO (CON BÚSQUEDA ROBUSTA, MULTI-TÉRMINO Y ACENTOS)
+   SETUP REGISTRO (CON NORMALIZACIÓN DE BÚSQUEDA)
    ============================================================ */
-function normStr(s) {
-  return String(s || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
-}
-
-function searchBaremos(query) {
-  if (!query) return [];
-  const qNorm = normStr(query);
-  const tokens = qNorm.split(/\s+/).filter(Boolean);
-  if (!tokens.length) return [];
-
-  const list = (State.baremo && State.baremo.length > 0) ? State.baremo : DEFAULT_BAREMOS;
-
-  const matches = list.filter(b => {
-    const codeNorm = normStr(b.baremo);
-    const descNorm = normStr(b.descripcion);
-    const codeDigits = codeNorm.replace(/^[a-z]+/i, '');
-
-    return tokens.every(token => {
-      if (codeNorm.startsWith(token) || codeNorm.includes(token) || codeDigits.startsWith(token)) {
-        return true;
-      }
-      if (descNorm.includes(token)) {
-        return true;
-      }
-      return false;
-    });
-  });
-
-  return matches.sort((a, b) => {
-    const codeA = normStr(a.baremo);
-    const codeB = normStr(b.baremo);
-    const descA = normStr(a.descripcion);
-    const descB = normStr(b.descripcion);
-    const codeDigitsA = codeA.replace(/^[a-z]+/i, '');
-    const codeDigitsB = codeB.replace(/^[a-z]+/i, '');
-
-    function getScore(code, desc, digits) {
-      if (code === qNorm) return 1000;
-      if (code.startsWith(qNorm)) return 800 + (100 - code.length);
-      if (digits.startsWith(qNorm)) return 700 + (100 - digits.length);
-      if (desc.startsWith(qNorm)) return 600;
-      
-      const words = desc.split(/\s+/);
-      if (words.some(w => w.startsWith(qNorm))) return 500;
-      if (tokens.every(t => words.some(w => w.startsWith(t)))) return 400;
-      if (code.includes(qNorm)) return 300;
-      if (desc.includes(qNorm)) return 200;
-      return 100;
-    }
-
-    const scoreA = getScore(codeA, descA, codeDigitsA);
-    const scoreB = getScore(codeB, descB, codeDigitsB);
-
-    if (scoreA !== scoreB) return scoreB - scoreA;
-    return codeA.localeCompare(codeB);
-  });
-}
-
 function setupRegistro() {
   const input = $('#baremoInput');
   const lst = $('#searchList');
   const qtyInput = $('#qtyInput');
   if (!input || !lst || !qtyInput) return;
-  
   let baremoSeleccionado = null;
   let ultimoTexto = '';
   
   function dest(t, q) {
-    if (!t || !q) return String(t || '');
-    const tokens = q.trim().split(/\s+/).filter(Boolean).map(tk => tk.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'));
-    if (!tokens.length) return String(t);
-    try {
-      const rx = new RegExp('(' + tokens.join('|') + ')', 'gi');
-      return String(t).replace(rx, '<mark>$1</mark>');
-    } catch (e) {
-      return String(t);
-    }
+    if (!q) return t;
+    return String(t).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark>$1</mark>');
   }
   
-  function selectBaremo(encontrado) {
-    if (!encontrado) return;
-    baremoSeleccionado = encontrado;
-    input.value = encontrado.baremo;
-    ultimoTexto = encontrado.baremo;
-    lst.classList.remove('show');
-    qtyInput.focus();
-    qtyInput.select();
-    toast(encontrado.baremo + ' · ' + fmt(encontrado.precio), 'success');
-  }
-
-  function render(m, q) {
-    if (!m || !m.length) {
+  function render(m) {
+    if (!m.length) {
       lst.innerHTML = '<div class="sr-empty">❌ No encontrado</div>';
       lst.classList.add('show');
       return;
     }
-    lst.innerHTML = m.slice(0, 15).map(b => '<div class="sr-item" data-code="' + b.baremo + '"><div class="sr-item-top"><span class="sr-code">' + dest(String(b.baremo || ''), q) + '</span><span class="sr-price">' + fmt(b.precio) + '</span></div><div class="sr-desc">' + dest(String(b.descripcion || ''), q) + '</div></div>').join('');
+    lst.innerHTML = m.slice(0, 10).map(b => `<div class="sr-item" data-code="${b.baremo}"><div class="sr-item-top"><span class="sr-code">${dest(String(b.baremo || ''), input.value)}</span><span class="sr-price">${fmt(b.precio)}</span></div><div class="sr-desc">${dest(String(b.descripcion || ''), input.value)}</div></div>`).join('');
+    lst.querySelectorAll('.sr-item').forEach(el => {
+      el.onclick = () => {
+        const codigo = el.dataset.code;
+        const encontrado = State.baremo.find(b => String(b.baremo) === codigo);
+        if (encontrado) {
+          baremoSeleccionado = encontrado;
+          input.value = encontrado.baremo;
+          ultimoTexto = encontrado.baremo;
+          lst.classList.remove('show');
+          qtyInput.focus();
+          qtyInput.select();
+          toast(`${encontrado.baremo} · ${fmt(encontrado.precio)}`, 'success');
+        }
+      };
+    });
     lst.classList.add('show');
   }
-
-  function ejecutarBusqueda() {
+  
+  input.addEventListener('input', () => {
     const v = input.value.trim();
     if (v !== ultimoTexto) baremoSeleccionado = null;
-    if (!v) {
-      lst.classList.remove('show');
-      lst.innerHTML = '';
-      return;
-    }
-    const matches = searchBaremos(v);
-    const exact = (State.baremo || DEFAULT_BAREMOS).find(b => normStr(b.baremo) === normStr(v));
-    if (exact) baremoSeleccionado = exact;
-    render(matches, v);
-  }
-  
-  // Arrojar resultados ÚNICAMENTE cuando se introduce un carácter o número
-  input.addEventListener('input', ejecutarBusqueda);
-
-  lst.addEventListener('mousedown', e => {
-    e.preventDefault();
-  });
-
-  lst.addEventListener('click', e => {
-    const itemEl = e.target.closest('.sr-item');
-    if (!itemEl) return;
-    const codigo = itemEl.dataset.code;
-    const encontrado = (State.baremo || DEFAULT_BAREMOS).find(b => String(b.baremo) === codigo);
-    if (encontrado) {
-      selectBaremo(encontrado);
-    }
+    if (!v) { lst.classList.remove('show'); return; }
+    
+    const up = v.toUpperCase();
+    const m = State.baremo.filter(b => {
+        const cod = String(b.baremo || '').toUpperCase();
+        const desc = String(b.descripcion || '').toUpperCase();
+        return cod.includes(up) || desc.includes(up);
+    }).sort((a, b) => {
+        const codA = String(a.baremo || '').toUpperCase();
+        const codB = String(b.baremo || '').toUpperCase();
+        return (codA.startsWith(up) ? 0 : 1) - (codB.startsWith(up) ? 0 : 1);
+    });
+    
+    const ex = State.baremo.find(b => String(b.baremo || '').toUpperCase() === up);
+    if (ex) baremoSeleccionado = ex;
+    render(m);
   });
   
   document.addEventListener('click', e => {
-    if (!e.target.closest('.search-wrap')) {
-      lst.classList.remove('show');
-    }
+    if (!e.target.closest('.search-wrap')) lst.classList.remove('show');
   });
   
   function agregar() {
     if (!baremoSeleccionado) {
-      const v = input.value.trim();
-      const list = (State.baremo && State.baremo.length > 0) ? State.baremo : DEFAULT_BAREMOS;
-      baremoSeleccionado = list.find(b => normStr(b.baremo) === normStr(v));
-      if (!baremoSeleccionado && v) {
-        const matches = searchBaremos(v);
-        if (matches.length > 0) baremoSeleccionado = matches[0];
-      }
+      const v = input.value.trim().toUpperCase();
+      baremoSeleccionado = State.baremo.find(b => String(b.baremo || '').toUpperCase() === v);
     }
     if (!baremoSeleccionado) { toast('Seleccioná un baremo válido de la lista', 'warn'); input.focus(); return; }
     if (!State.jornada) { toast('No hay jornada activa', 'warn'); return; }
@@ -2261,591 +962,79 @@ function setupRegistro() {
       cantidad: c,
       subtotal: baremoSeleccionado.precio * c
     };
-    
-    State.currentTarea.items.push(newItem);
-    State.currentTarea.total = State.currentTarea.items.reduce((a, i) => a + i.subtotal, 0);
-    
+    State.items.push(newItem);
+    saveJornada();
     renderItems();
     renderTotales();
-    
     input.value = '';
     qtyInput.value = 1;
     lst.classList.remove('show');
-    lst.innerHTML = '';
     baremoSeleccionado = null;
     ultimoTexto = '';
     input.focus();
-
-    // Desplazamiento suave para mostrar siempre el último ítem añadido
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        const lastRow = document.querySelector('#itemsBody tr:last-child');
-        if (lastRow) {
-          lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-          const taskCard = document.querySelector('#currentTaskCard');
-          if (taskCard) taskCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }, 60);
-    });
-
-    toast('Agregado x' + c + ' a la tarea', 'success');
+    toast(`Agregado x${c}`, 'success');
   }
   
-  const btnAgregar = $('#btnAgregar');
-  if (btnAgregar) btnAgregar.onclick = agregar;
-  
+  $('#btnAgregar').onclick = agregar;
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
-      e.preventDefault();
       if (!baremoSeleccionado) {
-        const v = input.value.trim();
-        if (v) {
-          const matches = searchBaremos(v);
-          if (matches.length > 0) {
-            selectBaremo(matches[0]);
-            return;
-          }
-        }
+        const f = lst.querySelector('.sr-item');
+        if (f) { f.click(); return; }
       }
       agregar();
-    } else if (e.key === 'Escape') {
-      lst.classList.remove('show');
     }
   });
-  
   qtyInput.addEventListener('keydown', e => { if (e.key === 'Enter') agregar(); });
-
-/* ============================================================
-   GEOLOCALIZACIÓN INTELIGENTE, EN SEGUNDO PLANO Y CACHÉ RÁPIDA (100% OFFLINE PWA)
-   ============================================================ */
-let lastGeoPosition = null;
-let lastGeoAddress = null;
-let geoWatchId = null;
-
-// Base de datos de zonas georreferenciadas offline
-const OFFLINE_ZONAS_GEO = [
-  { nombre: 'Moreno', lat: -34.6504, lng: -58.7891, radioKm: 7 },
-  { nombre: 'Trujui', lat: -34.5821, lng: -58.7420, radioKm: 5 },
-  { nombre: 'Cuartel V', lat: -34.5500, lng: -58.8350, radioKm: 7 },
-  { nombre: 'Gral. Rodríguez', lat: -34.6080, lng: -58.9550, radioKm: 8 },
-  { nombre: 'San Martín', lat: -34.5772, lng: -58.5361, radioKm: 6 },
-  { nombre: 'Tigre', lat: -34.4260, lng: -58.5790, radioKm: 7 },
-  { nombre: 'Olivos', lat: -34.5090, lng: -58.4870, radioKm: 5 },
-  { nombre: 'Pilar', lat: -34.4580, lng: -58.9140, radioKm: 8 },
-  { nombre: 'Escobar', lat: -34.3480, lng: -58.7980, radioKm: 8 },
-  { nombre: 'San Miguel', lat: -34.5420, lng: -58.7120, radioKm: 5 },
-  { nombre: 'José C. Paz', lat: -34.5150, lng: -58.7680, radioKm: 5 },
-  { nombre: 'Malvinas Argentinas', lat: -34.5000, lng: -58.7000, radioKm: 6 },
-  { nombre: 'Hurlingham', lat: -34.5880, lng: -58.6380, radioKm: 5 },
-  { nombre: 'Morón', lat: -34.6520, lng: -58.6200, radioKm: 5 },
-  { nombre: 'Merlo', lat: -34.6650, lng: -58.7280, radioKm: 6 },
-  { nombre: 'Tres de Febrero', lat: -34.6000, lng: -58.5600, radioKm: 5 },
-  { nombre: 'Vicente López', lat: -34.5280, lng: -58.4720, radioKm: 5 },
-  { nombre: 'San Isidro', lat: -34.4710, lng: -58.5280, radioKm: 6 },
-  { nombre: 'San Fernando', lat: -34.4440, lng: -58.5580, radioKm: 6 }
-];
-
-function resolverZonaOffline(lat, lng) {
-  let mejorMatch = null;
-  let distMinima = Infinity;
-  for (const z of OFFLINE_ZONAS_GEO) {
-    const dLat = (lat - z.lat) * 111.32;
-    const dLng = (lng - z.lng) * 40075 * Math.cos((lat * Math.PI) / 180) / 360;
-    const distKm = Math.hypot(dLat, dLng);
-    if (distKm < distMinima) {
-      distMinima = distKm;
-      mejorMatch = z;
-    }
-  }
-  if (mejorMatch && distMinima <= (mejorMatch.radioKm || 8)) {
-    return `${mejorMatch.nombre} (GPS: ${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-  }
-  return `Ubicación GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-}
-
-// Carga inicial de última ubicación guardada en localStorage
-try {
-  const savedAddr = localStorage.getItem('baremos_last_geo_address');
-  if (savedAddr) lastGeoAddress = JSON.parse(savedAddr);
-} catch (e) {}
-
-// Reverse geocode con fallback offline inmediato
-async function reverseGeocodeCoords(lat, lng) {
-  // Si estamos offline, resolver inmediatamente con la base de zonas local (0ms)
-  if (!navigator.onLine) {
-    return resolverZonaOffline(lat, lng);
-  }
-
-  // 1. Proveedor OpenStreetMap
-  try {
-    const ctrl1 = new AbortController();
-    const t1 = setTimeout(() => ctrl1.abort(), 1200);
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-      {
-        headers: { 'Accept-Language': 'es-AR,es;q=0.9' },
-        signal: ctrl1.signal
-      }
-    );
-    clearTimeout(t1);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.address) {
-        const a = data.address;
-        const calle = a.road || a.pedestrian || a.street || a.suburb || a.neighbourhood || '';
-        const numero = a.house_number || '';
-        const barrio = a.neighbourhood || a.suburb || a.city_district || '';
-        const ciudad = a.city || a.town || a.village || a.municipality || a.county || '';
-        const partes = [];
-        if (calle) partes.push(numero ? `${calle} ${numero}` : calle);
-        if (barrio && barrio !== calle) partes.push(barrio);
-        if (ciudad && ciudad !== barrio) partes.push(ciudad);
-        if (partes.length > 0) return partes.join(', ');
-        if (data.display_name) return data.display_name.split(',').slice(0, 3).join(', ').trim();
-      }
-    }
-  } catch (e) {}
-
-  // 2. Fallback BigDataCloud
-  try {
-    const ctrl2 = new AbortController();
-    const t2 = setTimeout(() => ctrl2.abort(), 1000);
-    const res2 = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=es`,
-      { signal: ctrl2.signal }
-    );
-    clearTimeout(t2);
-    if (res2.ok) {
-      const d = await res2.json();
-      const p = [];
-      if (d.locality) p.push(d.locality);
-      if (d.city && d.city !== d.locality) p.push(d.city);
-      if (d.principalSubdivision) p.push(d.principalSubdivision);
-      if (p.length > 0) return p.join(', ');
-    }
-  } catch (e) {}
-
-  // 3. Fallback inteligente a base offline local
-  return resolverZonaOffline(lat, lng);
-}
-
-// Procesa coordenadas captadas en background y resuelve dirección de forma silenciosa
-async function processGeoPosition(pos) {
-  if (!pos || !pos.coords) return;
-  const lat = pos.coords.latitude;
-  const lng = pos.coords.longitude;
-  const accuracy = Math.round(pos.coords.accuracy || 0);
-
-  lastGeoPosition = { lat, lng, accuracy, time: Date.now() };
-
-  // Si ya tenemos dirección reciente y cerca (< 150m), reutilizamos
-  if (lastGeoAddress && lastGeoAddress.coords) {
-    const dist = Math.hypot(lat - lastGeoAddress.coords.lat, lng - lastGeoAddress.coords.lng);
-    if (dist < 0.0015 && (Date.now() - (lastGeoAddress.time || 0)) < 600000) {
-      return;
-    }
-  }
-
-  // Resolver en segundo plano
-  const direccion = await reverseGeocodeCoords(lat, lng);
-  lastGeoAddress = {
-    direccion,
-    coords: { lat, lng, accuracy },
-    time: Date.now()
-  };
-
-  try {
-    localStorage.setItem('baremos_last_geo_address', JSON.stringify(lastGeoAddress));
-  } catch (e) {}
-}
-
-// Iniciar rastreo de ubicación silencioso, continuo y de bajo impacto
-function initGeoTracking() {
-  if (!('geolocation' in navigator)) return;
-
-  // 1. Lectura rápida sin bloqueo
-  try {
-    navigator.geolocation.getCurrentPosition(
-      pos => processGeoPosition(pos),
-      err => { /* Silencioso */ },
-      { enableHighAccuracy: true, timeout: 6000, maximumAge: 60000 }
-    );
-  } catch(e) {}
-
-  // 2. Monitoreo continuo silencioso
-  if (!geoWatchId) {
-    try {
-      geoWatchId = navigator.geolocation.watchPosition(
-        pos => processGeoPosition(pos),
-        err => { /* Silencioso */ },
-        { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
-      );
-    } catch (e) {}
-  }
-}
-
-// Refrescar rastreo al recuperar foco de la app
-window.addEventListener('focus', () => initGeoTracking());
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') initGeoTracking();
-});
-
-function pedirDireccionManualModal(sugerencia = '') {
-  return new Promise(resolve => {
-    const modal = $('#modalUbicacionManual');
-    const form = $('#formUbicacionManual');
-    const input = $('#inputManualDireccion');
-    const cancel = $('#cancelUbicacionManual');
-    
-    if (!modal || !form || !input) {
-      resolve(sugerencia || 'Lugar de trabajo');
-      return;
-    }
-
-    input.value = sugerencia;
-    modal.classList.add('show');
-    input.focus();
-
-    const cleanUp = () => {
-      modal.classList.remove('show');
-      form.onsubmit = null;
-      if (cancel) cancel.onclick = null;
-    };
-
-    form.onsubmit = e => {
-      e.preventDefault();
-      const val = input.value.trim();
-      cleanUp();
-      resolve(val || (sugerencia || 'Ubicación sin especificar'));
-    };
-
-    if (cancel) {
-      cancel.onclick = () => {
-        cleanUp();
-        resolve(null);
-      };
-    }
-  });
-}
-
-// Obtención instantánea, fluida y 100% no-intrusiva de ubicación
-async function obtenerUbicacionTarea() {
-  // 1. ¿Tenemos ya la dirección resuelta en caché reciente (< 20 mins)? -> Retorno INMEDIATO (0ms)
-  if (lastGeoAddress && lastGeoAddress.direccion && (Date.now() - (lastGeoAddress.time || 0) < 1200000)) {
-    return {
-      direccion: lastGeoAddress.direccion,
-      coords: lastGeoAddress.coords || null
-    };
-  }
-
-  // 2. ¿Tenemos coordenadas recientes en memoria? -> Retorno ultra rápido con resolución local
-  if (lastGeoPosition && (Date.now() - (lastGeoPosition.time || 0) < 600000)) {
-    const { lat, lng, accuracy } = lastGeoPosition;
-    let dir = resolverZonaOffline(lat, lng);
-    if (navigator.onLine) {
-      try {
-        const resolved = await Promise.race([
-          reverseGeocodeCoords(lat, lng),
-          new Promise(r => setTimeout(() => r(null), 600))
-        ]);
-        if (resolved) dir = resolved;
-      } catch (e) {}
-    }
-
-    const resObj = { direccion: dir, coords: { lat, lng, accuracy } };
-    lastGeoAddress = { ...resObj, time: Date.now() };
-    return resObj;
-  }
-
-  // 3. Si no hay nada previo en memoria, intento de lectura rápida silenciosa (máx 800ms)
-  if ('geolocation' in navigator) {
-    try {
-      const quickPos = await new Promise((resolve, reject) => {
-        const to = setTimeout(() => reject(new Error('timeout')), 800);
-        navigator.geolocation.getCurrentPosition(
-          p => { clearTimeout(to); resolve(p); },
-          e => { clearTimeout(to); reject(e); },
-          { enableHighAccuracy: true, timeout: 750, maximumAge: 60000 }
-        );
-      });
-
-      if (quickPos && quickPos.coords) {
-        const lat = quickPos.coords.latitude;
-        const lng = quickPos.coords.longitude;
-        const accuracy = Math.round(quickPos.coords.accuracy || 0);
-        
-        let dir = resolverZonaOffline(lat, lng);
-        if (navigator.onLine) {
-          try {
-            const resolved = await Promise.race([
-              reverseGeocodeCoords(lat, lng),
-              new Promise(r => setTimeout(() => r(null), 500))
-            ]);
-            if (resolved) dir = resolved;
-          } catch (e) {}
-        }
-
-        const resObj = { direccion: dir, coords: { lat, lng, accuracy } };
-        lastGeoAddress = { ...resObj, time: Date.now() };
-        return resObj;
-      }
-    } catch (e) {}
-  }
-
-  // 4. Fallback automático y transparente a la Zona configurada del usuario (sin interrumpir)
-  const defaultSug = State.user?.zona ? `Zona ${State.user.zona}` : 'Lugar de trabajo';
-  return { direccion: defaultSug, coords: null };
-}
-
-  // IMPLEMENTACIÓN ESTRICTA ASÍNCRONA PARA IMPACTO INMEDIATO EN LA UI
-  const btnFinalizar = $('#btnFinalizarTarea');
-  if (btnFinalizar) {
-    btnFinalizar.onclick = async () => {
-      if (!State.currentTarea || State.currentTarea.items.length === 0) {
-        toast('La tarea no tiene baremos agregados', 'warn');
-        return;
-      }
-
-      const prevText = btnFinalizar.innerHTML;
-      btnFinalizar.disabled = true;
-      btnFinalizar.innerHTML = '📍 Guardando tarea...';
-
-      let loc = null;
-      try {
-        loc = await obtenerUbicacionTarea();
-      } catch (err) {
-        console.error('[Error al obtener ubicacion]', err);
-      } finally {
-        btnFinalizar.disabled = false;
-        btnFinalizar.innerHTML = prevText;
-      }
-
-      if (!loc || !loc.direccion) {
-        loc = { direccion: State.user?.zona ? `Zona ${State.user.zona}` : 'Lugar de trabajo', coords: null };
-      }
-      
-      const backupTareas = State.jornada.tareas ? [...State.jornada.tareas] : [];
-      
-      // Empaquetado completo (Deep Copy) con ubicación y coordenadas
-      const nuevaTareaConfirmada = {
-        id: Date.now() + Math.random(),
-        fecha: hoy(),
-        hora: new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'}),
-        zona: State.user.zona || 'Sin zona',
-        direccion: loc.direccion,
-        coords: loc.coords || null,
-        items: JSON.parse(JSON.stringify(State.currentTarea.items)),
-        total: State.currentTarea.total
-      };
-      
-      if (!State.jornada.tareas) State.jornada.tareas = [];
-      State.jornada.tareas.push(nuevaTareaConfirmada);
-      
-      try {
-        // Bloqueo de la función hasta que el disco confirme la escritura
-        await saveJornada(); 
-        // Vaciado en memoria del input y renderizado instantáneo
-        State.currentTarea = { id: null, fecha: '', hora: '', zona: '', direccion: '', coords: null, items: [], total: 0 };
-        renderAll();
-        toast('✅ Tarea finalizada con éxito', 'success');
-      } catch (e) {
-        // En caso de fallo de hardware o límite de cuota, restauramos para no perder
-        State.jornada.tareas = backupTareas;
-        console.error('[Error de Almacenamiento Tarea]', e);
-        toast('Error al guardar en base de datos. Por favor, reintenta.', 'error');
-      }
-    };
-  }
 }
 
 function renderItems() {
   const tb = $('#itemsBody');
-  const card = $('#currentTaskCard');
-  if (!tb || !card) return;
-  
-  // Renderizar baremos de Tarea en Curso
-  if (!State.currentTarea || State.currentTarea.items.length === 0) {
-    card.style.display = 'none';
-    tb.innerHTML = '';
-  } else {
-    card.style.display = 'block';
-    tb.innerHTML = State.currentTarea.items.map((it, i) => `<tr class="adding"><td class="hide-mob">${i + 1}</td><td><strong>${it.codigo}</strong></td><td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td><td class="hide-mob">${fmt(it.precio)}</td><td><input type="number" min="1" class="qty-input" value="${it.cantidad}" data-id="${it.id}"></td><td><strong>${fmt(it.subtotal)}</strong></td><td><button class="del-btn" data-id="${it.id}">🗑️</button></td></tr>`).join('');
-    
-    const ctTotal = $('#currentTaskTotal');
-    if (ctTotal) ctTotal.textContent = fmt(State.currentTarea.total);
-    
-    tb.querySelectorAll('.qty-input').forEach(inp => {
-      inp.onchange = e => {
-        const it = State.currentTarea.items.find(i => i.id === parseFloat(e.target.dataset.id));
-        if (!it) return;
-        it.cantidad = parseInt(e.target.value) || 1;
-        it.subtotal = it.precio * it.cantidad;
-        State.currentTarea.total = State.currentTarea.items.reduce((a, i) => a + i.subtotal, 0);
-        renderAll();
-      };
-    });
-    tb.querySelectorAll('.del-btn').forEach(btn => {
-      btn.onclick = async e => {
-        const id = parseFloat(e.target.dataset.id);
-        State.currentTarea.items = State.currentTarea.items.filter(i => i.id !== id);
-        State.currentTarea.total = State.currentTarea.items.reduce((a, i) => a + i.subtotal, 0);
-        renderAll();
-        toast('Baremo eliminado', 'success');
-      };
-    });
+  if (!tb) return;
+  // Solo los baremos de la tarea en curso (los ya finalizados se muestran en TAREAS DEL DÍA)
+  const pendientes = typeof itemsPendientes === 'function' ? itemsPendientes() : State.items;
+  if (!pendientes.length) {
+    tb.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-soft)">Sin registros</td></tr>';
+    return;
   }
-
-  // Renderizar Tareas Finalizadas hoy (Acordeón multinivel)
-  const tl = $('#tareasFinalizadasList');
-  if (!tl) return;
-  if (!State.jornada || !State.jornada.tareas || State.jornada.tareas.length === 0) {
-    tl.innerHTML = '<div class="empty"><div class="ico">📋</div><p>Sin tareas finalizadas</p></div>';
-  } else {
-    const tareasReversed = [...State.jornada.tareas].reverse();
-    const totalCount = State.jornada.tareas.length;
-    
-    tl.innerHTML = tareasReversed.map((t, i) => {
-      const originalIdx = String(totalCount - i).padStart(3, '0');
-      const cantBaremos = t.items.length;
-      const fDate = t.fecha || State.jornada.fecha;
-      const fHora = t.hora ? ` ${t.hora}` : '';
-      const fZona = t.zona || State.jornada.zona || '-';
-      
-      return `
-      <div class="tarea-card">
-        <div class="tarea-header" style="cursor:pointer;" onclick="this.parentElement.classList.toggle('expanded')">
-          <div style="flex:1;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="color:var(--primary); font-weight:800; font-size:14px; text-transform:uppercase; letter-spacing:0.5px;">
-                TAREA ${originalIdx}
-              </span>
-              <span class="expand-ico">▼</span>
-            </div>
-            <div style="font-size:12px; color:var(--text-soft); margin-top:6px; font-weight:600; display:flex; flex-direction:column; gap:4px;">
-              <div><strong style="color:var(--text)">Fecha:</strong> ${fechaCorta(fDate)}${fHora}</div>
-              <div><strong style="color:var(--text)">Zona:</strong> ${fZona}</div>
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:2px;">
-                <strong style="color:var(--text)">Dirección:</strong>
-                ${t.direccion ? `
-                  <span style="color:var(--primary); font-weight:700; background:rgba(11, 61, 145, 0.09); padding:2px 8px; border-radius:4px; border:1px solid rgba(11, 61, 145, 0.25);">
-                    📍 ${t.direccion}
-                  </span>
-                  ${t.coords ? `<a href="https://www.google.com/maps?q=${t.coords.lat},${t.coords.lng}" target="_blank" rel="noopener" style="color:var(--primary); font-size:11px; text-decoration:underline; font-weight:700;" onclick="event.stopPropagation();">🗺️ Ver mapa</a>` : ''}
-                ` : `
-                  <span style="color:var(--text-soft); font-style:italic; opacity:0.8;">📍 Sin dirección registrada</span>
-                `}
-              </div>
-              <div style="color:var(--text); font-weight:800; margin-top:4px; font-size:13px;">
-                Total de la tarea: <span style="color:var(--primary); font-weight:800;">${fmt(t.total)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tarea-body">
-          <div style="padding: 10px 14px 6px; font-size: 11px; font-weight: 800; color: var(--text-soft); text-transform: uppercase;">Baremos incluidos (${cantBaremos}):</div>
-          <div class="table-wrap" style="border:none; border-radius:0; margin:0;">
-            <table>
-              <thead><tr><th>Cód</th><th>Desc</th><th class="hide-mob" style="text-align:right;">Precio</th><th style="text-align:center;">Cant</th><th style="text-align:right;">Sub</th></tr></thead>
-              <tbody>
-                ${t.items.map(it => `
-                  <tr>
-                    <td><strong>${it.codigo}</strong></td>
-                    <td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td>
-                    <td class="hide-mob" style="text-align:right;">${fmt(it.precio)}</td>
-                    <td style="text-align:center;">x${it.cantidad}</td>
-                    <td style="text-align:right;"><strong>${fmt(it.subtotal)}</strong></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-          <div class="tarea-footer">
-            <div class="tarea-actions-left">
-              ${!State.jornada.cerrada ? `
-                <button type="button" class="btn-tarea-action btn-tarea-del" data-id="${t.id}" title="Eliminar tarea">
-                  🗑️ Eliminar
-                </button>
-                <button type="button" class="btn-tarea-action btn-tarea-edit" data-id="${t.id}" title="Editar tarea">
-                  ✏️ Editar
-                </button>
-              ` : ''}
-            </div>
-            <div class="tarea-total">
-              TOTAL DE LA TAREA: <span style="color: var(--primary); font-weight: 800;">${fmt(t.total)}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    `}).join('');
-    
-    // Expandir la más reciente automáticamente
-    const firstCard = tl.querySelector('.tarea-card');
-    if (firstCard) firstCard.classList.add('expanded');
-
-    // Manejadores para Eliminar y Editar Tarea
-    tl.querySelectorAll('.btn-tarea-del').forEach(btn => {
-      btn.onclick = async e => {
-        e.stopPropagation();
-        const id = parseFloat(btn.dataset.id);
-        if (!await confirmDialog('¿Estás seguro de eliminar esta tarea de la jornada?')) return;
-        State.jornada.tareas = (State.jornada.tareas || []).filter(t => t.id !== id);
-        await saveJornada();
-        renderAll();
-        toast('Tarea eliminada correctamente', 'success');
-      };
-    });
-
-    tl.querySelectorAll('.btn-tarea-edit').forEach(btn => {
-      btn.onclick = async e => {
-        e.stopPropagation();
-        const id = parseFloat(btn.dataset.id);
-        const tarea = (State.jornada.tareas || []).find(t => t.id === id);
-        if (!tarea) return;
-
-        if (State.currentTarea && State.currentTarea.items && State.currentTarea.items.length > 0) {
-          if (!await confirmDialog('Ya tenés una tarea en curso. ¿Deseás reemplazarla con esta tarea para editarla?')) return;
-        }
-
-        // Cargar ítems a la tarea en curso y remover de finalizadas
-        State.currentTarea = {
-          id: tarea.id,
-          fecha: tarea.fecha,
-          hora: tarea.hora,
-          zona: tarea.zona,
-          direccion: tarea.direccion || '',
-          coords: tarea.coords || null,
-          items: JSON.parse(JSON.stringify(tarea.items)),
-          total: tarea.total
-        };
-        State.jornada.tareas = (State.jornada.tareas || []).filter(t => t.id !== id);
-        await saveJornada();
-        renderAll();
-        toast('Tarea cargada para edición. Realizá los cambios y presioná "Finalizar tarea" al terminar.', 'info');
-        
-        const topEl = $('#currentTaskCard') || $('#baremoInput');
-        if (topEl) topEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      };
-    });
-  }
+  tb.innerHTML = pendientes.map((it, i) => `<tr class="adding"><td class="hide-mob">${i + 1}</td><td><strong>${it.codigo}</strong></td><td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td><td class="hide-mob">${fmt(it.precio)}</td><td><input type="number" min="1" class="qty-input" value="${it.cantidad}" data-id="${it.id}"></td><td><strong>${fmt(it.subtotal)}</strong></td><td><button class="del-btn" data-id="${it.id}">🗑️</button></td></tr>`).join('');
+  tb.querySelectorAll('.qty-input').forEach(inp => {
+    inp.onchange = async e => {
+      const it = State.items.find(i => i.id === parseFloat(e.target.dataset.id));
+      if (!it) return;
+      it.cantidad = parseInt(e.target.value) || 1;
+      it.subtotal = it.precio * it.cantidad;
+      await saveJornada();
+      renderTotales();
+      e.target.closest('tr').children[5].innerHTML = `<strong>${fmt(it.subtotal)}</strong>`;
+    };
+  });
+  tb.querySelectorAll('.del-btn').forEach(btn => {
+    btn.onclick = async e => {
+      const id = parseFloat(e.target.dataset.id);
+      const ok = await confirmDialog('¿Eliminar?');
+      if (!ok) return;
+      State.items = State.items.filter(i => i.id !== id);
+      await saveJornada();
+      renderItems();
+      renderTotales();
+      toast('Eliminado', 'success');
+    };
+  });
 }
 
 function renderTotales() {
-  if (!State.jornada) return;
-  
-  const totalTareas = (State.jornada.tareas || []).length;
-  const totalItemsFinalizados = (State.jornada.tareas || []).reduce((a, t) => a + t.items.reduce((s, i) => s + i.cantidad, 0), 0);
-  const totalItemsActuales = (State.currentTarea && State.currentTarea.items) ? State.currentTarea.items.reduce((a, i) => a + i.cantidad, 0) : 0;
-  
-  const sumFinalizadas = (State.jornada.tareas || []).reduce((a, t) => a + t.total, 0);
-  const sumActual = (State.currentTarea && State.currentTarea.total) ? State.currentTarea.total : 0;
-  
-  const t = sumFinalizadas + sumActual;
-  
-  const tr = $('#totalRegs'); if (tr) tr.textContent = fmtNum(totalTareas);
-  const ti = $('#totalItems'); if (ti) ti.textContent = fmtNum(totalItemsFinalizados + totalItemsActuales);
-  const tg = $('#totalGeneral'); if (tg) tg.textContent = fmt(t);
-  const tgb = $('#totalGeneralBig'); if (tgb) tgb.textContent = fmt(t);
+  const r = State.items.length;
+  const it = State.items.reduce((a, i) => a + i.cantidad, 0);
+  const t = State.items.reduce((a, i) => a + i.subtotal, 0);
+  const tr = $('#totalRegs');
+  if (tr) tr.textContent = fmtNum(r);
+  const ti = $('#totalItems');
+  if (ti) ti.textContent = fmtNum(it);
+  const tg = $('#totalGeneral');
+  if (tg) tg.textContent = fmt(t);
+  const tgb = $('#totalGeneralBig');
+  if (tgb) tgb.textContent = fmt(t);
   
   const tgc = $('#totalGeneralCard');
   if (tgc) {
@@ -2869,12 +1058,8 @@ function renderTotales() {
 
 function showView(n) {
   if (!n) return;
-  if (!State.user) {
-    showLogin();
-    return;
-  }
   $$('.view').forEach(v => v.classList.remove('active'));
-  const vn = $(`#view${n}`); if(vn) vn.classList.add('active');
+  $(`#view${n}`)?.classList.add('active');
   $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.view === n));
   if (n === 'Dashboard') renderDashboard();
   if (n === 'Historial') renderHistorial();
@@ -2898,7 +1083,9 @@ function showApp() {
   const hz = $('#headerUserZona');
   const bz = $('#btnChangeZona');
   
-  if (h) h.textContent = `${State.user.nombre} · ${State.user.legajo}`;
+  if (h) {
+    h.textContent = `${State.user.nombre} · ${State.user.legajo}`;
+  }
   if (hz && bz) {
     if (State.user.zona) {
       hz.textContent = State.user.zona;
@@ -2907,12 +1094,13 @@ function showApp() {
       bz.style.display = 'none';
     }
   }
+  
   renderMiniCalendar();
   renderAll();
   showView('Inicio');
 }
 
-function renderAll() { renderItems(); renderTotales(); }
+function renderAll() { renderItems(); renderTotales(); if (typeof renderTareas === 'function') renderTareas(); }
 
 async function renderHistorial() {
   const all = await dbGetAll('jornadas');
@@ -2921,33 +1109,25 @@ async function renderHistorial() {
   else if (State.histFilter === 'mes') f = f.filter(j => j.fecha.startsWith(mesActual()));
   else if (State.histFilter === 'mesAnterior') f = f.filter(j => j.fecha.startsWith(mesAnterior()));
   f.sort((a, b) => b.fecha.localeCompare(a.fecha));
-  
   const lst = $('#historialList');
   const ab = $('#histActionsBar');
   if (!lst) return;
-  
   if (ab) {
     if (State.histSelected.size > 0) {
       ab.classList.add('show');
-      const hc = $('#habCount'); if(hc) hc.textContent = `${State.histSelected.size} seleccionada(s)`;
+      $('#habCount').textContent = `${State.histSelected.size} seleccionada(s)`;
     } else {
       ab.classList.remove('show');
     }
   }
-  
   if (!f.length) {
     lst.innerHTML = '<div class="empty"><div class="ico">📭</div><p>Sin jornadas</p></div>';
     return;
   }
-  
   lst.innerHTML = f.map(j => {
     const is = State.histSelected.has(j.id);
-    const tareasNorm = getNormalizedTareas(j);
-    const cantTareas = tareasNorm.length;
-    const cantItems = tareasNorm.reduce((a, t) => a + t.items.reduce((s, i) => s + i.cantidad, 0), 0);
-    return `<div class="jornada-item ${is ? 'selected' : ''}" data-id="${j.id}"><div class="ji-left"><div class="fecha">${fechaCorta(j.fecha)}</div><div class="meta">${cantTareas} tareas · ${cantItems} ítems</div></div><div class="ji-right"><div class="total">${fmt(j.total || 0)}</div><div class="estado ${j.cerrada ? 'cerrada' : 'abierta'}">${j.cerrada ? 'CERRADA' : 'ABIERTA'}</div><div class="ji-actions"><div class="check-box ${is ? 'checked' : ''}" data-act="select" data-id="${j.id}"></div><button class="mini-btn view" data-act="view" data-id="${j.id}">👁️</button>${j.cerrada ? `<button class="mini-btn export" data-act="export" data-id="${j.id}">📄</button>` : ''}</div></div></div>`;
+    return `<div class="jornada-item ${is ? 'selected' : ''}" data-id="${j.id}"><div class="ji-left"><div class="fecha">${fechaCorta(j.fecha)}</div><div class="meta">${j.cantidadRegistros || 0} reg · ${j.cantidadItems || 0} ítems</div></div><div class="ji-right"><div class="total">${fmt(j.total || 0)}</div><div class="estado ${j.cerrada ? 'cerrada' : 'abierta'}">${j.cerrada ? 'CERRADA' : 'ABIERTA'}</div><div class="ji-actions"><div class="check-box ${is ? 'checked' : ''}" data-act="select" data-id="${j.id}"></div><button class="mini-btn view" data-act="view" data-id="${j.id}">👁️</button>${j.cerrada ? `<button class="mini-btn export" data-act="export" data-id="${j.id}">📄</button>` : ''}</div></div></div>`;
   }).join('');
-  
   lst.querySelectorAll('[data-act="select"]').forEach(el => {
     el.onclick = e => {
       e.stopPropagation();
@@ -2957,64 +1137,50 @@ async function renderHistorial() {
       renderHistorial();
     };
   });
-  lst.querySelectorAll('[data-act="view"]').forEach(el => { el.onclick = e => { e.stopPropagation(); openJornada(parseInt(el.dataset.id)); }; });
-  lst.querySelectorAll('[data-act="export"]').forEach(el => { el.onclick = async e => { e.stopPropagation(); await exportarJornadaPDF(parseInt(el.dataset.id)); }; });
-  lst.querySelectorAll('.jornada-item').forEach(el => { el.onclick = () => openJornada(parseInt(el.dataset.id)); });
+  lst.querySelectorAll('[data-act="view"]').forEach(el => {
+    el.onclick = e => { e.stopPropagation(); openJornada(parseInt(el.dataset.id)); };
+  });
+  lst.querySelectorAll('[data-act="export"]').forEach(el => {
+    el.onclick = async e => { e.stopPropagation(); await exportarJornadaPDF(parseInt(el.dataset.id)); };
+  });
+  lst.querySelectorAll('.jornada-item').forEach(el => {
+    el.onclick = () => openJornada(parseInt(el.dataset.id));
+  });
 }
-
 function setHistFilter(f) {
   State.histFilter = f;
   State.histSelected.clear();
   $$('.hist-filtro-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
   renderHistorial();
 }
-
 async function openJornada(id) {
   const j = await dbGet('jornadas', id);
   if (!j) return;
-  const tareas = getNormalizedTareas(j);
-  const totalItems = tareas.reduce((a, t) => a + t.items.reduce((s, i) => s + i.cantidad, 0), 0);
-  
-  const fFecha = $('#mjFecha'); if(fFecha) fFecha.textContent = fechaLegible(j.fecha);
-  const fTotal = $('#mjTotal'); if(fTotal) fTotal.textContent = fmt(j.total);
-  const fMeta = $('#mjMeta'); if(fMeta) fMeta.textContent = `${tareas.length} tareas · ${totalItems} ítems · ${j.cerrada ? 'CERRADA' : 'ABIERTA'}`;
-  
-  const bd = $('#mjBody');
-  if(bd) {
-    let html = '';
-    tareas.forEach((t, idx) => {
-      const isLegacy = t.referencia === 'Registros Anteriores';
-      const labelTarea = isLegacy ? 'REGISTROS ANTERIORES' : `TAREA ${String(idx+1).padStart(3,'0')}`;
-      const subInfo = [
-        t.hora ? `Hora: ${t.hora}` : null,
-        t.zona ? `Zona: ${t.zona}` : null,
-        t.direccion ? `📍 ${t.direccion}` : null
-      ].filter(Boolean).join(' · ');
-
-      html += `<tr style="background:var(--surface-2)"><td colspan="6" style="padding:8px 10px;"><div style="font-weight:800; color:var(--primary); font-size:12px;">${labelTarea}</div>${subInfo ? `<div style="font-size:11px; color:var(--text-soft); font-weight:600; margin-top:2px;">${subInfo}</div>` : ''}</td></tr>`;
-      t.items.forEach((it, i) => {
-         html += `<tr><td class="hide-mob">${i + 1}</td><td><strong>${it.codigo}</strong></td><td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td><td class="hide-mob">${fmt(it.precio)}</td><td>${it.cantidad}</td><td>${fmt(it.subtotal)}</td></tr>`;
-      });
-      html += `<tr><td colspan="6" style="text-align:right; font-weight:800; font-size:12px; border-bottom: 2px solid var(--border);">Total de la Tarea: ${fmt(t.total)}</td></tr>`;
-    });
-    bd.innerHTML = html;
-  }
-  const modal = $('#modalJornada'); if(modal) modal.classList.add('show');
+  $('#mjFecha').textContent = fechaLegible(j.fecha);
+  $('#mjTotal').textContent = fmt(j.total);
+  $('#mjMeta').textContent = `${j.cantidadRegistros || 0} reg · ${j.cantidadItems || 0} ítems · ${j.cerrada ? 'CERRADA' : 'ABIERTA'}`;
+  $('#mjBody').innerHTML = (j.items || []).map((it, i) => `<tr><td class="hide-mob">${i + 1}</td><td>${it.codigo}</td><td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td><td class="hide-mob">${fmt(it.precio)}</td><td>${it.cantidad}</td><td>${fmt(it.subtotal)}</td></tr>`).join('');
+  if (typeof renderUbicacionesJornada === 'function') renderUbicacionesJornada(j);
+  $('#modalJornada').classList.add('show');
 }
 
 function drawElegantHeader(doc, title, subtitle, rightText1, rightText2) {
   doc.setFillColor(11, 61, 145);
   doc.rect(0, 0, 210, 35, 'F');
+  
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
   doc.text(title, 14, 20);
+  
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.text(subtitle, 14, 28);
+  
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.text(rightText1, 196, 20, { align: 'right' });
+  
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.text(rightText2, 196, 28, { align: 'right' });
@@ -3028,18 +1194,7 @@ async function exportarJornadaPDF(id) {
   
   drawElegantHeader(doc, "BAREMOS", `Jornada del ${fechaLegible(j.fecha)}`, State.user.nombre, `Legajo: ${State.user.legajo} | Zona: ${State.user.zona || '-'}`);
   
-  const tareas = getNormalizedTareas(j);
-  const body = [];
-  tareas.forEach((t, idx) => {
-    const isLegacy = t.referencia === 'Registros Anteriores';
-    const labelTarea = isLegacy ? 'REGISTROS ANTERIORES' : `TAREA ${String(idx + 1).padStart(3, '0')}${t.direccion ? ` (📍 ${t.direccion})` : ''}`;
-    body.push([{ content: labelTarea, colSpan: 6, styles: { fillColor: [240, 243, 249], fontStyle: 'bold', textColor: [11, 61, 145] } }]);
-    t.items.forEach((it, i) => {
-      body.push([i + 1, it.codigo, it.descripcion, it.cantidad, fmt(it.precio), fmt(it.subtotal)]);
-    });
-    body.push([{ content: `TOTAL DE LA TAREA: ${fmt(t.total)}`, colSpan: 6, styles: { halign: 'right', fontStyle: 'bold' } }]);
-  });
-  
+  const body = (j.items || []).map((it, i) => [i + 1, it.codigo, it.descripcion, it.cantidad, fmt(it.precio), fmt(it.subtotal)]);
   doc.autoTable({
     startY: 45,
     head: [['#', 'Código', 'Descripción', 'Cant', 'Precio', 'Subtotal']],
@@ -3050,7 +1205,12 @@ async function exportarJornadaPDF(id) {
     margin: { left: 14, right: 14 }
   });
   
-  const y = doc.lastAutoTable.finalY + 10;
+  let y = doc.lastAutoTable.finalY + 10;
+  // Bloque aditivo: ubicación de las tareas finalizadas (solo si la jornada las tiene)
+  if (typeof agregarTablaUbicacionesPDF === 'function') {
+    y = agregarTablaUbicacionesPDF(doc, j, y);
+  }
+  if (y > 250) { doc.addPage(); y = 25; }
   doc.setFillColor(11, 61, 145);
   doc.rect(14, y, 182, 12, 'F');
   doc.setTextColor(255, 255, 255);
@@ -3104,23 +1264,12 @@ async function exportarMultiplesPDF(ids, nom) {
     doc.setTextColor(11, 61, 145);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text(`▶ Jornada: ${fechaLegible(j.fecha)}   |   Total Día: ${fmt(j.total || 0)}`, 16, currentY + 6);
+    doc.text(`▶ Jornada: ${fechaLegible(j.fecha)}   |   Subtotal: ${fmt(j.total || 0)}`, 16, currentY + 6);
     currentY += 10;
     
     totalAcu += (j.total || 0);
 
-    const tareas = getNormalizedTareas(j);
-    const body = [];
-    tareas.forEach((t, idx) => {
-      const isLegacy = t.referencia === 'Registros Anteriores';
-      const labelTarea = isLegacy ? 'REGISTROS ANTERIORES' : `TAREA ${String(idx + 1).padStart(3, '0')}`;
-      body.push([{ content: labelTarea, colSpan: 6, styles: { fillColor: [240, 243, 249], fontStyle: 'bold', textColor: [11, 61, 145] } }]);
-      t.items.forEach((it, i) => {
-        body.push([i + 1, it.codigo, it.descripcion, it.cantidad, fmt(it.precio), fmt(it.subtotal)]);
-      });
-      body.push([{ content: `Total Tarea: ${fmt(t.total)}`, colSpan: 6, styles: { halign: 'right', fontStyle: 'bold' } }]);
-    });
-    
+    const body = (j.items || []).map((it, i) => [i + 1, it.codigo, it.descripcion, it.cantidad, fmt(it.precio), fmt(it.subtotal)]);
     doc.autoTable({
       startY: currentY,
       head: [['#', 'Código', 'Descripción', 'Cant', 'Precio', 'Subtotal']],
@@ -3131,7 +1280,11 @@ async function exportarMultiplesPDF(ids, nom) {
       margin: { left: 14, right: 14 }
     });
     
-    currentY = doc.lastAutoTable.finalY + 10;
+    currentY = doc.lastAutoTable.finalY + 6;
+    if (typeof agregarTablaUbicacionesPDF === 'function') {
+      currentY = agregarTablaUbicacionesPDF(doc, j, currentY);
+    }
+    currentY += 4;
   }
 
   if (currentY > 260) {
@@ -3163,23 +1316,9 @@ async function exportarMesExcel() {
   res.push({});
   res.push({ Fecha: 'TOTAL', Total: j.reduce((a, x) => a + (x.total || 0), 0) });
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(res), 'Resumen');
-  
   j.forEach(x => {
-    const detalle = [];
-    const tareas = getNormalizedTareas(x);
-    tareas.forEach((t, idx) => {
-       const isLegacy = t.referencia === 'Registros Anteriores';
-       const fRef = isLegacy ? 'REGISTROS ANTERIORES' : `TAREA ${String(idx + 1).padStart(3, '0')}`;
-       detalle.push({ '#': fRef, Código: '', Subtotal: t.total });
-       t.items.forEach((it, i) => {
-         detalle.push({
-           '#': i + 1, Código: it.codigo, Descripción: it.descripcion,
-           Precio: it.precio, Cantidad: it.cantidad, Subtotal: it.subtotal
-         });
-       });
-       detalle.push({});
-    });
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(detalle), `Dia_${x.fecha}`.substring(0, 31));
+    const d = (x.items || []).map((it, i) => ({ '#': i + 1, Código: it.codigo, Descripción: it.descripcion, Precio: it.precio, Cantidad: it.cantidad, Subtotal: it.subtotal }));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d), `Dia_${x.fecha}`.substring(0, 31));
   });
   XLSX.writeFile(wb, `baremos_${nombreMes(mes).replace(' ', '_')}.xlsx`);
   toast('Excel generado', 'success');
@@ -3198,18 +1337,13 @@ async function renderDashboard() {
   const dias = jMes.length;
   const tot = jMes.reduce((a, j) => a + (j.total || 0), 0);
   const prom = dias ? tot / dias : 0;
+  const tTrab = jMes.reduce((a, j) => a + (j.cantidadRegistros || 0), 0);
   
   const bc = {}, bf = {};
-  let totalItemsMes = 0;
-  jMes.forEach(j => {
-    const arr = getSafeItems(j);
-    totalItemsMes += arr.length;
-    arr.forEach(it => {
-      bc[it.codigo] = (bc[it.codigo] || 0) + it.cantidad;
-      bf[it.codigo] = (bf[it.codigo] || 0) + it.subtotal;
-    });
-  });
-  
+  jMes.forEach(j => (j.items || []).forEach(it => {
+    bc[it.codigo] = (bc[it.codigo] || 0) + it.cantidad;
+    bf[it.codigo] = (bf[it.codigo] || 0) + it.subtotal;
+  }));
   const tu = Object.entries(bc).sort((a, b) => b[1] - a[1])[0];
   const tf = Object.entries(bf).sort((a, b) => b[1] - a[1])[0];
   let mx = null, mn = null;
@@ -3223,8 +1357,8 @@ async function renderDashboard() {
   const prodAyer = jornadasPasadas.length ? (jornadasPasadas[0].total || 0) : 0;
   const fecAyer = jornadasPasadas.length ? `(${fechaCorta(jornadasPasadas[0].fecha)})` : '';
   
-  const statDiaAnt = $('#statDiaAnterior'); if(statDiaAnt) statDiaAnt.textContent = fmt(prodAyer);
-  const lblFecAyer = $('#lblFechaAyer'); if(lblFecAyer) lblFecAyer.textContent = fecAyer;
+  $('#statDiaAnterior').textContent = fmt(prodAyer);
+  $('#lblFechaAyer').textContent = fecAyer;
 
   const dac = $('#cardDiaAnterior');
   if (dac) {
@@ -3269,10 +1403,10 @@ async function renderDashboard() {
     const progreso = Math.max(0, Math.min((tot / meta) * 100, 100));
     const faltan = Math.max(meta - tot, 0);
 
-    const tcAm = $('#tacAmount'); if(tcAm) tcAm.textContent = fmt(tot);
-    const tcPb = $('#tacProgressBar'); if(tcPb) tcPb.style.width = progreso + '%';
-    const tcPt = $('#tacProgressText'); if(tcPt) tcPt.textContent = `Progreso: ${progreso.toFixed(1)}%`;
-    const tcFt = $('#tacFaltanText'); if(tcFt) tcFt.textContent = `Faltan: ${fmt(faltan)}`;
+    $('#tacAmount').textContent = fmt(tot);
+    $('#tacProgressBar').style.width = progreso + '%';
+    $('#tacProgressText').textContent = `Progreso: ${progreso.toFixed(1)}%`;
+    $('#tacFaltanText').textContent = `Faltan: ${fmt(faltan)}`;
 
     const overlay = $('#tacOverlayMsg');
     const cfgMes = getConfigMes(tot);
@@ -3301,8 +1435,8 @@ async function renderDashboard() {
   const s = (id, v) => { const el = $('#' + id); if (el) el.textContent = v; };
   s('statDias', fmtNum(dias));
   s('statProm', fmt(prom));
-  s('statTrabajos', fmtNum(totalItemsMes)); 
-  s('statBaremos', fmtNum(Object.keys(bc).length)); 
+  s('statTrabajos', fmtNum(tTrab));
+  s('statBaremos', fmtNum(Object.keys(bc).length));
   s('statTopUso', tu ? `${tu[0]} (${tu[1]})` : '-');
   s('statTopFact', tf ? `${tf[0]} · ${fmt(tf[1])}` : '-');
   s('statMaxDia', mx ? `${fechaCorta(mx.fecha)} · ${fmt(mx.total)}` : '-');
@@ -3515,201 +1649,16 @@ async function handleChangePassword(e) {
   $('#formChangePassword').reset();
 }
 
-/* ============================================================
-   SISTEMA DE NOTIFICACIONES PUSH / RECORDATORIO DE CIERRE
-   ============================================================ */
-async function loadNotificationSettings() {
-  try {
-    const act = await dbGet('config', 'notificaciones_activas');
-    State.notifEnabled = act ? !!act.value : false;
-    const hora = await dbGet('config', 'hora_recordatorio_cierre');
-    State.notifTime = hora?.value || '18:00';
-    const ult = await dbGet('config', 'ultimo_recordatorio_enviado');
-    State.lastNotifDate = ult?.value || null;
-  } catch(e) {
-    console.warn('[loadNotificationSettings]', e);
-  }
-}
-
-async function saveNotificationSettings(enabled, hora) {
-  State.notifEnabled = enabled;
-  State.notifTime = hora || '18:00';
-  await dbPut('config', { key: 'notificaciones_activas', value: State.notifEnabled });
-  await dbPut('config', { key: 'hora_recordatorio_cierre', value: State.notifTime });
-}
-
-async function requestNotificationPermission() {
-  if (!('Notification' in window)) {
-    toast('Este navegador no soporta notificaciones', 'warn');
-    return false;
-  }
-  if (Notification.permission === 'granted') return true;
-  if (Notification.permission === 'denied') {
-    toast('Las notificaciones están bloqueadas en tu navegador', 'warn');
-    return false;
-  }
-  try {
-    const res = await Notification.requestPermission();
-    return res === 'granted';
-  } catch (e) {
-    return false;
-  }
-}
-
-async function sendPushNotification(title, body, tag = 'recordatorio-cierre-jornada') {
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-  
-  // 1. Prioridad: Mostrar mediante Service Worker Registration (nativo PWA)
-  try {
-    if ('serviceWorker' in navigator) {
-      const reg = await navigator.serviceWorker.ready;
-      if (reg && reg.showNotification) {
-        await reg.showNotification(title, {
-          body,
-          icon: './icons/icon-192.png?v=5.8.34',
-          badge: './icons/icon-192.png?v=5.8.34',
-          vibrate: [200, 100, 200],
-          tag,
-          renotify: true,
-          data: { url: './' }
-        });
-        return;
-      }
-    }
-  } catch (e) {
-    console.warn('[sendPushNotification via SW ready failed, testing postMessage]', e);
-  }
-
-  // 2. Comunicación directa con Service Worker Controller
-  try {
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'SHOW_NOTIFICATION',
-        title,
-        body,
-        tag,
-        data: { url: './' }
-      });
-      return;
-    }
-  } catch (e) {
-    console.warn('[sendPushNotification via postMessage failed]', e);
-  }
-
-  // 3. Fallback a Notification API estándar de navegador
-  try {
-    new Notification(title, {
-      body,
-      icon: './icons/icon-192.png?v=5.8.34',
-      tag
-    });
-  } catch (e) {
-    console.warn('[sendPushNotification fallback error]', e);
-  }
-}
-
-async function checkNotificationReminder() {
-  if (!State.notifEnabled) return;
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-  
-  const hoyStr = hoy();
-  if (State.lastNotifDate === hoyStr) return;
-  
-  if (!State.jornada || State.jornada.cerrada) return;
-  
-  const ahoraObj = new Date();
-  const horas = String(ahoraObj.getHours()).padStart(2, '0');
-  const minutos = String(ahoraObj.getMinutes()).padStart(2, '0');
-  const horaActual = `${horas}:${minutos}`;
-  
-  if (horaActual >= State.notifTime) {
-    State.lastNotifDate = hoyStr;
-    await dbPut('config', { key: 'ultimo_recordatorio_enviado', value: hoyStr });
-    
-    await sendPushNotification(
-      '⚠️ Recordatorio: Cierre de Jornada',
-      'Tenés la jornada de hoy abierta. Recordá registrar todas tus tareas y cerrarla antes de terminar el día.'
-    );
-  }
-}
-
-function startNotificationScheduler() {
-  setInterval(checkNotificationReminder, 30000);
-  setTimeout(checkNotificationReminder, 2500);
-}
-
-function showNotificationModal() {
-  const m = $('#modalNotificaciones');
-  if (!m) return;
-  const chk = $('#notifEnabled');
-  const inpTime = $('#notifTime');
-  if (chk) chk.checked = State.notifEnabled;
-  if (inpTime) inpTime.value = State.notifTime || '18:00';
-  m.classList.add('show');
-}
-
-function setupNotificaciones() {
-  const form = $('#formNotificaciones');
-  const btnCancel = $('#cancelNotif');
-  const btnTest = $('#btnTestNotif');
-  const modal = $('#modalNotificaciones');
-
-  if (btnCancel && modal) {
-    btnCancel.onclick = () => modal.classList.remove('show');
-  }
-
-  if (btnTest) {
-    btnTest.onclick = async () => {
-      const granted = await requestNotificationPermission();
-      if (!granted) {
-        toast('Permiso de notificaciones no concedido', 'warn');
-        return;
-      }
-      const horaSeleccionada = $('#notifTime')?.value || State.notifTime || '18:00';
-      await sendPushNotification(
-        '🔔 Prueba de Notificación BAREMO',
-        `¡Notificaciones activas! Recibirás este aviso a las ${horaSeleccionada} hs si tu jornada sigue abierta.`
-      );
-      toast('Notificación de prueba enviada', 'success');
-    };
-  }
-
-  if (form && modal) {
-    form.onsubmit = async e => {
-      e.preventDefault();
-      const enabled = $('#notifEnabled')?.checked || false;
-      const hora = $('#notifTime')?.value || '18:00';
-
-      if (enabled) {
-        const granted = await requestNotificationPermission();
-        if (!granted) {
-          toast('Debes permitir las notificaciones en tu navegador', 'warn');
-          return;
-        }
-      }
-
-      await saveNotificationSettings(enabled, hora);
-      modal.classList.remove('show');
-      renderAjustes();
-      toast(enabled ? `Recordatorio activado a las ${hora} hs` : 'Recordatorio desactivado', 'success');
-    };
-  }
-}
-
 function renderAjustes() {
   const lst = $('#ajustesList');
   if (!lst) return;
   lst.innerHTML = `
-    <div class="ajuste-item" data-act="pwa"><div class="aj-ico">📱</div><div class="aj-text"><div class="aj-title">Instalar Aplicación (PWA)</div><div class="aj-desc">${isStandalone() ? 'App instalada en este dispositivo' : 'Instalar en pantalla de inicio para acceso directo y 100% offline'}</div></div><div class="aj-arrow">›</div></div>
-    <div class="ajuste-item" data-act="notif"><div class="aj-ico">🔔</div><div class="aj-text"><div class="aj-title">Recordatorio diario de cierre</div><div class="aj-desc">${State.notifEnabled ? `Activo · ${State.notifTime} hs` : 'Desactivado (Click para configurar)'}</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item" data-act="update"><div class="aj-ico">🔄</div><div class="aj-text"><div class="aj-title">Comprobar actualizaciones</div><div class="aj-desc">v${State.currentVersion || '?'}</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item" data-act="baremo"><div class="aj-ico">📥</div><div class="aj-text"><div class="aj-title">Actualizar baremo</div><div class="aj-desc">JSON o Excel</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item" data-act="backup"><div class="aj-ico">💾</div><div class="aj-text"><div class="aj-title">Backup</div><div class="aj-desc">Guardar datos</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item" data-act="restore"><div class="aj-ico">📤</div><div class="aj-text"><div class="aj-title">Restaurar</div><div class="aj-desc">Recuperar datos</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item" data-act="theme"><div class="aj-ico">${State.theme === 'light' ? '🌙' : '☀️'}</div><div class="aj-text"><div class="aj-title">Modo ${State.theme === 'light' ? 'oscuro' : 'claro'}</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item warn" data-act="users"><div class="aj-ico">👥</div><div class="aj-text"><div class="aj-title">Gestionar usuarios</div></div><div class="aj-arrow">›</div></div>
-    <div class="ajuste-item" data-act="terminos"><div class="aj-ico">🛡️</div><div class="aj-text"><div class="aj-title">Términos y Condiciones</div><div class="aj-desc">Bases, condiciones y responsabilidades</div></div><div class="aj-arrow">›</div></div>
-    <div class="ajuste-item" data-act="privacidad"><div class="aj-ico">🔒</div><div class="aj-text"><div class="aj-title">Política de Privacidad</div><div class="aj-desc">Tratamiento local de datos</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item admin" data-act="admin"><div class="aj-ico">🔐</div><div class="aj-text"><div class="aj-title">Panel de Administración</div><div class="aj-desc">Reportes, consolidación y seguridad</div></div><div class="aj-arrow">›</div></div>
     
     <div class="credits">
@@ -3724,9 +1673,7 @@ function renderAjustes() {
   lst.querySelectorAll('.ajuste-item').forEach(item => {
     item.onclick = () => {
       const a = item.dataset.act;
-      if (a === 'pwa') { if (window.openPwaInstallModal) window.openPwaInstallModal(); }
-      else if (a === 'notif') showNotificationModal();
-      else if (a === 'update') checkForUpdate();
+      if (a === 'update') checkForUpdate();
       else if (a === 'baremo') {
         const i = document.createElement('input');
         i.type = 'file';
@@ -3738,8 +1685,6 @@ function renderAjustes() {
       else if (a === 'restore') restoreInput();
       else if (a === 'theme') { toggleTheme(); renderAjustes(); }
       else if (a === 'users') switchUser();
-      else if (a === 'terminos') showInfoModal('terminos');
-      else if (a === 'privacidad') showInfoModal('privacidad');
       else if (a === 'admin') showView('Admin');
     };
   });
@@ -3999,7 +1944,7 @@ function setupAdmin() {
         doc.text(`▶ Jornada ${fechaLegible(jornada.fecha)} - Total: ${fmt(jornada.total || 0)}`, 16, currentY + 6);
         currentY += 10;
         
-        const detalle = getSafeItems(jornada).map((it, idx) => [idx + 1, it.codigo, it.descripcion, it.cantidad, fmt(it.precio), fmt(it.subtotal)]);
+        const detalle = (jornada.items || []).map((it, idx) => [idx + 1, it.codigo, it.descripcion, it.cantidad, fmt(it.precio), fmt(it.subtotal)]);
         doc.autoTable({
           startY: currentY,
           head: [['#', 'Código', 'Descripción', 'Cant', 'Precio', 'Subtotal']],
@@ -4042,7 +1987,7 @@ function setupAdmin() {
       const detalle = [];
       for (const jornada of info.jornadas) {
         detalle.push({ Fecha: fechaCorta(jornada.fecha), Tipo: 'ENCABEZADO', Total: jornada.total || 0 });
-        getSafeItems(jornada).forEach((it, idx) => {
+        (jornada.items || []).forEach((it, idx) => {
           detalle.push({
             '#': idx + 1, Código: it.codigo, Descripción: it.descripcion,
             Precio: it.precio, Cantidad: it.cantidad, Subtotal: it.subtotal
@@ -4079,7 +2024,7 @@ async function obtenerDatosReporteAdmin() {
     periodoLabel = `Reporte Semanal - ${fechaCorta(semana.lunes)} al ${fechaCorta(semana.domingo)}`;
   } else {
     const mes = fechaSel;
-    const [y, m] = mes.split('-'); 
+    const [y, m] = split('-');
     fechaDesde = `${y}-${String(m).padStart(2, '0')}-01`;
     const ultimoDia = diasDelMes(mes);
     fechaHasta = `${y}-${String(m).padStart(2, '0')}-${String(ultimoDia).padStart(2, '0')}`;
@@ -4205,9 +2150,7 @@ async function renderCharts(jornadas) {
       }
       
       const bf = {};
-      jornadas.forEach(j => {
-        getSafeItems(j).forEach(it => { bf[it.codigo] = (bf[it.codigo] || 0) + it.subtotal; });
-      });
+      jornadas.forEach(j => (j.items || []).forEach(it => { bf[it.codigo] = (bf[it.codigo] || 0) + it.subtotal; }));
       const top5 = Object.entries(bf).sort((a, b) => b[1] - a[1]).slice(0, 5);
       if (chartPie) chartPie.destroy();
       const c3 = $('#chartPie');
@@ -4250,77 +2193,983 @@ function hideAyuda() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-      $$('.tab-btn').forEach(b => { b.onclick = () => showView(b.dataset.view); });
-      const bt = $('#btnTheme'); if (bt) bt.onclick = toggleTheme;
-      const bs = $('#btnSwitchUser'); if (bs) bs.onclick = switchUser;
-      const bc = $('#btnCerrarJornada'); if (bc) bc.onclick = cerrarJornada;
-      setupMapaZona();
-      $$('.hist-filtro-btn').forEach(b => { b.onclick = () => setHistFilter(b.dataset.filter); });
-      const hc = $('#habClear'); if (hc) hc.onclick = () => { State.histSelected.clear(); renderHistorial(); };
-      
-      const btnExportSelected = $('#habExportSelected'); if (btnExportSelected) btnExportSelected.onclick = exportarSeleccionadasPDF;
-      const btnExportMonth = $('#habExportMonth'); if (btnExportMonth) btnExportMonth.onclick = exportarMesCompletoPDF;
-      const btnExportExcel = $('#habExportExcel'); if (btnExportExcel) btnExportExcel.onclick = exportarMesExcel;
+  $$('.tab-btn').forEach(b => { b.onclick = () => showView(b.dataset.view); });
+  const bt = $('#btnTheme'); if (bt) bt.onclick = toggleTheme;
+  const bs = $('#btnSwitchUser'); if (bs) bs.onclick = switchUser;
+  const bc = $('#btnCerrarJornada'); if (bc) bc.onclick = cerrarJornada;
+  setupMapaZona();
+  $$('.hist-filtro-btn').forEach(b => { b.onclick = () => setHistFilter(b.dataset.filter); });
+  const hc = $('#habClear'); if (hc) hc.onclick = () => { State.histSelected.clear(); renderHistorial(); };
+  
+  const btnExportSelected = $('#habExportSelected');
+  if (btnExportSelected) btnExportSelected.onclick = exportarSeleccionadasPDF;
+  
+  const btnExportMonth = $('#habExportMonth');
+  if (btnExportMonth) btnExportMonth.onclick = exportarMesCompletoPDF;
+  
+  const btnExportExcel = $('#habExportExcel');
+  if (btnExportExcel) btnExportExcel.onclick = exportarMesExcel;
 
-      const btnAcceptTerms = $('#btnAcceptTerms');
-      if (btnAcceptTerms) {
-        btnAcceptTerms.onclick = async () => {
-          setTermsAcceptedForUser(State.user?.legajo);
-          const modal = $('#modalTerms');
-          if (modal) modal.classList.remove('show');
-          if (State.user) {
-            showApp();
-          } else {
-            await continuarInicio();
-          }
-        };
-      }
-      
-      const btnChangeZona = $('#btnChangeZona'); if (btnChangeZona) btnChangeZona.onclick = () => { const z = State.user?.zona || ''; $('#newZonaSelect').value = z; mostrarMapaModalZona(z); $('#modalChangeZona').classList.add('show'); };
-      const cancelChangeZona = $('#cancelChangeZona'); if (cancelChangeZona) cancelChangeZona.onclick = () => { const mz = $('#modalChangeZona'); if(mz) mz.classList.remove('show'); };
-      
-      const formChangeZona = $('#formChangeZona');
-      if (formChangeZona) {
-        formChangeZona.onsubmit = async (e) => {
-          e.preventDefault();
-          const nz = $('#newZonaSelect').value;
-          if (!nz) return;
-          State.user.zona = nz;
-          await dbPut('usuarios', State.user);
-          
-          if (State.jornada && !State.jornada.cerrada) {
-             State.jornada.zona = nz;
-             await saveJornada();
-          }
-          
-          const mz = $('#modalChangeZona'); if (mz) mz.classList.remove('show');
-          showApp();
-          toast('Zona actualizada a ' + nz, 'success');
-        };
-      }
-
-      const btnHelp = $('#btnHelp'); if (btnHelp) btnHelp.onclick = showAyuda;
-      const btnVolverAyuda = $('#btnVolverAyuda'); if (btnVolverAyuda) btnVolverAyuda.onclick = hideAyuda;
-
-      $$('.modal-backdrop').forEach(m => {
-        m.addEventListener('click', e => { 
-            if (e.target === m && m.id !== 'modalTerms' && m.id !== 'modalConfirm') m.classList.remove('show'); 
-        });
-      });
-      const btnInfoClose = $('#btnInfoClose'); if (btnInfoClose) btnInfoClose.addEventListener('click', () => { const mi = $('#modalInfo'); if (mi) mi.classList.remove('show'); });
-      
-      const hse = $('#histSearch'); if (hse) hse.addEventListener('input', renderHistorial);
-      const mc = $('#mjClose'); if (mc) mc.onclick = () => { const mj = $('#modalJornada'); if(mj) mj.classList.remove('show'); };
-      
-      setupRegistro();
-      setupCombustible();
-      setupQuincenas();
-      setupAdmin();
-      setupNotificaciones();
-  } catch (e) {
-      console.error("[DOMContentLoaded Error]", e);
-  } finally {
-      await init();
+  const btnAcceptTerms = $('#btnAcceptTerms');
+  if (btnAcceptTerms) {
+    btnAcceptTerms.onclick = async () => {
+      setAcceptedTermsVersion();
+      $('#modalTerms').classList.remove('show');
+      await continuarInicio();
+    };
   }
+  
+  const btnChangeZona = $('#btnChangeZona');
+  if (btnChangeZona) {
+    btnChangeZona.onclick = () => {
+      $('#newZonaSelect').value = State.user.zona || '';
+      $('#modalChangeZona').classList.add('show');
+    };
+  }
+  
+  const cancelChangeZona = $('#cancelChangeZona');
+  if (cancelChangeZona) cancelChangeZona.onclick = () => $('#modalChangeZona').classList.remove('show');
+  
+  const formChangeZona = $('#formChangeZona');
+  if (formChangeZona) {
+    formChangeZona.onsubmit = async (e) => {
+      e.preventDefault();
+      const nz = $('#newZonaSelect').value;
+      if (!nz) return;
+      State.user.zona = nz;
+      await dbPut('usuarios', State.user);
+      
+      if (State.jornada && !State.jornada.cerrada) {
+         State.jornada.zona = nz;
+         await saveJornada();
+      }
+      
+      $('#modalChangeZona').classList.remove('show');
+      showApp();
+      toast('Zona actualizada a ' + nz, 'success');
+    };
+  }
+
+  const btnHelp = $('#btnHelp');
+  if (btnHelp) btnHelp.onclick = showAyuda;
+  
+  const btnVolverAyuda = $('#btnVolverAyuda');
+  if (btnVolverAyuda) btnVolverAyuda.onclick = hideAyuda;
+
+  $$('.modal-backdrop').forEach(m => {
+    m.addEventListener('click', e => { 
+        if (e.target === m && m.id !== 'modalTerms' && m.id !== 'modalConfirm') m.classList.remove('show'); 
+    });
+  });
+  $('#btnInfoClose')?.addEventListener('click', () => $('#modalInfo').classList.remove('show'));
+  
+  const hse = $('#histSearch'); if (hse) hse.addEventListener('input', renderHistorial);
+  const mc = $('#mjClose'); if (mc) mc.onclick = () => $('#modalJornada').classList.remove('show');
+  setupRegistro();
+  setupCombustible();
+  setupQuincenas();
+  setupAdmin();
+  await init();
 });
+
+/* ============================================================================
+   BAREMOS — BOTÓN "📲 INSTALAR APP" (PWA)
+   Módulo aislado y offline-first: no realiza ninguna petición de red,
+   no toca el Service Worker, la caché, la navegación ni otros botones.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var BTN_ID  = 'btnInstallApp';
+  var LS_KEY  = 'baremos_pwa_installed';
+
+  var deferredPrompt = null;   // evento beforeinstallprompt guardado
+  var promptInFlight = false;  // evita diálogos duplicados
+
+  function btn() { return document.getElementById(BTN_ID); }
+
+  /* ---------- Detección del modo de ejecución ---------- */
+  function isStandalone() {
+    var modes = ['standalone', 'minimal-ui', 'fullscreen', 'window-controls-overlay'];
+    try {
+      if (window.matchMedia) {
+        for (var i = 0; i < modes.length; i++) {
+          if (window.matchMedia('(display-mode: ' + modes[i] + ')').matches) return true;
+        }
+      }
+    } catch (e) {}
+    // iOS / iPadOS Safari
+    if (window.navigator && window.navigator.standalone === true) return true;
+    // Android WebAPK (TWA)
+    try {
+      if (document.referrer && document.referrer.indexOf('android-app://') === 0) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function markInstalled()  { try { localStorage.setItem(LS_KEY, '1'); } catch (e) {} }
+  function clearInstalled() { try { localStorage.removeItem(LS_KEY); } catch (e) {} }
+  function wasInstalled()   { try { return localStorage.getItem(LS_KEY) === '1'; } catch (e) { return false; } }
+
+  var ua       = (navigator.userAgent || '');
+  var isIOS    = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document);
+  var isSafari = /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
+  // iOS no expone beforeinstallprompt: la instalación es manual (Compartir → Añadir a inicio)
+  var iosManualInstall = isIOS && isSafari;
+
+  /* ---------- Mostrar / ocultar sin dejar hueco ---------- */
+  function showBtn() {
+    var b = btn();
+    if (!b) return;
+    b.hidden = false;
+    b.classList.add('is-visible');
+  }
+  function hideBtn() {
+    var b = btn();
+    if (!b) return;
+    b.classList.remove('is-visible');
+    b.hidden = true; // display:none → el flex de .header-actions se reajusta solo
+  }
+
+  /* ---------- Decisión central de visibilidad ---------- */
+  function refresh() {
+    if (!btn()) return;
+
+    // 1) Ejecutándose como aplicación instalada → nunca mostrar
+    if (isStandalone()) {
+      markInstalled();
+      deferredPrompt = null;
+      hideBtn();
+      return;
+    }
+
+    // 2) El navegador ofrece instalación → no está instalada en este contexto
+    if (deferredPrompt) {
+      clearInstalled();
+      showBtn();
+      return;
+    }
+
+    // 3) Ya se instaló anteriormente → no volver a insistir
+    if (wasInstalled()) {
+      hideBtn();
+      return;
+    }
+
+    // 4) iOS Safari: sin beforeinstallprompt pero sí instalable manualmente
+    if (iosManualInstall) {
+      showBtn();
+      return;
+    }
+
+    // 5) Resto de casos: esperamos beforeinstallprompt antes de mostrar
+    hideBtn();
+  }
+
+  /* ---------- Comprobación adicional (no asumir por ausencia de evento) ---------- */
+  function checkRelatedApps() {
+    if (!navigator.getInstalledRelatedApps) return;
+    try {
+      navigator.getInstalledRelatedApps().then(function (apps) {
+        if (apps && apps.length > 0) { markInstalled(); }
+        refresh();
+      }).catch(function () {});
+    } catch (e) {}
+  }
+
+  /* ---------- Click del usuario (única vía de instalación) ---------- */
+  function onClick() {
+    if (isStandalone()) { refresh(); return; }
+
+    if (deferredPrompt) {
+      if (promptInFlight) return;
+      promptInFlight = true;
+      var dp = deferredPrompt;
+      try {
+        dp.prompt(); // diálogo NATIVO del navegador
+        Promise.resolve(dp.userChoice).then(function (res) {
+          deferredPrompt = null; // el evento sólo puede usarse una vez
+          if (res && res.outcome === 'accepted') {
+            markInstalled();
+            hideBtn();
+          }
+          promptInFlight = false;
+          refresh();
+        }).catch(function () {
+          deferredPrompt = null;
+          promptInFlight = false;
+          refresh();
+        });
+      } catch (e) {
+        deferredPrompt = null;
+        promptInFlight = false;
+        refresh();
+      }
+      return;
+    }
+
+    // Sin API de instalación disponible (iOS u otros): breve indicación en la propia app
+    var msg = iosManualInstall
+      ? 'Tocá Compartir ⤴ y luego “Agregar a inicio” para instalar BAREMOS'
+      : 'Usá el menú del navegador y elegí “Instalar aplicación”';
+    if (typeof toast === 'function') { toast(msg, 'info'); }
+  }
+
+  /* ---------- Eventos estándar de PWA ---------- */
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();          // nunca lanzar el diálogo automáticamente
+    deferredPrompt = e;
+    refresh();
+  });
+
+  window.addEventListener('appinstalled', function () {
+    deferredPrompt = null;
+    markInstalled();
+    hideBtn();
+    if (typeof toast === 'function') { toast('BAREMOS instalada correctamente', 'success'); }
+  });
+
+  // Cambio de contexto navegador ↔ aplicación instalada
+  try {
+    var mq = window.matchMedia('(display-mode: standalone)');
+    if (mq.addEventListener) mq.addEventListener('change', refresh);
+    else if (mq.addListener) mq.addListener(refresh);
+  } catch (e) {}
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) { refresh(); checkRelatedApps(); }
+  });
+  window.addEventListener('pageshow', refresh);
+  window.addEventListener('focus', refresh);
+
+  /* ---------- Arranque ---------- */
+  function init() {
+    var b = btn();
+    if (!b) return;
+    b.addEventListener('click', onClick);
+    refresh();
+    checkRelatedApps();
+    // Reevaluación breve: algunos navegadores emiten beforeinstallprompt con retardo
+    setTimeout(refresh, 1200);
+    setTimeout(refresh, 3500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+
+/* ============================================================================
+   BAREMOS — TAREAS CON UBICACIÓN GPS (módulo aditivo)
+   ---------------------------------------------------------------------------
+   DISEÑO NO DESTRUCTIVO:
+   - jornada.items[] sigue siendo la ÚNICA fuente de verdad económica.
+     Los totales, Dashboard, Historial, PDF y Excel se calculan igual que antes.
+   - Al finalizar una tarea NO se mueve ni se copia ningún ítem: solo se les
+     agrega el campo nuevo `tareaId`.
+   - jornada.tareas[] es un array NUEVO con la metadata de cada tarea
+     (correlativo, hora, ubicación, estado). Si no existe se trata como [].
+   - Las jornadas y ítems creados antes de esta versión funcionan sin cambios:
+     los ítems sin `tareaId` son simplemente "tarea en curso".
+   - No se modifica DB_NAME, DB_VERSION ni el esquema de IndexedDB.
+   ========================================================================== */
+
+const GEO_LS_ONBOARDING = 'baremos_geo_onboarding_v1';
+const GEO_LS_EN_PROCESO = 'baremos_tarea_en_proceso';
+const GEO_MAX_AGE_MS = 60000;   // reutiliza un fix reciente: no pide GPS a cada momento
+const GEO_TIMEOUT_MS = 15000;
+
+let _finalizandoTarea = false;
+const _tareasAbiertas = new Set();
+const TIPOS_TRABAJO = ['Mide', 'Dime', 'Morosidad', 'Reclamos', 'NNSS Denuncias'];
+const TIPO_LS = 'baremos_tipo_trabajo';
+let _filtroTipo = null;   // null = ver todas
+
+/* Checks de tipo de trabajo: se comportan como opcion unica (solo uno marcado) */
+function tipoChecksInputs() {
+  return Array.prototype.slice.call(document.querySelectorAll('.tipo-check-input'));
+}
+
+function tipoTrabajoSeleccionado() {
+  const marcado = tipoChecksInputs().filter(i => i.checked)[0];
+  if (marcado && marcado.value) return marcado.value;
+  try { const v = localStorage.getItem(TIPO_LS); if (v && TIPOS_TRABAJO.indexOf(v) !== -1) return v; } catch (e) {}
+  return TIPOS_TRABAJO[0];
+}
+
+function marcarTipoTrabajo(valor) {
+  const inputs = tipoChecksInputs();
+  if (!inputs.length) return;
+  let hay = false;
+  inputs.forEach(i => {
+    const on = i.value === valor;
+    i.checked = on;
+    i.setAttribute('aria-checked', on ? 'true' : 'false');
+    const lab = i.closest('.tipo-check');
+    if (lab) lab.classList.toggle('activo', on);
+    if (on) hay = true;
+  });
+  // Nunca queda ninguno marcado: siempre hay exactamente una opcion activa
+  if (!hay) marcarTipoTrabajo(TIPOS_TRABAJO[0]);
+}
+
+function setupTipoTrabajo() {
+  const inputs = tipoChecksInputs();
+  if (!inputs.length) return;
+  let inicial = TIPOS_TRABAJO[0];
+  try { const v = localStorage.getItem(TIPO_LS); if (v && TIPOS_TRABAJO.indexOf(v) !== -1) inicial = v; } catch (e) {}
+  marcarTipoTrabajo(inicial);
+  inputs.forEach(inp => {
+    inp.addEventListener('change', () => {
+      // Seleccion exclusiva: al marcar uno se desmarcan los demas y no se puede dejar vacio
+      marcarTipoTrabajo(inp.checked ? inp.value : tipoTrabajoSeleccionado());
+      try { localStorage.setItem(TIPO_LS, tipoTrabajoSeleccionado()); } catch (e) {}
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', setupTipoTrabajo);
+
+/* Chips por tipo de trabajo junto al título: contador + filtro */
+function renderChipsTipos(tareas) {
+  const box = document.getElementById('tareasDiaTipos');
+  if (!box) return;
+  const conteo = {};
+  const totales = {};
+  tareas.forEach(t => {
+    const k = t.tipoTrabajo || 'Sin tipo';
+    conteo[k] = (conteo[k] || 0) + 1;
+    totales[k] = (totales[k] || 0) + (t.total || 0);
+  });
+  const extras = Object.keys(conteo).filter(k => TIPOS_TRABAJO.indexOf(k) === -1);
+  const lista = TIPOS_TRABAJO.concat(extras);
+
+  box.innerHTML = '<button class="tipo-chip todas' + (_filtroTipo ? '' : ' activo') + '" data-tipo="">Todas '
+      + '<span class="tc-n">' + tareas.length + '</span></button>'
+    + lista.map(k => {
+      const n = conteo[k] || 0;
+      return '<button class="tipo-chip' + (_filtroTipo === k ? ' activo' : '') + (n ? '' : ' vacio')
+        + '" data-tipo="' + escapeHtml(k) + '" title="' + escapeHtml(k) + ': ' + n + ' tarea(s) · ' + fmt(totales[k] || 0) + '">'
+        + escapeHtml(k) + ' <span class="tc-n">' + n + '</span></button>';
+    }).join('');
+
+  box.querySelectorAll('[data-tipo]').forEach(b => {
+    b.onclick = () => {
+      const v = b.dataset.tipo || null;
+      _filtroTipo = (_filtroTipo === v) ? null : v;
+      renderTareas();
+    };
+  });
+}  // candado anti doble clic / anti duplicados
+let _ultimaPosicion = null;     // { lat, lon, precision, ts }
+let _ubicPendiente = null;      // contexto del modal manual
+
+/* ---------------------------------------------------------------- helpers */
+
+function tareasJornada() {
+  if (!State.jornada) return [];
+  if (!Array.isArray(State.tareas)) State.tareas = State.jornada.tareas || [];
+  return State.tareas;
+}
+
+// Ítems todavía no asignados a ninguna tarea = tarea en curso
+function itemsPendientes() {
+  return (State.items || []).filter(it => !it.tareaId);
+}
+
+function itemsDeTarea(jornada, tareaId) {
+  return (jornada.items || []).filter(it => it.tareaId === tareaId);
+}
+
+function siguienteCorrelativo() {
+  const t = tareasJornada();
+  let max = 0;
+  t.forEach(x => {
+    const n = parseInt(String(x.correlativo || '0'), 10);
+    if (!isNaN(n) && n > max) max = n;
+  });
+  return String(max + 1).padStart(3, '0');
+}
+
+function horaCorta(iso) {
+  try {
+    const d = iso ? new Date(iso) : new Date();
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  } catch (e) { return ''; }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ------------------------------------------------- persistencia de respaldo */
+// Guarda un borrador del proceso para poder informar si el navegador se recarga.
+// Los baremos ya están persistidos en IndexedDB, así que nunca se pierden.
+function guardarBorradorProceso(estado) {
+  try {
+    const pend = itemsPendientes();
+    localStorage.setItem(GEO_LS_EN_PROCESO, JSON.stringify({
+      estado,
+      jornadaId: State.jornada ? State.jornada.id : null,
+      legajo: State.user ? State.user.legajo : null,
+      usuario: State.user ? State.user.nombre : null,
+      zona: State.user ? State.user.zona : null,
+      fecha: State.jornada ? State.jornada.fecha : hoy(),
+      hora: horaCorta(),
+      cantidadBaremos: pend.length,
+      cantidadItems: pend.reduce((a, i) => a + i.cantidad, 0),
+      total: pend.reduce((a, i) => a + i.subtotal, 0),
+      ts: Date.now()
+    }));
+  } catch (e) {}
+}
+
+function limpiarBorradorProceso() {
+  try { localStorage.removeItem(GEO_LS_EN_PROCESO); } catch (e) {}
+}
+
+/* -------------------------------------------------------------- GPS + geo */
+
+function obtenerPosicion() {
+  return new Promise((resolve, reject) => {
+    if (!('geolocation' in navigator)) {
+      reject({ code: 'NO_API', message: 'Este dispositivo o navegador no permite obtener la ubicación.' });
+      return;
+    }
+    // Reutiliza un fix reciente para no molestar al usuario en cada tarea
+    if (_ultimaPosicion && (Date.now() - _ultimaPosicion.ts) < GEO_MAX_AGE_MS) {
+      resolve(_ultimaPosicion);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const p = {
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          precision: typeof pos.coords.accuracy === 'number' ? Math.round(pos.coords.accuracy) : null,
+          ts: Date.now()
+        };
+        _ultimaPosicion = p;
+        resolve(p);
+      },
+      err => {
+        let msg = 'No se pudo obtener la ubicación.';
+        if (err && err.code === 1) msg = 'Permiso de ubicación denegado.';
+        else if (err && err.code === 2) msg = 'GPS sin señal o desactivado.';
+        else if (err && err.code === 3) msg = 'Se agotó el tiempo de espera del GPS.';
+        reject({ code: err ? err.code : 'ERR', message: msg });
+      },
+      { enableHighAccuracy: true, timeout: GEO_TIMEOUT_MS, maximumAge: GEO_MAX_AGE_MS }
+    );
+  });
+}
+
+// Geocodificación inversa con Nominatim (OpenStreetMap). Nunca bloquea la tarea:
+// si no hay Internet o falla, se conservan latitud y longitud como respaldo.
+async function geocodificarInverso(lat, lon) {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) return null;
+  const url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1'
+    + '&lat=' + encodeURIComponent(lat) + '&lon=' + encodeURIComponent(lon) + '&accept-language=es';
+  let ctrl = null, timer = null;
+  try {
+    ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    if (ctrl) timer = setTimeout(() => ctrl.abort(), 9000);
+    const r = await fetch(url, {
+      method: 'GET',
+      cache: 'no-store',
+      signal: ctrl ? ctrl.signal : undefined,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (timer) clearTimeout(timer);
+    if (!r.ok) return null;
+    const d = await r.json();
+    const a = (d && d.address) || {};
+    // Solo se conserva lo que el servicio realmente devuelve: no se inventa nada
+    const calle = a.road || a.pedestrian || a.residential || a.footway || null;
+    const altura = a.house_number || null;
+    const barrio = a.neighbourhood || a.suburb || a.quarter || a.hamlet || null;
+    const localidad = a.city || a.town || a.village || a.municipality || null;
+    const partido = a.county || a.state_district || a.city_district || null;
+    const partes = [];
+    if (calle) partes.push(altura ? (calle + ' ' + altura) : calle);
+    if (barrio) partes.push(barrio);
+    if (localidad) partes.push(localidad);
+    if (partido && partido !== localidad) partes.push(partido);
+    const texto = partes.join(', ');
+    if (!texto) return null;
+    return { texto, calle, altura, barrio, localidad, partido };
+  } catch (e) {
+    if (timer) clearTimeout(timer);
+    return null;
+  }
+}
+
+/* --------------------------------------------------- alta de la tarea real */
+
+async function crearTareaFinalizada(ubic) {
+  const pend = itemsPendientes();
+  if (!State.jornada || !pend.length) return null;
+
+  const ahoraISO = ahora();
+  const tareaId = 'T' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+
+  const tarea = {
+    id: tareaId,
+    correlativo: siguienteCorrelativo(),
+    fecha: State.jornada.fecha,
+    hora: horaCorta(ahoraISO),
+    horaISO: ahoraISO,
+    usuario: State.user ? State.user.nombre : (State.jornada.usuario || ''),
+    legajo: State.user ? State.user.legajo : (State.jornada.legajo || ''),
+    zona: (State.user && State.user.zona) || State.jornada.zona || '',
+    itemIds: pend.map(i => i.id),
+    cantidadBaremos: pend.length,
+    cantidadItems: pend.reduce((a, i) => a + i.cantidad, 0),
+    total: pend.reduce((a, i) => a + i.subtotal, 0),
+    lat: ubic && ubic.lat != null ? ubic.lat : null,
+    lon: ubic && ubic.lon != null ? ubic.lon : null,
+    precision: ubic && ubic.precision != null ? ubic.precision : null,
+    direccion: ubic && ubic.direccion ? ubic.direccion : null,
+    direccionDetalle: ubic && ubic.direccionDetalle ? ubic.direccionDetalle : null,
+    direccionPendiente: !!(ubic && ubic.direccionPendiente),
+    tipoUbicacion: ubic && ubic.tipoUbicacion ? ubic.tipoUbicacion : 'ninguna',
+    tipoTrabajo: tipoTrabajoSeleccionado(),
+    estado: 'finalizada'
+  };
+
+  // Marca (no mueve ni borra) los ítems que pasan a formar parte de la tarea
+  pend.forEach(it => { it.tareaId = tareaId; });
+
+  tareasJornada().push(tarea);
+  await saveJornada();
+  renderAll();
+  return tarea;
+}
+
+/* ------------------------------------------------------ estado del botón */
+
+function setBotonFinalizar(estado) {
+  const b = $('#btnFinalizarTarea');
+  if (!b) return;
+  if (estado === 'buscando') {
+    b.disabled = true;
+    b.classList.add('gps-buscando');
+    b.textContent = '📍 Obteniendo ubicación GPS....';
+  } else {
+    b.disabled = false;
+    b.classList.remove('gps-buscando');
+    b.textContent = '✅ FINALIZAR TAREA';
+  }
+}
+
+/* ------------------------------------------------------ modal de respaldo */
+
+function abrirModalUbicacionManual(motivo) {
+  const pend = itemsPendientes();
+  const total = pend.reduce((a, i) => a + i.subtotal, 0);
+  const m = $('#ubicMotivo');
+  if (m) m.textContent = '⚠️ ' + (motivo || 'No se pudo obtener la ubicación.');
+  const r = $('#ubicResumen');
+  if (r) {
+    r.innerHTML = 'La tarea está <strong>intacta</strong> y sigue guardada: '
+      + '<strong>' + pend.length + '</strong> baremo(s), '
+      + '<strong>' + pend.reduce((a, i) => a + i.cantidad, 0) + '</strong> ítem(s), total '
+      + '<strong>' + fmt(total) + '</strong>.<br>Zona: <strong>'
+      + escapeHtml((State.user && State.user.zona) || '-') + '</strong> · '
+      + escapeHtml(fechaCorta(State.jornada ? State.jornada.fecha : hoy())) + ' ' + horaCorta();
+  }
+  const inp = $('#ubicManualInput');
+  if (inp) inp.value = '';
+  _ubicPendiente = { motivo: motivo || '' };
+  guardarBorradorProceso('modal_manual');
+  $('#modalUbicacion').classList.add('show');
+  setTimeout(() => { if (inp) inp.focus(); }, 150);
+}
+
+function cerrarModalUbicacion() {
+  $('#modalUbicacion').classList.remove('show');
+  _ubicPendiente = null;
+}
+
+/* --------------------------------------------------------- flujo principal */
+
+async function finalizarTarea() {
+  if (_finalizandoTarea) return;                       // evita ejecuciones simultáneas
+  if (!State.jornada) { toast('No hay jornada activa', 'warn'); return; }
+  if (State.jornada.cerrada) { toast('La jornada está cerrada', 'warn'); return; }
+
+  const pend = itemsPendientes();
+  if (!pend.length) { toast('Agregá al menos un baremo para finalizar la tarea', 'warn'); return; }
+
+  _finalizandoTarea = true;
+  setBotonFinalizar('buscando');
+  guardarBorradorProceso('obteniendo_gps');
+
+  try {
+    const pos = await obtenerPosicion();
+    let direccion = null, detalle = null, pendiente = false;
+    const geo = await geocodificarInverso(pos.lat, pos.lon);
+    if (geo) { direccion = geo.texto; detalle = geo; }
+    else { pendiente = true; }
+
+    const tarea = await crearTareaFinalizada({
+      lat: pos.lat,
+      lon: pos.lon,
+      precision: pos.precision,
+      direccion,
+      direccionDetalle: detalle,
+      direccionPendiente: pendiente,
+      tipoUbicacion: 'gps'
+    });
+
+    limpiarBorradorProceso();
+    if (tarea) {
+      toast('TAREA ' + tarea.correlativo + ' finalizada · ' + fmt(tarea.total)
+        + (direccion ? '' : ' · coordenadas guardadas'), 'success');
+    }
+  } catch (err) {
+    // La tarea NO se pierde: se ofrece el respaldo manual
+    abrirModalUbicacionManual(err && err.message ? err.message : 'No se pudo obtener la ubicación.');
+  } finally {
+    setBotonFinalizar('normal');
+    _finalizandoTarea = false;
+  }
+}
+
+async function guardarUbicacionManual(texto) {
+  if (_finalizandoTarea) return;
+  const ref = String(texto || '').trim();
+  if (!ref) { toast('Ingresá una dirección o referencia', 'warn'); return; }
+  if (!itemsPendientes().length) { cerrarModalUbicacion(); toast('No hay baremos para finalizar', 'warn'); return; }
+
+  _finalizandoTarea = true;
+  try {
+    const tarea = await crearTareaFinalizada({
+      lat: null,               // nunca se inventan coordenadas para una ubicación manual
+      lon: null,
+      precision: null,
+      direccion: ref,
+      direccionPendiente: false,
+      tipoUbicacion: 'manual'
+    });
+    limpiarBorradorProceso();
+    cerrarModalUbicacion();
+    if (tarea) toast('TAREA ' + tarea.correlativo + ' finalizada con ubicación manual', 'success');
+  } finally {
+    _finalizandoTarea = false;
+    setBotonFinalizar('normal');
+  }
+}
+
+/* ------------------------------------------------------------- ver en mapa */
+
+function urlMapaTarea(t) {
+  if (!t) return null;
+  if (t.lat != null && t.lon != null) {
+    return 'https://www.google.com/maps/search/?api=1&query=' + t.lat + ',' + t.lon;
+  }
+  if (t.direccion) {
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(t.direccion);
+  }
+  return null;
+}
+
+/* ------------------------------------------- TAREAS DEL DÍA (FINALIZADAS) */
+
+function renderTareas() {
+  const wrap = $('#tareasDiaWrap');
+  const lst = $('#tareasDiaList');
+  const cnt = $('#tareasDiaCount');
+  if (!wrap || !lst) return;
+
+  // La última tarea cerrada siempre queda en la cima (orden descendente)
+  const tareas = tareasJornada().slice().sort((a, b) => {
+    const ta = a.horaISO ? Date.parse(a.horaISO) : 0;
+    const tb = b.horaISO ? Date.parse(b.horaISO) : 0;
+    if (tb !== ta) return tb - ta;
+    return String(b.correlativo || '').localeCompare(String(a.correlativo || ''));
+  });
+  if (!tareas.length) { wrap.style.display = 'none'; lst.innerHTML = ''; return; }
+
+  wrap.style.display = 'block';
+  if (cnt) cnt.textContent = tareas.length;
+  renderChipsTipos(tareas);
+
+  const visibles = _filtroTipo
+    ? tareas.filter(t => (t.tipoTrabajo || 'Sin tipo') === _filtroTipo)
+    : tareas;
+
+  if (!visibles.length) {
+    lst.innerHTML = '<div class="tareas-vacio">Sin tareas de «' + escapeHtml(_filtroTipo) + '» en el día</div>';
+    return;
+  }
+
+  lst.innerHTML = visibles.map(t => {
+    const items = itemsDeTarea(State.jornada, t.id);
+    const tipo = t.tipoUbicacion || 'ninguna';
+    const badge = tipo === 'gps'
+      ? '<span class="tarea-badge gps">GPS</span>'
+      : (tipo === 'manual' ? '<span class="tarea-badge manual">MANUAL</span>'
+                           : '<span class="tarea-badge sin">SIN UBICACIÓN</span>');
+    const dir = t.direccion
+      ? escapeHtml(t.direccion)
+      : (t.lat != null ? 'Coordenadas ' + Number(t.lat).toFixed(5) + ', ' + Number(t.lon).toFixed(5)
+                       : 'Ubicación no registrada');
+    const url = urlMapaTarea(t);
+    const baremos = items.length
+      ? items.map(it => '<div class="tarea-baremo-item"><span class="tb-cod">' + escapeHtml(it.codigo)
+          + '</span><span class="tb-desc" title="' + escapeHtml(it.descripcion) + '">'
+          + escapeHtml(it.descripcion) + '</span><span class="tb-sub">x' + it.cantidad + ' · '
+          + fmt(it.subtotal) + '</span></div>').join('')
+      : '<div class="tarea-baremo-item"><span class="tb-desc">Sin baremos asociados</span></div>';
+
+    const abierta = _tareasAbiertas.has(t.id);
+    return '<div class="tarea-card ubic-' + tipo + (abierta ? ' open' : '') + '" data-tarea="' + t.id + '">'
+      + '<div class="tarea-card-top" data-toggle-tarea="' + t.id + '" role="button" tabindex="0" aria-expanded="' + (abierta ? 'true' : 'false') + '">'
+      + '<div class="tarea-num">TAREA ' + escapeHtml(t.correlativo)
+      + (t.tipoTrabajo ? '<span class="tarea-tipo">' + escapeHtml(t.tipoTrabajo) + '</span>' : '') + '</div>'
+      + '<span class="tarea-caret">▼</span></div>'
+      + '<div class="tarea-row meta"><span class="v">🕒 ' + escapeHtml(fechaCorta(t.fecha)) + ' ' + escapeHtml(t.hora || '') + '</span>'
+      + '<span class="meta-sep">·</span><span class="v">📍 ' + escapeHtml(t.zona || '-') + '</span></div>'
+      + '<div class="tarea-row dir"><span class="k">Dirección:</span>'
+      + '<span class="dir-chip ' + tipo + '" title="' + (tipo === 'manual' ? 'Ubicación manual' : (tipo === 'gps' ? 'Ubicación GPS' : 'Sin ubicación')) + '">📍 ' + dir + '</span>'
+      + (url ? '<a class="tarea-mapa" href="' + url + '" target="_blank" rel="noopener noreferrer">🗺️ Ver mapa</a>' : '')
+      + '</div>'
+      + '<div class="tarea-row total"><span class="k">Total de la tarea:</span><span class="tarea-total">' + fmt(t.total || 0) + '</span></div>'
+      + '<div class="tarea-body">'
+      + '<div class="tarea-baremos"><div class="tarea-baremos-lbl">Baremos incluidos (' + items.length + '):</div>' + baremos + '</div>'
+      + '<div class="tarea-card-actions"><button class="tarea-del-btn" data-del-tarea="' + t.id + '">🗑️ ELIMINAR</button></div>'
+      + '</div></div>';
+  }).join('');
+
+  lst.querySelectorAll('[data-del-tarea]').forEach(b => {
+    b.onclick = async e => {
+      e.stopPropagation();
+      await eliminarTarea(b.dataset.delTarea);
+    };
+  });
+
+  // Expandir / colapsar: los baremos se ven al expandir la tarea
+  lst.querySelectorAll('[data-toggle-tarea]').forEach(h => {
+    const toggle = e => {
+      if (e.target && e.target.closest('a')) return;
+      const id = h.dataset.toggleTarea;
+      const card = h.closest('.tarea-card');
+      if (!card) return;
+      const abrir = !card.classList.contains('open');
+      card.classList.toggle('open', abrir);
+      h.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+      if (abrir) _tareasAbiertas.add(id); else _tareasAbiertas.delete(id);
+    };
+    h.onclick = toggle;
+    h.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); } };
+  });
+}
+
+/* Mantiene la barra "Buscar baremos" siempre visible bajo la cabecera al hacer scroll */
+function ajustarStickyBusqueda() {
+  const h = document.querySelector('.app-header');
+  if (!h) return;
+  const alto = Math.round(h.getBoundingClientRect().height);
+  if (alto > 0) document.documentElement.style.setProperty('--hdr-h', alto + 'px');
+}
+window.addEventListener('resize', ajustarStickyBusqueda);
+window.addEventListener('orientationchange', ajustarStickyBusqueda);
+document.addEventListener('DOMContentLoaded', () => {
+  ajustarStickyBusqueda();
+  setTimeout(ajustarStickyBusqueda, 600);
+  setTimeout(ajustarStickyBusqueda, 1800);
+  const hd = document.querySelector('.app-header');
+  if (hd && window.ResizeObserver) { try { new ResizeObserver(ajustarStickyBusqueda).observe(hd); } catch (e) {} }
+});
+
+// Usa el sistema de confirmación existente: nunca elimina con un clic accidental
+async function eliminarTarea(tareaId) {
+  const t = tareasJornada().find(x => x.id === tareaId);
+  if (!t) return;
+  const items = itemsDeTarea(State.jornada, tareaId);
+  const ok = await confirmDialog('¿Eliminar la TAREA ' + t.correlativo + '?\n'
+    + items.length + ' baremo(s) · ' + fmt(t.total || 0) + '\nEsta acción no se puede deshacer.');
+  if (!ok) return;
+  State.tareas = tareasJornada().filter(x => x.id !== tareaId);
+  State.items = (State.items || []).filter(it => it.tareaId !== tareaId);
+  await saveJornada();
+  renderAll();
+  toast('TAREA ' + t.correlativo + ' eliminada', 'success');
+}
+
+/* ------------------------------------ permiso de ubicación al primer inicio */
+
+async function solicitarPermisoUbicacionInicial() {
+  let yaPreguntado = false;
+  try { yaPreguntado = localStorage.getItem(GEO_LS_ONBOARDING) === '1'; } catch (e) {}
+  if (yaPreguntado) return;
+  if (!('geolocation' in navigator)) return;
+
+  try {
+    if (navigator.permissions && navigator.permissions.query) {
+      const st = await navigator.permissions.query({ name: 'geolocation' });
+      if (st && st.state === 'granted') {
+        try { localStorage.setItem(GEO_LS_ONBOARDING, '1'); } catch (e) {}
+        return;                         // ya autorizado: no se vuelve a molestar
+      }
+      if (st && st.state === 'denied') {
+        try { localStorage.setItem(GEO_LS_ONBOARDING, '1'); } catch (e) {}
+        return;                         // ya denegado: no insistir
+      }
+    }
+  } catch (e) {}
+
+  try { localStorage.setItem(GEO_LS_ONBOARDING, '1'); } catch (e) {}
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      _ultimaPosicion = {
+        lat: pos.coords.latitude, lon: pos.coords.longitude,
+        precision: typeof pos.coords.accuracy === 'number' ? Math.round(pos.coords.accuracy) : null,
+        ts: Date.now()
+      };
+      toast('Ubicación habilitada para registrar tus tareas', 'success');
+    },
+    () => { /* si rechaza, no se insiste: al finalizar una tarea existe el respaldo manual */ },
+    { enableHighAccuracy: true, timeout: GEO_TIMEOUT_MS, maximumAge: GEO_MAX_AGE_MS }
+  );
+}
+
+/* --------------------------------------------------------------- arranque */
+
+function setupTareasGPS() {
+  const b = $('#btnFinalizarTarea');
+  if (b) b.addEventListener('click', finalizarTarea);
+
+  const form = $('#formUbicacionManual');
+  if (form) {
+    form.onsubmit = async e => {
+      e.preventDefault();
+      await guardarUbicacionManual($('#ubicManualInput').value);
+    };
+  }
+  const cancelar = $('#ubicCancelar');
+  if (cancelar) {
+    cancelar.onclick = () => {
+      cerrarModalUbicacion();
+      limpiarBorradorProceso();
+      toast('Tarea sin finalizar: tus baremos siguen guardados', 'info');
+    };
+  }
+  const reintentar = $('#ubicReintentar');
+  if (reintentar) {
+    reintentar.onclick = async () => {
+      cerrarModalUbicacion();
+      _ultimaPosicion = null;              // fuerza una lectura nueva del GPS
+      await finalizarTarea();
+    };
+  }
+
+  // Aviso si el navegador se recargó en medio del proceso (nada se perdió)
+  try {
+    const raw = localStorage.getItem(GEO_LS_EN_PROCESO);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && d.cantidadBaremos > 0) {
+        setTimeout(() => toast('Se recuperó una tarea sin finalizar: ' + d.cantidadBaremos + ' baremo(s) intactos', 'info'), 1200);
+      }
+      limpiarBorradorProceso();
+    }
+  } catch (e) {}
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupTareasGPS);
+} else {
+  setupTareasGPS();
+}
+
+/* ============================================================================
+   UBICACIÓN EN HISTORIAL Y REPORTES PDF (aditivo)
+   No altera el formato existente: solo agrega un bloque cuando la jornada
+   contiene tareas con ubicación. Las jornadas antiguas no se modifican.
+   ========================================================================== */
+
+function textoUbicacionTarea(t) {
+  if (!t) return 'Ubicación no registrada';
+  if (t.direccion) {
+    return t.direccion + (t.tipoUbicacion === 'manual' ? ' (manual)' : '');
+  }
+  if (t.lat != null && t.lon != null) {
+    return 'Lat ' + Number(t.lat).toFixed(5) + ' / Lon ' + Number(t.lon).toFixed(5);
+  }
+  return 'Ubicación no registrada';
+}
+
+// Detalle de jornada (Historial): agrega tarea, fecha, hora, zona, dirección,
+// ubicación, baremos y total. Si no hay tareas registradas, informa el caso.
+function renderUbicacionesJornada(j) {
+  const modal = document.querySelector('#modalJornada .modal');
+  if (!modal) return;
+  let box = document.getElementById('mjUbicaciones');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'mjUbicaciones';
+    box.className = 'mj-ubic';
+    const tabla = modal.querySelector('.table-wrap');
+    if (tabla) modal.insertBefore(box, tabla);
+    else modal.appendChild(box);
+  }
+
+  const tareas = Array.isArray(j.tareas) ? j.tareas : [];
+  if (!tareas.length) {
+    box.innerHTML = '<div class="mj-ubic-title">📍 Ubicación de tareas</div>'
+      + '<div class="mj-ubic-row" style="color:var(--text-soft)">Ubicación no registrada</div>';
+    return;
+  }
+
+  box.innerHTML = '<div class="mj-ubic-title">📍 Tareas con ubicación (' + tareas.length + ')</div>'
+    + tareas.map(t => {
+      const items = (j.items || []).filter(it => it.tareaId === t.id);
+      const url = urlMapaTarea(t);
+      const tipo = t.tipoUbicacion === 'gps' ? 'GPS' : (t.tipoUbicacion === 'manual' ? 'Manual' : 'No registrada');
+      return '<div class="mj-ubic-row">'
+        + '<strong>TAREA ' + escapeHtml(t.correlativo) + '</strong> · ' + escapeHtml(fechaCorta(t.fecha)) + ' ' + escapeHtml(t.hora || '') + '<br>'
+        + 'Zona: ' + escapeHtml(t.zona || '-') + ' · Tipo: ' + escapeHtml(t.tipoTrabajo || 'No registrado')
+        + ' · Ubicación: ' + escapeHtml(tipo) + '<br>'
+        + 'Dirección: ' + escapeHtml(textoUbicacionTarea(t)) + '<br>'
+        + 'Baremos: ' + items.length + ' · Total: <strong>' + fmt(t.total || 0) + '</strong>'
+        + (url ? ' · <a href="' + url + '" target="_blank" rel="noopener noreferrer">🗺️ Ver mapa</a>' : '')
+        + '</div>';
+    }).join('');
+}
+
+// Agrega al PDF una tabla compacta con la ubicación de las tareas de la jornada.
+// Devuelve la nueva coordenada Y. Si la jornada no tiene tareas, no cambia nada.
+function agregarTablaUbicacionesPDF(doc, j, y) {
+  const tareas = Array.isArray(j.tareas) ? j.tareas : [];
+  if (!tareas.length || !doc.autoTable) return y;
+
+  if (y > 235) { doc.addPage(); y = 25; }
+
+  const body = tareas.map(t => [
+    'TAREA ' + (t.correlativo || '') + (t.tipoTrabajo ? '\n' + t.tipoTrabajo : ''),
+    fechaCorta(t.fecha) + ' ' + (t.hora || ''),
+    t.zona || '-',
+    textoUbicacionTarea(t),
+    (t.lat != null && t.lon != null) ? (Number(t.lat).toFixed(5) + ', ' + Number(t.lon).toFixed(5)) : '-',
+    fmt(t.total || 0)
+  ]);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Tarea', 'Fecha / Hora', 'Zona', 'Dirección', 'Coordenadas', 'Total']],
+    body,
+    theme: 'grid',
+    styles: { fontSize: 7, cellPadding: 1.5 },
+    headStyles: { fillColor: [21, 163, 91] },
+    columnStyles: { 3: { cellWidth: 55 } },
+    margin: { left: 14, right: 14 }
+  });
+
+  return doc.lastAutoTable.finalY + 8;
+}

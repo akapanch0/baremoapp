@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es-AR">
-<head>
+<head><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3326087178271029"
+     crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0b3d91">
@@ -9,16 +10,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAREMOS">
 <meta name="application-name" content="BAREMOS">
-<title>BAREMOS - Control de Producción</title>
-<link rel="manifest" href="manifest.json?v=5.8.39">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.39">
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.39">
-<link rel="apple-touch-icon" href="icons/icon-180.png?v=5.8.39">
-<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png?v=5.8.39">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png?v=5.8.39">
-<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png?v=5.8.39">
-<link rel="stylesheet" href="styles.css?v=5.8.39">
+<title>BAREMOS</title>
+<link rel="manifest" href="manifest.json?v=5.8.40">
+<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.40">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.40">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.40">
+<link rel="stylesheet" href="styles.css?v=5.8.40">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.6.0/dist/jspdf.plugin.autotable.min.js"></script>
@@ -56,7 +53,7 @@
       BAREMOS
     </h1>
     <div class="header-actions">
-      <button class="btn-pwa-install" id="btnInstallPwa" style="display:none;" title="Instalar Aplicación">📲 Instalar</button>
+      <button class="btn-install-pwa" id="btnInstallApp" type="button" title="Instalar BAREMOS en tu dispositivo" aria-label="Instalar app" hidden><span class="bip-ico" aria-hidden="true">📲</span><span class="bip-txt">Instalar</span></button>
       <button class="btn-ayuda" id="btnHelp" title="Menú de Ayuda">AYUDA</button>
       <button class="icon-btn" id="btnTheme" title="Tema">🌓</button>
     </div>
@@ -70,7 +67,6 @@
       <div class="mini-calendar" id="miniCalendar"></div>
     </div>
   </div>
-  <div id="offlineBar" class="offline-bar" style="display:none;">⚡ Modo Offline activo · Tus datos se guardan de forma local</div>
 </header>
 
 <main>
@@ -306,42 +302,46 @@
       </div>
       <div class="search-list" id="searchList"></div>
     </div>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 14px;">
-      <button class="btn btn-primary" id="btnAgregar" style="padding: 10px 2px; font-size: 11px;">➕ Agregar</button>
-      <button class="btn btn-success" id="btnFinalizarTarea" style="padding: 10px 2px; font-size: 11px;">✅ Finalizar Tarea</button>
-      <button class="btn btn-ghost" id="btnCerrarJornada" style="padding: 10px 2px; font-size: 11px; border-color: var(--danger); color: var(--danger);">🔒 Cerrar Jornada</button>
-    </div>
-
-    <div class="card" id="currentTaskCard" style="display:none; border: 2px solid var(--primary);">
-      <div class="card-title" style="color:var(--primary);"><span class="ico">⏳</span> TAREA EN CURSO</div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th class="hide-mob">#</th><th>Cód</th><th>Descripción</th><th class="hide-mob">Precio</th><th>Cant</th><th>Sub</th><th></th></tr></thead>
-          <tbody id="itemsBody"></tbody>
-        </table>
-      </div>
-      <div style="text-align:right; font-weight:800; margin-top:12px; font-size:16px;">
-        Subtotal Tarea: <span id="currentTaskTotal" style="color:var(--primary);">$0</span>
+    <div class="tipo-trabajo-row" id="tipoTrabajoRow" role="radiogroup" aria-label="Tipo de trabajo">
+      <span class="tipo-trabajo-lbl">Tipo de trabajo</span>
+      <div class="tipo-checks" id="tipoChecks">
+        <label class="tipo-check"><input type="checkbox" class="tipo-check-input" name="tipoTrabajo" value="Mide" checked><span class="tipo-check-box"></span><span class="tipo-check-txt">Mide</span><span class="tipo-check-short">Mide</span></label>
+        <label class="tipo-check"><input type="checkbox" class="tipo-check-input" name="tipoTrabajo" value="Dime"><span class="tipo-check-box"></span><span class="tipo-check-txt">Dime</span><span class="tipo-check-short">Dime</span></label>
+        <label class="tipo-check"><input type="checkbox" class="tipo-check-input" name="tipoTrabajo" value="Morosidad"><span class="tipo-check-box"></span><span class="tipo-check-txt">Morosidad</span><span class="tipo-check-short">Moros.</span></label>
+        <label class="tipo-check"><input type="checkbox" class="tipo-check-input" name="tipoTrabajo" value="Reclamos"><span class="tipo-check-box"></span><span class="tipo-check-txt">Reclamos</span><span class="tipo-check-short">Recl.</span></label>
+        <label class="tipo-check"><input type="checkbox" class="tipo-check-input" name="tipoTrabajo" value="NNSS Denuncias"><span class="tipo-check-box"></span><span class="tipo-check-txt">NNSS Denuncias</span><span class="tipo-check-short">NNSS</span></label>
       </div>
     </div>
-
+    <div class="btn-row btn-row-3" style="margin-bottom:10px">
+      <button class="btn btn-primary" id="btnAgregar">➕ Agregar</button>
+      <button class="btn btn-finalizar-tarea" id="btnFinalizarTarea" type="button">✅ FINALIZAR TAREA</button>
+      <button class="btn btn-ghost" id="btnCerrarJornada">🔒 Cerrar jornada</button>
+    </div>
     <div class="totals">
-      <div class="total-card"><div class="lbl">Tareas</div><div class="val" id="totalRegs">0</div></div>
-      <div class="total-card"><div class="lbl">Baremos</div><div class="val" id="totalItems">0</div></div>
+      <div class="total-card"><div class="lbl">Registros</div><div class="val" id="totalRegs">0</div></div>
+      <div class="total-card"><div class="lbl">Ítems</div><div class="val" id="totalItems">0</div></div>
       <div class="total-card"><div class="lbl">Total</div><div class="val" id="totalGeneral">$0</div></div>
     </div>
-    
     <div class="total-general bg-red" id="totalGeneralCard">
       <div class="lbl">Total del día</div>
       <div class="val" id="totalGeneralBig">$0</div>
       <div class="tg-medal" id="tgMedal">🥇</div>
     </div>
-
-    <div class="card-title" style="margin-top:20px; margin-bottom: 12px;"><span class="ico">📋</span> Tareas del Día (Finalizadas)</div>
-    <div id="tareasFinalizadasList"></div>
-
-    <div id="fraseContainer" style="margin-top:20px;"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="hide-mob">#</th><th>Cód</th><th>Descripción</th><th class="hide-mob">Precio</th><th>Cant</th><th>Sub</th><th></th></tr></thead>
+        <tbody id="itemsBody"></tbody>
+      </table>
+    </div>
+    <div class="tareas-dia" id="tareasDiaWrap" style="display:none">
+      <div class="tareas-dia-head">
+        <div class="tareas-dia-title">📋 TAREAS DEL DÍA (FINALIZADAS)</div>
+        <div class="tareas-dia-count" id="tareasDiaCount">0</div>
+      </div>
+      <div class="tareas-dia-tipos" id="tareasDiaTipos"></div>
+      <div id="tareasDiaList"></div>
+    </div>
+    <div id="fraseContainer"></div>
   </section>
 
   <section class="view" id="viewHistorial">
@@ -396,7 +396,7 @@
         <div class="dac-medal">🥇</div>
       </div>
       
-      <div class="stat-card"><div class="ico">🛠️</div><div class="lbl">Total Tareas</div><div class="val" id="statTrabajos">0</div></div>
+      <div class="stat-card"><div class="ico">🛠️</div><div class="lbl">Total trabajos</div><div class="val" id="statTrabajos">0</div></div>
       <div class="stat-card"><div class="ico">📋</div><div class="lbl">Total baremos</div><div class="val" id="statBaremos">0</div></div>
       <div class="stat-card"><div class="ico">⭐</div><div class="lbl">Baremo más usado</div><div class="val" id="statTopUso" style="font-size:13px">-</div></div>
       <div class="stat-card"><div class="ico">💎</div><div class="lbl">Mayor facturación</div><div class="val" id="statTopFact" style="font-size:13px">-</div></div>
@@ -437,8 +437,7 @@
 
   <section class="view" id="viewCombustible">
     <div class="card">
-      <div class="card-title" style="margin-bottom: 6px; font-size: 14px; color: var(--primary);">⛽ REGISTRAR CARGA DE COMBUSTIBLE</div>
-      <div style="font-size: 11px; color: var(--text-soft); margin-bottom: 14px; line-height: 1.45;">Es importante registres cada carga para mantener un control general de tus egresos dentro del balance de BAREMO APP.</div>
+      <div class="card-title">⛽ Cargar combustible</div>
       <form id="formComb">
         <div class="field"><label>Patente</label><input class="input" id="combPatente" placeholder="ABC123" required style="text-transform:uppercase"></div>
         <div class="field"><label>Monto</label><input class="input" id="combMonto" type="number" min="1" step="0.01" placeholder="0.00" required></div>
@@ -578,25 +577,6 @@
   <button class="tab-btn" data-view="Ajustes"><span class="ico">⚙️</span>Ajustes</button>
 </nav>
 
-<div class="modal-backdrop" id="modalUbicacionManual">
-  <div class="modal">
-    <h2 style="font-size:18px;margin-bottom:8px">📍 Ubicación de la Tarea</h2>
-    <p style="font-size:12px;color:var(--text-soft);margin-bottom:14px">
-      No se pudo obtener el GPS automático o se denegó el permiso. Ingresá la dirección o referencia del lugar de trabajo para guardarla en la tarea:
-    </p>
-    <form id="formUbicacionManual">
-      <div class="field">
-        <label>Dirección / Calle y Número / Referencia</label>
-        <input class="input" id="inputManualDireccion" type="text" placeholder="Ej: Av. San Martín 1420, Vicente López" required>
-      </div>
-      <div class="btn-row">
-        <button type="button" class="btn btn-ghost" id="cancelUbicacionManual">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Confirmar y Guardar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
 <div class="modal-backdrop" id="modalConfirm">
   <div class="modal">
     <h2 style="font-size:18px;margin-bottom:14px">⚠️ Confirmar</h2>
@@ -648,22 +628,6 @@
           <option value="Pilar-Escobar">Pilar-Escobar</option>
         </select>
       </div>
-      <div class="zona-mapa-container" id="modalZonaMapaContainer" style="margin-bottom:14px">
-        <div class="zona-mapa-header">
-          <span>📍</span>
-          <span id="modalZonaMapaTitulo">Zona seleccionada</span>
-        </div>
-        <div class="zona-mapa-img-wrap">
-          <img class="zona-mapa-img" id="modalZonaMapaImg" alt="Mapa" style="display:none">
-          <div class="zona-mapa-placeholder" id="modalZonaMapaPlaceholder">
-            <div><span class="zmp-ico">🗺️</span><span>Seleccioná una zona</span></div>
-          </div>
-        </div>
-        <div class="zona-mapa-footer">
-          <span><span class="zmf-dot"></span>Mapa precargado</span>
-          <span id="modalZonaMapaNombre">—</span>
-        </div>
-      </div>
       <div class="btn-row">
         <button type="button" class="btn btn-ghost" id="cancelChangeZona">Cancelar</button>
         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -690,15 +654,18 @@
   </div>
 </div>
 
+<!-- Modal de Términos y Condiciones (Bloqueante / Versión Controlada) -->
 <div class="modal-backdrop" id="modalTerms" style="z-index: 9999;">
   <div class="modal terms-modal">
     <div class="terms-icon">🛡️</div>
     <h2 style="font-size:18px; margin-bottom:14px; text-align:center;">Términos y Condiciones</h2>
+    <!-- Este contenedor inyecta el contenido dinámicamente desde app.js (INFO_CONTENT.terminos.html) -->
     <div id="termsModalContent" class="terms-content-scroll"></div>
     <button class="btn btn-primary" id="btnAcceptTerms" style="width: 100%; font-size: 16px; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(11,61,145,.3); margin-top: 10px;">ACEPTO LOS TÉRMINOS Y CONDICIONES</button>
   </div>
 </div>
 
+<!-- Modal de Información Legal / Contacto -->
 <div class="modal-backdrop" id="modalInfo" style="z-index: 9999;">
   <div class="modal info-modal">
     <h2 id="modalInfoTitle" style="font-size:18px; margin-bottom:14px; text-align:center;"></h2>
@@ -707,79 +674,28 @@
   </div>
 </div>
 
-<div class="modal-backdrop" id="modalNotificaciones">
+<!-- Modal de respaldo manual de ubicación (GPS no disponible) -->
+<div class="modal-backdrop" id="modalUbicacion" style="z-index: 9998;">
   <div class="modal">
-    <h2 style="font-size:18px;margin-bottom:12px">🔔 Recordatorio Diario de Cierre</h2>
-    <p style="font-size:13px;color:var(--text-soft);margin-bottom:16px;line-height:1.4">
-      Configurá una alerta push automática para recordarte registrar tus tareas y cerrar la jornada antes de que termine el día.
-    </p>
-    <form id="formNotificaciones">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-sm);margin-bottom:14px;">
-        <span style="font-weight:600;font-size:14px">Activar recordatorio</span>
-        <input type="checkbox" id="notifEnabled" style="width:20px;height:20px;accent-color:var(--primary);cursor:pointer;">
-      </div>
-      <div class="field" id="notifTimeField">
-        <label>Hora del recordatorio</label>
-        <input class="input" id="notifTime" type="time" value="18:00" required>
-        <div style="font-size:11px;color:var(--text-soft);margin-top:4px">Horarios habituales: 18:00, 19:00 o 20:00</div>
-      </div>
-      <div style="margin-top:14px;margin-bottom:16px">
-        <button type="button" class="btn btn-ghost" id="btnTestNotif" style="width:100%;font-size:13px;padding:10px 12px;border:1px dashed var(--primary);color:var(--primary)">
-          🔔 Enviar notificación de prueba
-        </button>
+    <h2 style="font-size:18px;margin-bottom:14px">📍 Ubicación no disponible</h2>
+    <p style="margin-bottom:12px;color:var(--text-soft);font-size:13px;line-height:1.5">No pudimos obtener automáticamente la ubicación de esta tarea. Ingresá manualmente la dirección o una referencia del lugar de trabajo para continuar.</p>
+    <div class="ubic-motivo" id="ubicMotivo"></div>
+    <div class="ubic-resumen" id="ubicResumen"></div>
+    <form id="formUbicacionManual">
+      <div class="field">
+        <label>Dirección o referencia del lugar de trabajo</label>
+        <input class="input" id="ubicManualInput" type="text" placeholder="Ej: Av. Mitre 1234, esquina plaza" autocomplete="off" required>
       </div>
       <div class="btn-row">
-        <button type="button" class="btn btn-ghost" id="cancelNotif">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Ajustes</button>
+        <button class="btn btn-ghost" type="button" id="ubicCancelar">CANCELAR</button>
+        <button class="btn btn-primary" type="submit" id="ubicGuardar">GUARDAR UBICACIÓN MANUAL</button>
       </div>
+      <button class="btn btn-ghost" type="button" id="ubicReintentar" style="width:100%;margin-top:8px">🔄 Reintentar GPS</button>
     </form>
   </div>
 </div>
 
-<div class="modal-backdrop" id="modalInstallPwa">
-  <div class="modal pwa-install-modal">
-    <div style="text-align:center; margin-bottom:14px;">
-      <img src="icons/icon-192.png?v=5.8.39" alt="BAREMOS" style="width:72px; height:72px; border-radius:18px; box-shadow:0 8px 24px rgba(11,61,145,.35); margin-bottom:10px;">
-      <h2 style="font-size:20px; font-weight:800; color:var(--text); margin-bottom:4px;">Instalar BAREMOS</h2>
-      <p style="font-size:12px; color:var(--text-soft);">Aplicación PWA de Alto Rendimiento</p>
-    </div>
-    <div class="pwa-features-list">
-      <div class="pwa-feat-item">
-        <span class="pwa-feat-ico">⚡</span>
-        <div>
-          <div class="pwa-feat-title">100% Offline</div>
-          <div class="pwa-feat-desc">Registrá tareas sin depender de conexión a internet o señal.</div>
-        </div>
-      </div>
-      <div class="pwa-feat-item">
-        <span class="pwa-feat-ico">🚀</span>
-        <div>
-          <div class="pwa-feat-title">Acceso Instantáneo</div>
-          <div class="pwa-feat-desc">Apertura en pantalla completa desde tu pantalla de inicio.</div>
-        </div>
-      </div>
-      <div class="pwa-feat-item">
-        <span class="pwa-feat-ico">🔒</span>
-        <div>
-          <div class="pwa-feat-title">Máxima Seguridad</div>
-          <div class="pwa-feat-desc">Base de datos local cifrada y respaldos en Excel y PDF.</div>
-        </div>
-      </div>
-    </div>
-    <div id="pwaIosInstructions" style="display:none; background:var(--surface-2); padding:12px 14px; border-radius:var(--radius-sm); font-size:12px; line-height:1.5; color:var(--text); margin-bottom:14px; border:1px solid var(--border);">
-      <strong>📱 Instrucciones para iPhone / iPad (Safari):</strong><br>
-      1. Tocá el botón <strong>Compartir</strong> <span style="font-size:14px;">📤</span> en la barra inferior.<br>
-      2. Desplazate hacia abajo y seleccioná <strong>"Añadir a pantalla de inicio"</strong> ➕.<br>
-      3. Confirmá en <strong>"Añadir"</strong> para tener el acceso directo.
-    </div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-ghost" id="btnPwaModalClose">Cerrar</button>
-      <button type="button" class="btn btn-primary" id="btnPwaModalAction">📲 Instalar App</button>
-    </div>
-  </div>
-</div>
-
-<script src="db.js?v=5.8.39"></script>
-<script src="app.js?v=5.8.39"></script>
+<script src="db.js?v=5.8.40"></script>
+<script src="app.js?v=5.8.40"></script>
 </body>
 </html>
