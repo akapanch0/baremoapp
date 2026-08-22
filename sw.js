@@ -1,16 +1,16 @@
-const CACHE_NAME = 'baremos-v5.8.40';
+const CACHE_NAME = 'baremos-v5.8.44';
 const LOCAL_ASSETS = [
   './', 
   './index.html', 
-  './styles.css?v=5.8.40', 
-  './app.js?v=5.8.40', 
-  './db.js?v=5.8.40',
+  './styles.css?v=5.8.44', 
+  './app.js?v=5.8.44', 
+  './db.js?v=5.8.44',
   './baremo.json', 
-  './manifest.json?v=5.8.40', 
+  './manifest.json?v=5.8.44', 
   './version.json', 
   './VERSION',
-  './icons/icon-192.png?v=5.8.40', 
-  './icons/icon-512.png?v=5.8.40',
+  './icons/icon-192.png?v=5.8.44', 
+  './icons/icon-512.png?v=5.8.44',
   './maps/trujui.png', './maps/cuartelv.png', './maps/moreno.png',
   './maps/gralrodriguez.png', './maps/tigre.png', './maps/sanmartin.png',
   './maps/olivos.png', './maps/pilarescobar.png'

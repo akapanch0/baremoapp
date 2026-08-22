@@ -130,11 +130,15 @@ tbody tr.adding { animation: rowIn .4s ease; }
 .total-general .lbl { font-size: 12px; opacity: .9; text-transform: uppercase; }
 .total-general .val { font-size: 28px; margin-top: 4px; position: relative; z-index: 2; }
 
-.bg-green-intense { background: linear-gradient(135deg, #16a34a, #22c55e); }
-.bg-green-soft { background: linear-gradient(135deg, #65a30d, #84cc16); }
-.bg-yellow-green { background: linear-gradient(135deg, #ca8a04, #eab308); }
-.bg-red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+/* Rangos de color del día (getConfigDia). Se exponen también como --card-bg para
+   que otras tarjetas con fondo propio, como .stat-card, puedan reutilizar el
+   mismo degradado sin depender del orden de las reglas. */
+.bg-green-intense { --card-bg: linear-gradient(135deg, #16a34a, #22c55e); background: var(--card-bg); }
+.bg-green-soft { --card-bg: linear-gradient(135deg, #65a30d, #84cc16); background: var(--card-bg); }
+.bg-yellow-green { --card-bg: linear-gradient(135deg, #ca8a04, #eab308); background: var(--card-bg); }
+.bg-red { --card-bg: linear-gradient(135deg, #ef4444, #b91c1c); background: var(--card-bg); }
 .bg-gold { 
+  --card-bg: linear-gradient(135deg, #D4AF37, #AA8A2A);
   background: linear-gradient(135deg, #D4AF37, #AA8A2A) !important; 
   box-shadow: 0 0 35px rgba(212, 175, 55, 0.7) !important; 
   color: #fff !important; 
@@ -160,6 +164,7 @@ canvas { max-width: 100%; height: 220px !important; }
 .jornada-item { background: var(--surface); border-radius: var(--radius); padding: 12px; margin-bottom: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .ji-left { flex: 1; }
 .ji-left .fecha { font-weight: 700; font-size: 14px; }
+.ji-left .zonas { font-size: 11px; font-weight: 700; color: var(--primary); margin-top: 3px; }
 .ji-left .meta { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
 .ji-right { text-align: right; }
 .ji-right .total { font-weight: 800; color: var(--primary); font-size: 15px; }
@@ -367,16 +372,52 @@ canvas { max-width: 100%; height: 220px !important; }
 /* ============================================================
    ESTILOS DE MENÚ AYUDA (SEO)
    ============================================================ */
-.ayuda-menu-links {
-  display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;
-  background: var(--surface-2); padding: 16px; border-radius: var(--radius);
+/* Tarjetas de temas. Reemplazan al indice de anclas: antes los enlaces saltaban
+   al fondo del articulo y obligaban a scrollear para leer cada tema. */
+.ayuda-hint { font-size: 12.5px; color: var(--text-soft); margin-bottom: 12px; }
+.ayuda-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+.ayuda-card {
+  display: flex; align-items: center; gap: 10px; text-align: left; width: 100%;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 13px 12px; font-family: inherit; color: var(--text); cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
 }
-.ayuda-menu-links a {
-  color: var(--primary); font-weight: 700; text-decoration: none; font-size: 14px;
-  padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface);
-  transition: background var(--transition);
+.ayuda-card:active { background: var(--surface-2); transform: scale(.98); }
+.ayuda-card .ac-ico { font-size: 20px; line-height: 1; flex: none; }
+.ayuda-card .ac-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.ayuda-card .ac-tit { font-size: 13px; font-weight: 700; line-height: 1.25; }
+.ayuda-card .ac-sub { font-size: 11px; color: var(--text-soft); line-height: 1.2; }
+.ayuda-card .ac-arrow { font-size: 20px; color: var(--text-soft); flex: none; }
+
+/* La fuente de contenido queda en el HTML (SEO) pero no se muestra en la vista:
+   el modal la clona al abrir cada tema. */
+.help-source { display: none; }
+
+/* Modal de ayuda: cabecera fija y el texto scrollea dentro del modal, nunca la pagina. */
+.help-modal { padding: 0; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+.help-modal-head {
+  display: flex; align-items: center; gap: 10px; padding: 15px 18px; flex: none;
+  border-bottom: 1px solid var(--border); background: var(--surface);
 }
-.ayuda-menu-links a:active { background: var(--surface-2); }
+.help-modal-head h2 { font-size: 17px; font-weight: 800; color: var(--primary); flex: 1; line-height: 1.25; }
+.help-modal-close {
+  flex: none; width: 34px; height: 34px; border-radius: 10px; cursor: pointer;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text); font-size: 15px;
+}
+.help-modal-close:active { background: var(--border); }
+.help-modal-body {
+  padding: 16px 18px 26px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+/* El titulo del tema ya vive en la cabecera del modal. */
+.help-modal-body > h2:first-child { display: none; }
+
+/* Con un modal abierto la pagina de fondo no se mueve. */
+body.modal-abierto { overflow: hidden; }
+
+@media (max-width: 430px) {
+  .ayuda-cards { grid-template-columns: 1fr; }
+}
 
 .help-article h2 { font-size: 18px; color: var(--primary); margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 2px solid var(--border); }
 .help-article h2:first-child { margin-top: 0; }
@@ -630,7 +671,14 @@ canvas { max-width: 100%; height: 220px !important; }
   position: relative;
   transition: all 0.3s ease;
 }
-.dac-interactive.tac-gold { padding-right: 45px !important; }
+/* `.stat-card` define `background: var(--surface)` después de las clases .bg-*,
+   con la misma especificidad, así que las tapaba: la tarjeta quedaba con fondo
+   claro y el texto blanco de .dac-interactive se volvía invisible. Con dos
+   clases gana esta regla y el color del rango se aplica de verdad. */
+.stat-card.dac-interactive { background: var(--card-bg, var(--surface)); }
+.stat-card.dac-interactive.bg-green-intense { box-shadow: 0 0 25px rgba(22, 163, 74, 0.4); }
+.dac-interactive.tac-gold,
+.dac-interactive.bg-gold { padding-right: 45px !important; }
 .dac-interactive .lbl {
   color: rgba(255,255,255,0.9) !important;
   z-index: 2; position: relative;
@@ -647,7 +695,8 @@ canvas { max-width: 100%; height: 220px !important; }
   font-size: 35px; opacity: 0; transform: scale(0) rotate(-20deg);
   transition: all 0.5s; pointer-events: none; z-index: 1;
 }
-.tac-gold .dac-medal {
+.tac-gold .dac-medal,
+.bg-gold .dac-medal {
   opacity: 1; transform: scale(1) rotate(0deg); animation: medalBounce 2s infinite ease-in-out;
 }
 
@@ -1031,7 +1080,7 @@ canvas { max-width: 100%; height: 220px !important; }
 .total-card .val { font-size: 14px; margin-top: 2px; }
 
 /* ============================================================
-   v5.8.40 — Cabecera y buscador siempre visibles, cabecera mejor
+   v5.8.44 — Cabecera y buscador siempre visibles, cabecera mejor
    organizada, boton INSTALAR minimalista (antes de AYUDA),
    tipos de trabajo en una sola linea y tarjetas de tareas del dia
    mas compactas. Bloque aislado y aditivo.

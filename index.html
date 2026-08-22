@@ -11,11 +11,11 @@
 <meta name="apple-mobile-web-app-title" content="BAREMOS">
 <meta name="application-name" content="BAREMOS">
 <title>BAREMOS</title>
-<link rel="manifest" href="manifest.json?v=5.8.40">
-<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.40">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.40">
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.40">
-<link rel="stylesheet" href="styles.css?v=5.8.40">
+<link rel="manifest" href="manifest.json?v=5.8.44">
+<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.44">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.44">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.44">
+<link rel="stylesheet" href="styles.css?v=5.8.44">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.6.0/dist/jspdf.plugin.autotable.min.js"></script>
@@ -117,23 +117,27 @@
       
       <h1 style="font-size:22px; font-weight:800; color:var(--primary); margin-bottom:16px;">Centro de Ayuda BAREMOS</h1>
       
-      <div class="ayuda-menu-links">
-        <a href="#ayuda-1">¿Qué es BAREMOS?</a>
-        <a href="#ayuda-2">Cómo funciona la app</a>
-        <a href="#ayuda-3">Guía para contratistas</a>
-        <a href="#ayuda-4">Preguntas frecuentes (FAQ)</a>
-        <a href="#ayuda-5">Ejemplos de baremos</a>
-        <a href="#ayuda-6">Normativas y referencias</a>
-        <a href="#ayuda-7">Política de privacidad</a>
-        <a href="#ayuda-8">Términos y condiciones</a>
-        <a href="#ayuda-9">Aviso legal</a>
-        <a href="#ayuda-10">Contacto</a>
-        <a href="#ayuda-11">Sobre nosotros</a>
+      <p class="ayuda-hint">Toca un tema para leerlo. Se abre en una ventana propia, sin mover la página.</p>
+
+      <div class="ayuda-cards">
+        <button type="button" class="ayuda-card" data-help="ayuda-1"><span class="ac-ico">❓</span><span class="ac-txt"><span class="ac-tit">¿Qué es BAREMOS?</span><span class="ac-sub">Que es y para que sirve</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-2"><span class="ac-ico">⚙️</span><span class="ac-txt"><span class="ac-tit">Cómo funciona la app</span><span class="ac-sub">Modulos y funciones</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-3"><span class="ac-ico">🦺</span><span class="ac-txt"><span class="ac-tit">Guía para contratistas</span><span class="ac-sub">Antes, durante y al cerrar</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-4"><span class="ac-ico">💬</span><span class="ac-txt"><span class="ac-tit">Preguntas frecuentes (FAQ)</span><span class="ac-sub">Dudas mas comunes</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-5"><span class="ac-ico">📋</span><span class="ac-txt"><span class="ac-tit">Ejemplos de baremos</span><span class="ac-sub">Codigos y precios</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-6"><span class="ac-ico">📖</span><span class="ac-txt"><span class="ac-tit">Normativas y referencias</span><span class="ac-sub">Marco normativo</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-7"><span class="ac-ico">🔒</span><span class="ac-txt"><span class="ac-tit">Política de privacidad</span><span class="ac-sub">Tratamiento de datos</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-8"><span class="ac-ico">📜</span><span class="ac-txt"><span class="ac-tit">Términos y condiciones</span><span class="ac-sub">Condiciones de uso</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-9"><span class="ac-ico">⚖️</span><span class="ac-txt"><span class="ac-tit">Aviso legal</span><span class="ac-sub">Alcance y limites</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-10"><span class="ac-ico">✉️</span><span class="ac-txt"><span class="ac-tit">Contacto</span><span class="ac-sub">Soporte y consultas</span></span><span class="ac-arrow">›</span></button>
+        <button type="button" class="ayuda-card" data-help="ayuda-11"><span class="ac-ico">👥</span><span class="ac-txt"><span class="ac-tit">Sobre nosotros</span><span class="ac-sub">El proyecto</span></span><span class="ac-arrow">›</span></button>
       </div>
 
-      <article class="help-article" itemscope itemtype="http://schema.org/FAQPage">
-        
-        <h2 id="ayuda-1">¿Qué es BAREMOS?</h2>
+      <!-- Fuente de contenido de cada tema. Sigue en el HTML para SEO y es lo que
+           clona el modal al abrirse; no se muestra directamente en la vista. -->
+      <article class="help-article help-source" itemscope itemtype="http://schema.org/FAQPage">
+        <section class="help-sec" id="ayuda-1">
+<h2 id="ayuda-1">¿Qué es BAREMOS?</h2>
         <p>BAREMOS es una aplicación diseñada para contratistas y cuadrillas que trabajan en tareas operativas, eléctricas y de mantenimiento.</p>
         <p>Permite registrar trabajos realizados, calcular totales, organizar jornadas y llevar un control claro de las actividades diarias.</p>
         
@@ -145,8 +149,9 @@
           <li>Organizar información de manera clara y accesible.</li>
           <li>Facilitar la administración de quincenas y combustibles.</li>
         </ul>
-
-        <h2 id="ayuda-2">Cómo funciona la app</h2>
+        </section>
+        <section class="help-sec" id="ayuda-2">
+<h2 id="ayuda-2">Cómo funciona la app</h2>
         <p>BAREMOS está estructurada en módulos simples y directos:</p>
         
         <h3>Registro</h3>
@@ -201,8 +206,9 @@
           <li>Preferencias</li>
           <li>Información de contacto</li>
         </ul>
-
-        <h2 id="ayuda-3">Guía para contratistas</h2>
+        </section>
+        <section class="help-sec" id="ayuda-3">
+<h2 id="ayuda-3">Guía para contratistas</h2>
         <h3>Antes de comenzar la jornada</h3>
         <ul>
           <li>Verificá tu ubicación.</li>
@@ -231,8 +237,9 @@
           <li>Usá el historial para evitar duplicados.</li>
           <li>Mantené tus datos personales actualizados.</li>
         </ul>
-
-        <h2 id="ayuda-4">Preguntas frecuentes (FAQ)</h2>
+        </section>
+        <section class="help-sec" id="ayuda-4">
+<h2 id="ayuda-4">Preguntas frecuentes (FAQ)</h2>
         <h3>¿Necesito conexión a internet?</h3>
         <p>La app funciona online. Algunas funciones pueden requerir conexión para sincronizar datos.</p>
         
@@ -250,8 +257,9 @@
 
         <h3>¿La app guarda mis datos?</h3>
         <p>Sí, tus datos se almacenan de forma segura según las políticas de privacidad.</p>
-
-        <h2 id="ayuda-5">Ejemplos de baremos</h2>
+        </section>
+        <section class="help-sec" id="ayuda-5">
+<h2 id="ayuda-5">Ejemplos de baremos</h2>
         <h3>Tendido LAPE ≤ 3 x 95/50 mm²</h3>
         <p><strong>Código:</strong> M120802<br>
         <strong>Precio:</strong> $494<br>
@@ -266,27 +274,44 @@
         <p><strong>Código:</strong> N120802<br>
         <strong>Precio:</strong> $3.617<br>
         <strong>Descripción:</strong> Intervención técnica en la acometida del usuario.</p>
-
-        <h2 id="ayuda-6">Normativas y referencias</h2>
+        </section>
+        <section class="help-sec" id="ayuda-6">
+<h2 id="ayuda-6">Normativas y referencias</h2>
         <p>Todos los trabajos, registros y precios estipulados deben ajustarse a la normativa eléctrica vigente y a los lineamientos estipulados por la entidad contratante. BAREMOS opera como una herramienta administrativa de referencia y no sustituye los protocolos de seguridad industrial ni las tablas de liquidación oficiales emitidas por las autoridades correspondientes.</p>
-
-        <h2 id="ayuda-7">Política de privacidad</h2>
+        </section>
+        <section class="help-sec" id="ayuda-7">
+<h2 id="ayuda-7">Política de privacidad</h2>
         <h3>1. Introducción</h3><p>La presente Política de Privacidad describe cómo se gestiona la información dentro del sitio web BAREMO y su aplicación asociada. Este proyecto es un desarrollo 100% freelance, sin asociaciones comerciales ni vínculos con terceros.</p><h3>2. No recopilación de datos personales</h3><p>BAREMO no recopila, almacena ni procesa datos personales de los usuarios.</p><p>El sitio y la aplicación no solicitan información identificatoria, no registran actividad del usuario y no acceden a datos del dispositivo.</p><h3>3. Información local</h3><p>Toda la información que el usuario ingresa en la aplicación se mantiene localmente en su dispositivo, sin ser enviada ni almacenada en servidores externos.</p><h3>4. Cookies y tecnologías de seguimiento</h3><p>Este sitio no utiliza cookies, herramientas de análisis, publicidad, ni tecnologías de rastreo.</p><h3>5. Compartición de información</h3><p>Dado que no se recopilan datos, no existe ningún tipo de cesión, venta o transferencia de información a terceros.</p><h3>6. Seguridad</h3><p>Aunque no se manejan datos personales, se aplican medidas básicas de seguridad para garantizar el funcionamiento correcto del sitio y la aplicación.</p><h3>7. Actualizaciones</h3><p>BAREMO puede modificar esta política en cualquier momento. Las actualizaciones se publicarán en este sitio web.</p>
-        
-        <h2 id="ayuda-8">Términos y condiciones</h2>
+        </section>
+        <section class="help-sec" id="ayuda-8">
+<h2 id="ayuda-8">Términos y condiciones</h2>
         <h3>1. Aceptación</h3><p>Al utilizar el sitio o la aplicación BAREMO, el usuario acepta estos Términos y Condiciones. Si no está de acuerdo, debe abstenerse de utilizar el servicio.</p><h3>2. Descripción del servicio</h3><p>BAREMO es una herramienta destinada al control y registro de ganancias diarias para contratistas del rubro eléctrico.</p><p>El servicio se ofrece “tal cual”, sin garantías de disponibilidad continua o ausencia de errores.</p><h3>3. Uso permitido</h3><p>El usuario se compromete a utilizar el sitio y la aplicación de manera legal y responsable. Queda prohibido:</p><ul><li>Manipular o intentar acceder a funciones no autorizadas.</li><li>Utilizar el servicio para actividades ilícitas.</li><li>Realizar ingeniería inversa, descompilación o extracción del código fuente.</li></ul><h3>4. Responsabilidad</h3><p>BAREMO no se responsabiliza por:</p><ul><li>Errores derivados del uso incorrecto del servicio.</li><li>Pérdida de información almacenada localmente en el dispositivo del usuario.</li><li>Fallas técnicas, interrupciones o indisponibilidad del servicio.</li></ul><h3>5. Modificaciones</h3><p>Los presentes términos pueden actualizarse sin previo aviso. Las modificaciones se publicarán en este sitio.</p>
-
-        <h2 id="ayuda-9">Aviso legal</h2>
+        </section>
+        <section class="help-sec" id="ayuda-9">
+<h2 id="ayuda-9">Aviso legal</h2>
         <p>BAREMO es un proyecto independiente y freelance, sin asociaciones con empresas, entidades o marcas del sector eléctrico.</p><p>La información presentada en el sitio y la aplicación tiene fines operativos y organizativos para contratistas.</p><p>No se garantiza la exactitud de los cálculos o registros generados por el usuario, ya que cada contratista maneja sus propios Baremos y estos pueden variar.</p><p>El desarrollador no asume responsabilidad por decisiones comerciales tomadas a partir del uso de la aplicación.</p>
-
-        <h2 id="ayuda-10">Contacto</h2>
+        </section>
+        <section class="help-sec" id="ayuda-10">
+<h2 id="ayuda-10">Contacto</h2>
         <p>Para consultas, sugerencias o reportes relacionados con la aplicación BAREMO, podés comunicarte a:</p><p>📧 Email: <a href="mailto:contacto@baremo.app">contacto@baremo.app</a><br>🌐 Desarrollador: Proyecto freelance AKAPANCH0<br>📍 Ubicación: Buenos Aires, Argentina</p>
-
-        <h2 id="ayuda-11">Sobre nosotros</h2>
+        </section>
+        <section class="help-sec" id="ayuda-11">
+<h2 id="ayuda-11">Sobre nosotros</h2>
         <p>BAREMO es un proyecto desarrollado de manera 100% freelance, sin asociaciones comerciales ni vínculos con terceros.</p><p>Nuestro objetivo es ofrecer una herramienta simple, clara y eficiente para contratistas del rubro eléctrico, permitiendo registrar y controlar sus ganancias diarias, tareas realizadas y organización operativa.</p><p>Creemos en soluciones prácticas, livianas y sin complicaciones. Por eso, nuestra aplicación funciona de manera local, sin recopilar datos personales y sin depender de servidores externos.</p><p>BAREMO es independiente, transparente y diseñado para profesionales que necesitan una herramienta confiable para su trabajo diario.</p>
+        </section>
       </article>
     </div>
   </section>
+
+  <div class="modal-backdrop" id="modalAyuda">
+    <div class="modal help-modal">
+      <div class="help-modal-head">
+        <h2 id="mayTitulo"></h2>
+        <button type="button" class="help-modal-close" id="mayClose" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="help-article help-modal-body" id="mayBody"></div>
+    </div>
+  </div>
 
   <section class="view" id="viewInicio">
     <div class="search-wrap">
@@ -642,6 +667,7 @@
     <div style="margin-bottom:10px">
       <div style="font-size:16px;font-weight:700" id="mjFecha"></div>
       <div style="font-size:12px;color:var(--text-soft)" id="mjMeta"></div>
+      <div style="font-size:12px;color:var(--primary);margin-top:3px" id="mjZonas"></div>
       <div style="font-size:22px;font-weight:800;color:var(--primary);margin-top:8px" id="mjTotal"></div>
     </div>
     <div class="table-wrap">
@@ -695,7 +721,7 @@
   </div>
 </div>
 
-<script src="db.js?v=5.8.40"></script>
-<script src="app.js?v=5.8.40"></script>
+<script src="db.js?v=5.8.44"></script>
+<script src="app.js?v=5.8.44"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 /* ============================================================
-   BAREMOS v5.8.40 - app.js COMPLETO
+   BAREMOS v5.8.44 - app.js COMPLETO
    ============================================================ */
-const APP_VERSION = '5.8.40';
+const APP_VERSION = '5.8.44';
 
 /* Control de versión de Términos y Condiciones */
 const CURRENT_TERMS_VERSION = 1;
@@ -424,10 +424,13 @@ async function sha256(message) {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
+// Contraseña inicial: solo se usa la primera vez, cuando aún no hay hash guardado.
+// Al cambiarla desde Ajustes > Panel de Administración, este valor deja de servir.
+const ADMIN_DEFAULT_PASSWORD = 'Admin2026';
 async function getAdminPasswordHash() {
   const existing = await dbGet('config', 'adminPasswordHash');
   if (!existing) {
-    const defaultHash = await sha256('Admin2026');
+    const defaultHash = await sha256(ADMIN_DEFAULT_PASSWORD);
     await dbPut('config', { key: 'adminPasswordHash', value: defaultHash });
     return defaultHash;
   }
@@ -1102,13 +1105,56 @@ function showApp() {
 
 function renderAll() { renderItems(); renderTotales(); if (typeof renderTareas === 'function') renderTareas(); }
 
+/* ============================================================
+   HISTORIAL: ORDEN Y ZONAS DE LA JORNADA
+   ============================================================ */
+
+/* Marca temporal de la jornada, para desempatar cuando hay varias el mismo dia
+   (al cerrar una jornada se crea otra, asi que es habitual). */
+function tsJornada(j) {
+  const t = j.horaInicio || j.horaCierre || j.ultimaMod;
+  const ms = t ? Date.parse(t) : NaN;
+  return isNaN(ms) ? 0 : ms;
+}
+
+/* Orden del historial: la jornada mas reciente siempre primero.
+   Ordenar solo por fecha dejaba las jornadas del mismo dia empatadas y, al ser
+   sort estable, quedaban en el orden de insercion de IndexedDB (la mas vieja
+   arriba). Ahora se desempata por hora de inicio y, si tambien empata, por id. */
+function compararJornadasDesc(a, b) {
+  if (a.fecha !== b.fecha) return a.fecha < b.fecha ? 1 : -1;
+  const ta = tsJornada(a), tb = tsJornada(b);
+  if (ta !== tb) return tb - ta;
+  return (b.id || 0) - (a.id || 0);
+}
+
+/* Zonas de una jornada: SOLO las zonas donde realmente se cerraron tareas.
+   La zona del login no se usa a proposito. Mientras la jornada no tenga ningun
+   cierre no hay zona que informar, asi que no se muestra nada. Cada tarea
+   guarda la zona en la que se cerro, de modo que si el usuario cambio de zona
+   durante el dia aparecen todas, en orden de aparicion y sin repetir. */
+function zonasDeJornada(j) {
+  const zonas = [];
+  (j.tareas || []).forEach(t => {
+    const v = String(t && t.zona != null ? t.zona : '').trim();
+    if (v && zonas.indexOf(v) === -1) zonas.push(v);
+  });
+  return zonas;
+}
+
+function textoZonasJornada(j) {
+  const zonas = zonasDeJornada(j);
+  if (!zonas.length) return '';
+  return '\ud83d\udccdJornada con cierres en: ' + zonas.map(escapeHtml).join(', ');
+}
+
 async function renderHistorial() {
   const all = await dbGetAll('jornadas');
   let f = all.filter(j => j.legajo === State.user.legajo);
   if (State.histFilter === 'hoy') f = f.filter(j => j.fecha === hoy());
   else if (State.histFilter === 'mes') f = f.filter(j => j.fecha.startsWith(mesActual()));
   else if (State.histFilter === 'mesAnterior') f = f.filter(j => j.fecha.startsWith(mesAnterior()));
-  f.sort((a, b) => b.fecha.localeCompare(a.fecha));
+  f.sort(compararJornadasDesc);
   const lst = $('#historialList');
   const ab = $('#histActionsBar');
   if (!lst) return;
@@ -1126,7 +1172,8 @@ async function renderHistorial() {
   }
   lst.innerHTML = f.map(j => {
     const is = State.histSelected.has(j.id);
-    return `<div class="jornada-item ${is ? 'selected' : ''}" data-id="${j.id}"><div class="ji-left"><div class="fecha">${fechaCorta(j.fecha)}</div><div class="meta">${j.cantidadRegistros || 0} reg · ${j.cantidadItems || 0} ítems</div></div><div class="ji-right"><div class="total">${fmt(j.total || 0)}</div><div class="estado ${j.cerrada ? 'cerrada' : 'abierta'}">${j.cerrada ? 'CERRADA' : 'ABIERTA'}</div><div class="ji-actions"><div class="check-box ${is ? 'checked' : ''}" data-act="select" data-id="${j.id}"></div><button class="mini-btn view" data-act="view" data-id="${j.id}">👁️</button>${j.cerrada ? `<button class="mini-btn export" data-act="export" data-id="${j.id}">📄</button>` : ''}</div></div></div>`;
+    const zonasHtml = textoZonasJornada(j);
+    return `<div class="jornada-item ${is ? 'selected' : ''}" data-id="${j.id}"><div class="ji-left"><div class="fecha">${fechaCorta(j.fecha)}</div>${zonasHtml ? `<div class="zonas">${zonasHtml}</div>` : ''}<div class="meta">${j.cantidadRegistros || 0} reg · ${j.cantidadItems || 0} ítems</div></div><div class="ji-right"><div class="total">${fmt(j.total || 0)}</div><div class="estado ${j.cerrada ? 'cerrada' : 'abierta'}">${j.cerrada ? 'CERRADA' : 'ABIERTA'}</div><div class="ji-actions"><div class="check-box ${is ? 'checked' : ''}" data-act="select" data-id="${j.id}"></div><button class="mini-btn view" data-act="view" data-id="${j.id}">👁️</button>${j.cerrada ? `<button class="mini-btn export" data-act="export" data-id="${j.id}">📄</button>` : ''}</div></div></div>`;
   }).join('');
   lst.querySelectorAll('[data-act="select"]').forEach(el => {
     el.onclick = e => {
@@ -1159,6 +1206,11 @@ async function openJornada(id) {
   $('#mjFecha').textContent = fechaLegible(j.fecha);
   $('#mjTotal').textContent = fmt(j.total);
   $('#mjMeta').textContent = `${j.cantidadRegistros || 0} reg · ${j.cantidadItems || 0} ítems · ${j.cerrada ? 'CERRADA' : 'ABIERTA'}`;
+  const mjZ = $('#mjZonas');
+  if (mjZ) {
+    const zh = textoZonasJornada(j);
+    mjZ.innerHTML = zh ? '<b>' + zh + '</b>' : '';
+  }
   $('#mjBody').innerHTML = (j.items || []).map((it, i) => `<tr><td class="hide-mob">${i + 1}</td><td>${it.codigo}</td><td class="td-desc" style="font-size:11px" title="${it.descripcion}">${it.descripcion}</td><td class="hide-mob">${fmt(it.precio)}</td><td>${it.cantidad}</td><td>${fmt(it.subtotal)}</td></tr>`).join('');
   if (typeof renderUbicacionesJornada === 'function') renderUbicacionesJornada(j);
   $('#modalJornada').classList.add('show');
@@ -1655,7 +1707,7 @@ function renderAjustes() {
   lst.innerHTML = `
     <div class="ajuste-item" data-act="update"><div class="aj-ico">🔄</div><div class="aj-text"><div class="aj-title">Comprobar actualizaciones</div><div class="aj-desc">v${State.currentVersion || '?'}</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item" data-act="baremo"><div class="aj-ico">📥</div><div class="aj-text"><div class="aj-title">Actualizar baremo</div><div class="aj-desc">JSON o Excel</div></div><div class="aj-arrow">›</div></div>
-    <div class="ajuste-item" data-act="backup"><div class="aj-ico">💾</div><div class="aj-text"><div class="aj-title">Backup</div><div class="aj-desc">Guardar datos</div></div><div class="aj-arrow">›</div></div>
+    <div class="ajuste-item" data-act="backup"><div class="aj-ico">💾</div><div class="aj-text"><div class="aj-title">Backup</div><div class="aj-desc">Guardar datos</div></div><div class="aj-arrow">��</div></div>
     <div class="ajuste-item" data-act="restore"><div class="aj-ico">📤</div><div class="aj-text"><div class="aj-title">Restaurar</div><div class="aj-desc">Recuperar datos</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item" data-act="theme"><div class="aj-ico">${State.theme === 'light' ? '🌙' : '☀️'}</div><div class="aj-text"><div class="aj-title">Modo ${State.theme === 'light' ? 'oscuro' : 'claro'}</div></div><div class="aj-arrow">›</div></div>
     <div class="ajuste-item warn" data-act="users"><div class="aj-ico">👥</div><div class="aj-text"><div class="aj-title">Gestionar usuarios</div></div><div class="aj-arrow">›</div></div>
@@ -1750,7 +1802,7 @@ function setupAdmin() {
       const pass = $('#adminPassword').value.trim();
       const correct = await getAdminPasswordHash();
       const inputHash = await sha256(pass);
-      if (pass === 'Admin2026' || inputHash === correct) {
+      if (inputHash === correct) {
         State.adminLoggedIn = true;
         $('#adminLogin').style.display = 'none';
         $('#adminPanel').style.display = 'block';
@@ -2182,14 +2234,50 @@ function showAyuda() {
   $$('.view').forEach(v => v.classList.remove('active'));
   $('#viewAyuda').classList.add('active');
   $$('.tab-btn').forEach(b => b.classList.remove('active'));
+  cerrarAyudaTema();
+  window.scrollTo(0, 0);
 }
 
 function hideAyuda() {
+  cerrarAyudaTema();
   if (State.user) {
     showView('Inicio');
   } else {
     showLogin();
   }
+}
+
+/* ============================================================
+   CENTRO DE AYUDA: UN MODAL POR TEMA
+   Antes los 11 temas estaban apilados en un solo articulo y el indice de anclas
+   empujaba la pagina hasta el fondo. Ahora cada tarjeta abre su contenido en un
+   modal que arranca siempre desde arriba y scrollea por dentro.
+   ============================================================ */
+function abrirAyudaTema(id) {
+  const sec = id ? document.getElementById(id) : null;
+  const modal = $('#modalAyuda');
+  const cuerpo = $('#mayBody');
+  const titulo = $('#mayTitulo');
+  if (!sec || !modal || !cuerpo || !titulo) return;
+  // Se clona para no vaciar la fuente original, que se reutiliza en cada apertura.
+  const clon = sec.cloneNode(true);
+  const h2 = clon.querySelector('h2');
+  titulo.textContent = h2 ? h2.textContent.trim() : 'Ayuda';
+  if (h2) h2.remove();
+  cuerpo.innerHTML = clon.innerHTML;
+  cuerpo.scrollTop = 0;
+  modal.classList.add('show');
+  document.body.classList.add('modal-abierto');
+}
+
+function cerrarAyudaTema() {
+  const modal = $('#modalAyuda');
+  if (modal) modal.classList.remove('show');
+  // Se limpia siempre, incluso si el modal ya lo habia cerrado el handler generico
+  // de .modal-backdrop, para no dejar el scroll de la pagina bloqueado.
+  document.body.classList.remove('modal-abierto');
+  const cuerpo = $('#mayBody');
+  if (cuerpo) cuerpo.innerHTML = '';
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -2255,6 +2343,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   const btnVolverAyuda = $('#btnVolverAyuda');
   if (btnVolverAyuda) btnVolverAyuda.onclick = hideAyuda;
+
+  $$('.ayuda-card').forEach(c => { c.onclick = () => abrirAyudaTema(c.dataset.help); });
+  const mayClose = $('#mayClose');
+  if (mayClose) mayClose.onclick = cerrarAyudaTema;
+  const mayBackdrop = $('#modalAyuda');
+  if (mayBackdrop) mayBackdrop.onclick = e => { if (e.target === mayBackdrop) cerrarAyudaTema(); };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarAyudaTema(); });
 
   $$('.modal-backdrop').forEach(m => {
     m.addEventListener('click', e => { 
