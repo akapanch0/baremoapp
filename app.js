@@ -1,7 +1,7 @@
 /* ============================================================
-   BAREMOS v5.8.44 - app.js COMPLETO
+   BAREMOS v5.8.45 - app.js COMPLETO
    ============================================================ */
-const APP_VERSION = '5.8.44';
+const APP_VERSION = '5.8.45';
 
 /* Control de versión de Términos y Condiciones */
 const CURRENT_TERMS_VERSION = 1;

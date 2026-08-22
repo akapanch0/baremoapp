@@ -48,8 +48,24 @@ body {
 }
 .app-header .row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .app-header h1 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.app-header h1 .logo-ico { width: 28px; height: 28px; background: rgba(255,255,255,.18); border-radius: 8px; display: grid; place-items: center; }
-.app-header h1 .logo-ico svg { width: 16px; height: 16px; fill: #fff; }
+/* Logo de marca del encabezado. Escala con el viewport para adaptarse a
+   cualquier dispositivo y es puramente decorativo: pointer-events none deja
+   pasar el toque, no se puede clickear, arrastrar ni seleccionar. */
+.app-header h1 .logo-img {
+  height: clamp(26px, 7.2vw, 34px);
+  width: auto;
+  max-width: 42vw;
+  object-fit: contain;
+  flex: 0 0 auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+/* Si el archivo no esta disponible, no se muestra el icono de imagen rota. */
+.app-header h1 .logo-img.logo-img-falla { display: none; }
 .app-header .user-chip { background: rgba(255,255,255,.18); padding: 6px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; flex-wrap: wrap; }
 .app-header .date-line { font-size: 12px; opacity: .9; display: flex; align-items: center; gap: 6px; }
 .header-actions { display: flex; gap: 8px; align-items: center; }
@@ -729,9 +745,6 @@ body.modal-abierto { overflow: hidden; }
   animation: boltColor 3s linear infinite, boltGlow 1.5s ease-in-out infinite, boltShake 0.1s infinite alternate;
   transform-origin: center;
 }
-.app-header h1 .logo-ico svg.electric-bolt {
-  width: 16px; height: 16px;
-}
 .splash .logo svg.electric-bolt {
   width: 48px; height: 48px;
 }
@@ -1080,7 +1093,7 @@ body.modal-abierto { overflow: hidden; }
 .total-card .val { font-size: 14px; margin-top: 2px; }
 
 /* ============================================================
-   v5.8.44 — Cabecera y buscador siempre visibles, cabecera mejor
+   v5.8.45 — Cabecera y buscador siempre visibles, cabecera mejor
    organizada, boton INSTALAR minimalista (antes de AYUDA),
    tipos de trabajo en una sola linea y tarjetas de tareas del dia
    mas compactas. Bloque aislado y aditivo.
@@ -1105,7 +1118,7 @@ body {
 /* Cabecera mejor organizada: titulo + acciones sin desbordes */
 .app-header .row-top { gap: 8px; min-width: 0; flex-wrap: nowrap; }
 .app-header h1 { font-size: clamp(15px, 4.4vw, 18px); gap: 7px; min-width: 0; }
-.app-header h1 .logo-ico { width: 26px; height: 26px; flex: 0 0 auto; }
+.app-header h1 .logo-img { height: clamp(24px, 6.8vw, 32px); }
 .header-actions { gap: 6px; flex: 0 0 auto; flex-wrap: nowrap; }
 .app-header .user-chip { flex-wrap: nowrap; white-space: nowrap; padding: 5px 9px; }
 .app-header .date-line { min-width: 0; justify-content: flex-end; }
@@ -1211,7 +1224,7 @@ body {
 @media (max-width: 360px) {
   .app-header { padding-left: 10px; padding-right: 10px; }
   .app-header h1 { font-size: 14px; gap: 6px; }
-  .app-header h1 .logo-ico { width: 22px; height: 22px; }
+  .app-header h1 .logo-img { height: 22px; }
   .header-actions { gap: 5px; }
   .btn-install-pwa { padding: 6px 8px; }
   .btn-install-pwa .bip-txt { display: none; }   /* solo icono: minimalista */

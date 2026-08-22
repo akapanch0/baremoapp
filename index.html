@@ -11,11 +11,11 @@
 <meta name="apple-mobile-web-app-title" content="BAREMOS">
 <meta name="application-name" content="BAREMOS">
 <title>BAREMOS</title>
-<link rel="manifest" href="manifest.json?v=5.8.44">
-<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.44">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.44">
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.44">
-<link rel="stylesheet" href="styles.css?v=5.8.44">
+<link rel="manifest" href="manifest.json?v=5.8.45">
+<link rel="apple-touch-icon" href="icons/icon-192.png?v=5.8.45">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=5.8.45">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png?v=5.8.45">
+<link rel="stylesheet" href="styles.css?v=5.8.45">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.6.0/dist/jspdf.plugin.autotable.min.js"></script>
@@ -42,14 +42,10 @@
 <header class="app-header">
   <div class="row-top">
     <h1>
-      <div class="logo-ico electric-wrapper">
-        <div class="bolt-spark bs1"></div>
-        <div class="bolt-spark bs2"></div>
-        <div class="bolt-spark bs3"></div>
-        <svg class="electric-bolt" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13 2L3 14h8l-2 8 12-12h-8l2-8z"/>
-        </svg>
-      </div>
+      <!-- Logo de la marca. alt vacio y role=presentation porque el texto BAREMOS
+           que sigue ya cumple la funcion accesible; no es enlace ni boton. -->
+      <img class="logo-img" id="headerLogo" src="icons/logo.png?v=5.8.45" alt="" role="presentation"
+           draggable="false" onerror="this.classList.add('logo-img-falla')">
       BAREMOS
     </h1>
     <div class="header-actions">
@@ -493,7 +489,7 @@
       </div>
       <div class="qb-fechas" id="fechasQ1">Período: 01 al 15 · Pago día 20</div>
       <div class="qb-alerta" id="alertaQ1">
-        <span>⚠️</span>
+        <span>��️</span>
         <span>Una vez registrada quedará <strong>bloqueada permanentemente</strong>.</span>
       </div>
       <form id="formQ1">
@@ -721,7 +717,7 @@
   </div>
 </div>
 
-<script src="db.js?v=5.8.44"></script>
-<script src="app.js?v=5.8.44"></script>
+<script src="db.js?v=5.8.45"></script>
+<script src="app.js?v=5.8.45"></script>
 </body>
 </html>
